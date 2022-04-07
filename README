@@ -1,0 +1,18 @@
+# gym
+
+setting up structure with graphql 
+
+go mod init github.com/cindy1408/gym 
+
+go get github.com/99designs/gqlgen
+
+this creates the structure 
+go run github.com/99designs/gqlgen init --verbose
+
+to generate the schema and gen file 
+path: /graphql 
+go run github.com/99designs/gqlgen generate --verbose
+
+run server 
+path: /graphql 
+go run server.go
