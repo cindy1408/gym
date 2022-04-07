@@ -1,0 +1,91 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+extend type Query {
+  baseExercises: [BaseExercise]!
+  getAllAvaliableBaseExercises: [String!]!
+  getAllEachExercise: [EachExercise!]!
+  getAllWorkoutDay: [WorkoutPerDay!]!
+  getAllUserWorkoutPlans: [UserWorkoutPlan!]!
+  getMuscleSpecifics(input: muscleSpecificInput): String!
+}
+
+extend type Mutation {
+  createBaseExercise(input: baseExerciseInput): String!
+}
+
+# base Exercise 
+type BaseExercise {
+    id: String! 
+    name: String! 
+    muscleGroup: [MuscleGroup]!
+    specificParts: [Body!]!
+    level: Int! 
+    avoidGiven: [AvoidGiven]
+    movementType: String!
+}
+
+type Body {
+  name: String!
+}
+
+type MuscleGroup {
+  name: String! 
+}
+
+type AvoidGiven {
+  name: String
+}
+
+input baseExerciseInput {
+    name: String!
+    muscleGroup: String!
+    specificParts: String!
+    level: Int! 
+    avoidGiven: String
+    movementType: String!
+}
+
+# Each Exercise 
+
+type EachExercise {
+    id: String!
+    name: String!
+    weight: Int!
+    Unit: String!
+    Sets: Int!
+    Reps: Int!
+}
+
+# muscle group
+
+type MuscleGroupSpecific {
+    id: String!
+    muscleGroup: String! 
+    specificParts: String! 
+}
+
+input muscleSpecificInput {
+  name: String!
+}
+
+# user workout plan 
+
+type UserWorkoutPlan {
+    userId: String! 
+    name: String!
+    cycle: [WorkoutPerDay!]!
+}
+
+# workout per day 
+
+type WorkoutPerDay {
+    id: String!
+    gymDay: String!
+    exercises: [EachExercise!]!
+}
+
+# gymday: Push
+# exercises: [["bench", "20", "kg", "3", "4"], ["chest fly", "20", "kg", "3", "4"]]
+

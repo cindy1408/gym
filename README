@@ -4,6 +4,7 @@ setting up structure with graphql
 
 go mod init github.com/cindy1408/gym 
 
+cd src/cmd/graphql
 go get github.com/99designs/gqlgen
 
 this creates the structure 
