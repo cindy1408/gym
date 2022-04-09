@@ -9,6 +9,7 @@ import (
 
 	"github.com/cindy1408/gym/src/cmd/graphql/graph/generated"
 	"github.com/cindy1408/gym/src/cmd/graphql/graph/model"
+	"github.com/google/uuid"
 )
 
 func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (string, error) {
@@ -16,7 +17,7 @@ func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.
 	muscleGroup = append(muscleGroup, &model.MuscleGroup{input.MuscleGroup})
 
 	newExercise := &model.BaseExercise{
-		ID:            "",
+		ID:            uuid.New().String(),
 		Name:          input.Name,
 		MuscleGroup:   muscleGroup,
 		SpecificParts: []*model.Body{{input.SpecificParts}},
