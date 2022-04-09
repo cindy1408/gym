@@ -25,9 +25,14 @@ func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.
 		AvoidGiven:    []*model.AvoidGiven{{input.AvoidGiven}},
 		MovementType:  input.MovementType,
 	}
-	r.baseExercise = append(r.baseExercise, newExercise)
+	fmt.Println(newExercise)
+	// r.baseExercise = append(r.baseExercise, newExercise)
 
 	return "exercise was successfully added", nil
+}
+
+func (m *mutationResolver) CreateHydrate() {
+	m.baseExercise.Hydrate()
 }
 
 func (r *queryResolver) BaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {

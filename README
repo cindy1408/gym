@@ -17,3 +17,8 @@ go run github.com/99designs/gqlgen generate --verbose
 run server 
 path: /graphql 
 go run server.go
+
+
+Database 
+
+database

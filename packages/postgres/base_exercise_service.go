@@ -1,22 +1,23 @@
-package data
+package postgres
 
 import (
 	"fmt"
 
 	"github.com/cindy1408/gym/src/cmd/graphql/graph/model"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
-type BaseExerciseMutation struct {
+type BaseExercise struct {
 	db gorm.DB
 }
 
-func (b *BaseExerciseMutation) HydrateBaseExercise() {
+func (b *BaseExercise) Hydrate() (string, error) {
 	data := []model.BaseExercise{
 		// Compound Movements
 		{ID: uuid.New().String(), Name: "Bench Press", MuscleGroup: []*model.MuscleGroup{}, SpecificParts: []*model.Body{}, Level: 3, AvoidGiven: []*model.AvoidGiven{}, MovementType: "Compound"},
-		{ID: uuid.New().String(), Name: "Bench Press", MuscleGroup: []*model.MuscleGroup{}, SpecificParts: []*model.Body{}, Level: 3, AvoidGiven: []*model.AvoidGiven{}, MovementType: "Compound"}, 
+		{ID: uuid.New().String(), Name: "Bench Press", MuscleGroup: []*model.MuscleGroup{}, SpecificParts: []*model.Body{}, Level: 3, AvoidGiven: []*model.AvoidGiven{}, MovementType: "Compound"},
 		{ID: uuid.New().String(), Name: "Overhead Press", MuscleGroup: []*model.MuscleGroup{}, SpecificParts: []*model.Body{}, Level: 3, AvoidGiven: []*model.AvoidGiven{}, MovementType: "Compound"},
 		{ID: uuid.New().String(), Name: "Bent Over Rows", MuscleGroup: []*model.MuscleGroup{}, SpecificParts: []*model.Body{}, Level: 3, AvoidGiven: []*model.AvoidGiven{}, MovementType: "Compound"},
 		{ID: uuid.New().String(), Name: "Bent Over Rows", MuscleGroup: []*model.MuscleGroup{}, SpecificParts: []*model.Body{}, Level: 3, AvoidGiven: []*model.AvoidGiven{}, MovementType: "Compound"},
@@ -63,14 +64,20 @@ func (b *BaseExerciseMutation) HydrateBaseExercise() {
 
 	// TODO: refactor badly..
 	for _, eachExercise := range data {
-		rows, _ := b.db.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
+		rows, err := b.db.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
+		if err != nil {
+			return "unable to hydrate base exercise table", errors.Wrapf(err, "db.Model.Select.Rows")
+		}
 
 		defer rows.Close()
 		var name string
 		var avoidGiven []*model.AvoidGiven
 		var count int
 		for rows.Next() {
-			rows.Scan(&name, &avoidGiven)
+			err := rows.Scan(&name, &avoidGiven)
+			if err != nil {
+				return "unable to hydrate base exercise table", errors.Wrapf(err, "rows.Scan")
+			}
 			if name == eachExercise.Name {
 				count += 1
 				fmt.Printf("%v ,exists in database!\n", eachExercise.Name)
@@ -80,4 +87,5 @@ func (b *BaseExerciseMutation) HydrateBaseExercise() {
 			b.db.Create(eachExercise)
 		}
 	}
+	return "successfully hydrated base exercise table", nil
 }
