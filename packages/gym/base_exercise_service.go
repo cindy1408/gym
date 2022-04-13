@@ -1,6 +1,6 @@
 package gym 
 
-type BaseExercise interface{
+type BaseExercise interface {
 	Create()
-	Hydrate() error
+	Hydrate() (string, error)
 }

@@ -11,6 +11,8 @@ import (
 
 type BaseExercise struct {
 	db gorm.DB
+	Message string
+	// everything in this struct is avaliable to Hydrate function
 }
 
 func (b *BaseExercise) Hydrate() (string, error) {
