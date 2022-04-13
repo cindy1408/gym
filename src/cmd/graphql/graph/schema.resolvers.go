@@ -10,6 +10,7 @@ import (
 	"github.com/cindy1408/gym/src/cmd/graphql/graph/generated"
 	"github.com/cindy1408/gym/src/cmd/graphql/graph/model"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
 )
 
 func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (string, error) {
@@ -31,8 +32,12 @@ func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.
 	return "exercise was successfully added", nil
 }
 
-func (m *mutationResolver) CreateHydrate() {
-	m.baseExercise.Hydrate()
+func (m *mutationResolver) CreateHydrate() (string, error) {
+	str, err := m.baseExercise.Hydrate()
+	if err != nil {
+		return "", errors.Wrapf(err, "m.baseExercise.Hydrate")
+	}
+	return str, nil 
 }
 
 func (r *queryResolver) BaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
