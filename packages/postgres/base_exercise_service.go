@@ -3,14 +3,14 @@ package postgres
 import (
 	"fmt"
 
-	"github.com/cindy1408/gym/src/cmd/graphql/graph/model"
+	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
 type BaseExercise struct {
-	db gorm.DB
+	db      gorm.DB
 	Message string
 	// everything in this struct is avaliable to Hydrate function
 }
