@@ -22,12 +22,13 @@ func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.
 		AvoidGiven:    input.AvoidGiven,
 		MovementType:  input.MovementType,
 	}
+	r.baseExercise = append(r.baseExercise, &newExercise)
 
 	return &newExercise, nil
 }
 
 func (r *queryResolver) BaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.baseExercise, nil 
 }
 
 func (r *queryResolver) GetAllAvaliableBaseExercises(ctx context.Context) ([]string, error) {

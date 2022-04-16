@@ -10,5 +10,5 @@ import (
 
 // used to pull the interface in
 type Resolver struct {
-	baseExercise []model.BaseExercise
+	baseExercise []*model.BaseExercise
 }
