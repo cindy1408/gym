@@ -10,34 +10,20 @@ import (
 	"github.com/cindy1408/gym/src/graphql/graph/generated"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/google/uuid"
-	"github.com/pkg/errors"
 )
 
-func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (string, error) {
-	muscleGroup := []*model.MuscleGroup{}
-	muscleGroup = append(muscleGroup, &model.MuscleGroup{input.MuscleGroup})
-
-	newExercise := &model.BaseExercise{
+func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
+	newExercise := model.BaseExercise{
 		ID:            uuid.New().String(),
 		Name:          input.Name,
-		MuscleGroup:   muscleGroup,
-		SpecificParts: []*model.Body{{input.SpecificParts}},
+		MuscleGroup:   input.MuscleGroup,
+		SpecificParts: input.SpecificParts,
 		Level:         input.Level,
-		AvoidGiven:    []*model.AvoidGiven{{input.AvoidGiven}},
+		AvoidGiven:    input.AvoidGiven,
 		MovementType:  input.MovementType,
 	}
-	fmt.Println(newExercise)
-	// r.baseExercise = append(r.baseExercise, newExercise)
 
-	return "exercise was successfully added", nil
-}
-
-func (m *mutationResolver) CreateHydrate() (string, error) {
-	str, err := m.baseExercise.Hydrate()
-	if err != nil {
-		return "", errors.Wrapf(err, "m.baseExercise.Hydrate")
-	}
-	return str, nil
+	return &newExercise, nil
 }
 
 func (r *queryResolver) BaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {

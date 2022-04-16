@@ -12,17 +12,17 @@ extend type Query {
 }
 
 extend type Mutation {
-  createBaseExercise(input: baseExerciseInput): String!
+  createBaseExercise(input: baseExerciseInput): BaseExercise!
 }
 
 # base Exercise 
 type BaseExercise {
     id: String! 
     name: String! 
-    muscleGroup: [MuscleGroup]!
-    specificParts: [Body!]!
+    muscleGroup: String!
+    specificParts: String!
     level: Int! 
-    avoidGiven: [AvoidGiven]
+    avoidGiven: String
     movementType: String!
 }
 

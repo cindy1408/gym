@@ -7,13 +7,13 @@ type AvoidGiven struct {
 }
 
 type BaseExercise struct {
-	ID            string         `json:"id"`
-	Name          string         `json:"name"`
-	MuscleGroup   []*MuscleGroup `json:"muscleGroup"`
-	SpecificParts []*Body        `json:"specificParts"`
-	Level         int            `json:"level"`
-	AvoidGiven    []*AvoidGiven  `json:"avoidGiven"`
-	MovementType  string         `json:"movementType"`
+	ID            string  `json:"id"`
+	Name          string  `json:"name"`
+	MuscleGroup   string  `json:"muscleGroup"`
+	SpecificParts string  `json:"specificParts"`
+	Level         int     `json:"level"`
+	AvoidGiven    *string `json:"avoidGiven"`
+	MovementType  string  `json:"movementType"`
 }
 
 type Body struct {

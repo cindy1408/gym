@@ -1,7 +1,7 @@
 package graph
 
 import (
-	"github.com/cindy1408/gym/packages/gym"
+	"github.com/cindy1408/gym/src/graphql/graph/model"
 )
 
 // This file will not be regenerated automatically.
@@ -10,5 +10,5 @@ import (
 
 // used to pull the interface in
 type Resolver struct {
-	baseExercise gym.BaseExercise
+	baseExercise []model.BaseExercise
 }
