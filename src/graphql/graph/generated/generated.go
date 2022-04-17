@@ -81,7 +81,8 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateBaseExercise func(childComplexity int, input *model.BaseExerciseInput) int
+		CreateBaseExercise  func(childComplexity int, input *model.BaseExerciseInput) int
+		HydrateBaseExercise func(childComplexity int) int
 	}
 
 	Query struct {
@@ -108,6 +109,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error)
+	HydrateBaseExercise(ctx context.Context) ([]*model.BaseExercise, error)
 }
 type QueryResolver interface {
 	BaseExercises(ctx context.Context) ([]*model.BaseExercise, error)
@@ -278,6 +280,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateBaseExercise(childComplexity, args["input"].(*model.BaseExerciseInput)), true
 
+	case "Mutation.hydrateBaseExercise":
+		if e.complexity.Mutation.HydrateBaseExercise == nil {
+			break
+		}
+
+		return e.complexity.Mutation.HydrateBaseExercise(childComplexity), true
+
 	case "Query.baseExercises":
 		if e.complexity.Query.BaseExercises == nil {
 			break
@@ -446,6 +455,7 @@ extend type Query {
 
 extend type Mutation {
   createBaseExercise(input: baseExerciseInput): BaseExercise!
+  hydrateBaseExercise: [BaseExercise]!
 }
 
 # base Exercise 
@@ -1312,6 +1322,41 @@ func (ec *executionContext) _Mutation_createBaseExercise(ctx context.Context, fi
 	res := resTmp.(*model.BaseExercise)
 	fc.Result = res
 	return ec.marshalNBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_hydrateBaseExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().HydrateBaseExercise(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.BaseExercise)
+	fc.Result = res
+	return ec.marshalNBaseExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_baseExercises(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3424,6 +3469,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "createBaseExercise":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createBaseExercise(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "hydrateBaseExercise":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_hydrateBaseExercise(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
