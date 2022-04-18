@@ -21,3 +21,18 @@ Run docker-compose down --remove-orphans
 path packages/postgres
 
 docker compose up 
+
+DOCKER STARTS HERE!
+
+
+docker run --name gym --rm -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e PGDATA=/var/lib/postgresql/data/pgdata -v /tmp:/var/lib/postgresql/data -p 5432:5432 -it postgres:14.1-alpine
+
+
+docker exec -it gym /bin/sh
+
+psql --username postgres
+
+\l (lists the database inside the psql CLI)
+
+<!-- This will start the container -->
+docker-compose -f docker-compose.yml up

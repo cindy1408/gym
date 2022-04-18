@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -40,9 +41,18 @@ func main() {
 		log.Fatal(err)
 	}
 
-
 	// http.HandleFunc("/aboutMe", aboutMe)
 
+	// Docker for postgres
+	postgresInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", "postgres", 5432, "user", "password", "gym")
+
+	db, err := sql.Open("postgres", postgresInfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer db.Close()
+	
 }
 
 // New Database
