@@ -13,6 +13,7 @@ extend type Query {
 
 extend type Mutation {
   createBaseExercise(input: baseExerciseInput): BaseExercise!
+  hydrateBaseExercise: [BaseExercise]!
 }
 
 # base Exercise 
