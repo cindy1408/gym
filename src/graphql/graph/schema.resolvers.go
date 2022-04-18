@@ -27,24 +27,8 @@ func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.
 	return &newExercise, nil
 }
 
-func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.BaseExercise, error) {
-	for _, eachBaseExercise := range Data {
-		newExercise := model.BaseExercise{
-			ID:            uuid.NewString(),
-			Name:          eachBaseExercise.Name,
-			MuscleGroup:   eachBaseExercise.MuscleGroup,
-			SpecificParts: eachBaseExercise.SpecificParts,
-			Level:         eachBaseExercise.Level,
-			AvoidGiven:    eachBaseExercise.AvoidGiven,
-			MovementType:  eachBaseExercise.MovementType,
-		}
-		r.baseExercise = append(r.baseExercise, &newExercise)
-	}
-	return r.baseExercise, nil
-}
-
 func (r *queryResolver) BaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
-	return r.baseExercise, nil
+	return r.baseExercise, nil 
 }
 
 func (r *queryResolver) GetAllAvaliableBaseExercises(ctx context.Context) ([]string, error) {
