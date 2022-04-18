@@ -1,11 +1,11 @@
-version: '3.8'
+version: "3.9"
 services:
   db:
     image: postgres:14.1-alpine
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
     ports:
       - '5432:5432'
     volumes: 
@@ -25,9 +25,6 @@ services:
       NODE_ENV: production
       DB_HOST: db
       DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: postgres
     links:
       - db
     volumes:
