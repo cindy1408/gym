@@ -9,11 +9,14 @@ extend type Query {
   getAllWorkoutDay: [WorkoutPerDay!]!
   getAllUserWorkoutPlans: [UserWorkoutPlan!]!
   getMuscleSpecifics(input: muscleSpecificInput): String!
+  getUserIdByUserEmail(input: String!): String!
+  getAllUsers: [User!]!
 }
 
 extend type Mutation {
   createBaseExercise(input: baseExerciseInput): BaseExercise!
   hydrateBaseExercise: [BaseExercise]!
+  createUser(input: CreateUserInput!): User!
 }
 
 # base Exercise 
@@ -25,6 +28,19 @@ type BaseExercise {
     level: Int! 
     avoidGiven: String
     movementType: String!
+}
+
+type User {
+  id: String!
+  firstName: String! 
+  lastName: String!
+  email: String!
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
 }
 
 type Body {

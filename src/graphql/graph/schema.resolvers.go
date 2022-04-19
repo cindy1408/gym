@@ -43,6 +43,19 @@ func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.Ba
 	return r.baseExercise, nil
 }
 
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
+	// TODO: Check email is valid
+
+	newUser := model.User{
+		ID:        uuid.New().String(),
+		FirstName: input.FirstName,
+		LastName:  input.LastName,
+		Email:     input.Email,
+	}
+	r.users = append(r.users, &newUser)
+	return &newUser, nil
+}
+
 func (r *queryResolver) BaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
 	return r.baseExercise, nil
 }
@@ -65,6 +78,14 @@ func (r *queryResolver) GetAllUserWorkoutPlans(ctx context.Context) ([]*model.Us
 
 func (r *queryResolver) GetMuscleSpecifics(ctx context.Context, input *model.MuscleSpecificInput) (string, error) {
 	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) GetUserIDByUserEmail(ctx context.Context, input string) (string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) GetAllUsers(ctx context.Context) ([]*model.User, error) {
+	return r.users, nil 
 }
 
 // Mutation returns generated.MutationResolver implementation.

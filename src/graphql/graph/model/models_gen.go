@@ -20,6 +20,12 @@ type Body struct {
 	Name string `json:"name"`
 }
 
+type CreateUserInput struct {
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Email     string `json:"email"`
+}
+
 type EachExercise struct {
 	ID     string `json:"id"`
 	Name   string `json:"name"`
@@ -37,6 +43,13 @@ type MuscleGroupSpecific struct {
 	ID            string `json:"id"`
 	MuscleGroup   string `json:"muscleGroup"`
 	SpecificParts string `json:"specificParts"`
+}
+
+type User struct {
+	ID        string `json:"id"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Email     string `json:"email"`
 }
 
 type UserWorkoutPlan struct {

@@ -85,7 +85,17 @@ go get -u gorm.io/driver/postgres
 
 NEXT STEP: 
 
-Hydrating directly to the database (possibly server?)
+Hydrating directly to the database - DONE
+
+Create User 
+
+Read https://thenewstack.io/understanding-golang-packages/
+
+Get all User - done
+
+Get User Id by Email && check if email is valid 
+
+To be able to update baseExercise
 
 Look into docker compose up and docker compose down 
 
