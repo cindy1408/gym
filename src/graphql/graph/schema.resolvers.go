@@ -46,6 +46,14 @@ func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.Ba
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
+
+	if input.FirstName == "" {
+		return nil, errors.New("first name is missing")
+	} 
+	if input.LastName == "" {
+		return nil, errors.New("last name is missing")
+	}
+
 	_, err := mail.ParseAddress(input.Email)
 	if err != nil {
 		return nil, errors.New("invalid email address")
