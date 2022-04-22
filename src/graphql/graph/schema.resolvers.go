@@ -5,7 +5,9 @@ package graph
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"net/mail"
 
 	"github.com/cindy1408/gym/src/graphql/graph/generated"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
@@ -44,7 +46,10 @@ func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.Ba
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
-	// TODO: Check email is valid
+	_, err := mail.ParseAddress(input.Email)
+	if err != nil {
+		return nil, errors.New("invalid email address")
+	}
 
 	newUser := model.User{
 		ID:        uuid.New().String(),
@@ -85,7 +90,7 @@ func (r *queryResolver) GetUserIDByUserEmail(ctx context.Context, input string) 
 }
 
 func (r *queryResolver) GetAllUsers(ctx context.Context) ([]*model.User, error) {
-	return r.users, nil 
+	return r.users, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
