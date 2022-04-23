@@ -17,6 +17,7 @@ extend type Mutation {
   createBaseExercise(input: baseExerciseInput): BaseExercise!
   hydrateBaseExercise: [BaseExercise]!
   createUser(input: CreateUserInput!): User!
+  addUserWorkout(input: AddUserWorkoutInput!): WorkoutPerDay!
 }
 
 # base Exercise 
@@ -37,12 +38,6 @@ type User {
   email: String!
 }
 
-input CreateUserInput {
-  firstName: String!
-  lastName: String!
-  email: String!
-}
-
 type Body {
   name: String!
 }
@@ -54,6 +49,53 @@ type MuscleGroup {
 type AvoidGiven {
   name: String
 }
+# muscle group
+
+type MuscleGroupSpecific {
+    id: String!
+    muscleGroup: String! 
+    specificParts: String! 
+}
+
+# user workout plan 
+type UserWorkoutPlan {
+    userId: String! 
+    name: String!
+    cycle: [WorkoutPerDay!]!
+}
+
+# workout per day 
+type WorkoutPerDay {
+    id: String!
+    gymDay: String!
+    exercises: [EachExercise!]!
+}
+
+# Each Exercise 
+type EachExercise {
+    id: String!
+    name: String!
+    weight: Int!
+    Unit: String!
+    Sets: Int!
+    Reps: Int!
+}
+
+input AddUserWorkoutInput {
+  userEmail: String!
+  gymDay: String! 
+  exerciseName: String! 
+  weight: Int! 
+  Unit: String! 
+  Sets: Int! 
+  Reps: Int! 
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+}
 
 input baseExerciseInput {
     name: String!
@@ -64,43 +106,8 @@ input baseExerciseInput {
     movementType: String!
 }
 
-# Each Exercise 
-
-type EachExercise {
-    id: String!
-    name: String!
-    weight: Int!
-    Unit: String!
-    Sets: Int!
-    Reps: Int!
-}
-
-# muscle group
-
-type MuscleGroupSpecific {
-    id: String!
-    muscleGroup: String! 
-    specificParts: String! 
-}
-
 input muscleSpecificInput {
   name: String!
-}
-
-# user workout plan 
-
-type UserWorkoutPlan {
-    userId: String! 
-    name: String!
-    cycle: [WorkoutPerDay!]!
-}
-
-# workout per day 
-
-type WorkoutPerDay {
-    id: String!
-    gymDay: String!
-    exercises: [EachExercise!]!
 }
 
 # gymday: Push

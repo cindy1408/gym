@@ -46,10 +46,9 @@ func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.Ba
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
-
 	if input.FirstName == "" {
 		return nil, errors.New("first name is missing")
-	} 
+	}
 	if input.LastName == "" {
 		return nil, errors.New("last name is missing")
 	}
@@ -67,6 +66,11 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 	}
 	r.users = append(r.users, &newUser)
 	return &newUser, nil
+}
+
+func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (*model.WorkoutPerDay, error) {
+	//TODO
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) BaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
@@ -99,7 +103,7 @@ func (r *queryResolver) GetUserIDByUserEmail(ctx context.Context, input string) 
 	}
 	for _, user := range r.users {
 		if user.Email == input {
-			return user.ID, nil 
+			return user.ID, nil
 		}
 	}
 	return "", errors.New("please enter a valid email")

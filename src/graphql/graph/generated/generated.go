@@ -81,6 +81,7 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		AddUserWorkout      func(childComplexity int, input model.AddUserWorkoutInput) int
 		CreateBaseExercise  func(childComplexity int, input *model.BaseExerciseInput) int
 		CreateUser          func(childComplexity int, input model.CreateUserInput) int
 		HydrateBaseExercise func(childComplexity int) int
@@ -121,6 +122,7 @@ type MutationResolver interface {
 	CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error)
 	HydrateBaseExercise(ctx context.Context) ([]*model.BaseExercise, error)
 	CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error)
+	AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (*model.WorkoutPerDay, error)
 }
 type QueryResolver interface {
 	BaseExercises(ctx context.Context) ([]*model.BaseExercise, error)
@@ -280,6 +282,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.MuscleGroupSpecific.SpecificParts(childComplexity), true
+
+	case "Mutation.addUserWorkout":
+		if e.complexity.Mutation.AddUserWorkout == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addUserWorkout_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddUserWorkout(childComplexity, args["input"].(model.AddUserWorkoutInput)), true
 
 	case "Mutation.createBaseExercise":
 		if e.complexity.Mutation.CreateBaseExercise == nil {
@@ -531,6 +545,7 @@ extend type Mutation {
   createBaseExercise(input: baseExerciseInput): BaseExercise!
   hydrateBaseExercise: [BaseExercise]!
   createUser(input: CreateUserInput!): User!
+  addUserWorkout(input: AddUserWorkoutInput!): WorkoutPerDay!
 }
 
 # base Exercise 
@@ -551,12 +566,6 @@ type User {
   email: String!
 }
 
-input CreateUserInput {
-  firstName: String!
-  lastName: String!
-  email: String!
-}
-
 type Body {
   name: String!
 }
@@ -568,6 +577,53 @@ type MuscleGroup {
 type AvoidGiven {
   name: String
 }
+# muscle group
+
+type MuscleGroupSpecific {
+    id: String!
+    muscleGroup: String! 
+    specificParts: String! 
+}
+
+# user workout plan 
+type UserWorkoutPlan {
+    userId: String! 
+    name: String!
+    cycle: [WorkoutPerDay!]!
+}
+
+# workout per day 
+type WorkoutPerDay {
+    id: String!
+    gymDay: String!
+    exercises: [EachExercise!]!
+}
+
+# Each Exercise 
+type EachExercise {
+    id: String!
+    name: String!
+    weight: Int!
+    Unit: String!
+    Sets: Int!
+    Reps: Int!
+}
+
+input AddUserWorkoutInput {
+  userEmail: String!
+  gymDay: String! 
+  exerciseName: String! 
+  weight: Int! 
+  Unit: String! 
+  Sets: Int! 
+  Reps: Int! 
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+}
 
 input baseExerciseInput {
     name: String!
@@ -578,43 +634,8 @@ input baseExerciseInput {
     movementType: String!
 }
 
-# Each Exercise 
-
-type EachExercise {
-    id: String!
-    name: String!
-    weight: Int!
-    Unit: String!
-    Sets: Int!
-    Reps: Int!
-}
-
-# muscle group
-
-type MuscleGroupSpecific {
-    id: String!
-    muscleGroup: String! 
-    specificParts: String! 
-}
-
 input muscleSpecificInput {
   name: String!
-}
-
-# user workout plan 
-
-type UserWorkoutPlan {
-    userId: String! 
-    name: String!
-    cycle: [WorkoutPerDay!]!
-}
-
-# workout per day 
-
-type WorkoutPerDay {
-    id: String!
-    gymDay: String!
-    exercises: [EachExercise!]!
 }
 
 # gymday: Push
@@ -627,6 +648,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_addUserWorkout_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.AddUserWorkoutInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNAddUserWorkoutInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐAddUserWorkoutInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_createBaseExercise_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -1517,6 +1553,48 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	res := resTmp.(*model.User)
 	fc.Result = res
 	return ec.marshalNUser2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_addUserWorkout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_addUserWorkout_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddUserWorkout(rctx, args["input"].(model.AddUserWorkoutInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.WorkoutPerDay)
+	fc.Result = res
+	return ec.marshalNWorkoutPerDay2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐWorkoutPerDay(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_baseExercises(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3420,6 +3498,77 @@ func (ec *executionContext) ___Type_specifiedByURL(ctx context.Context, field gr
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputAddUserWorkoutInput(ctx context.Context, obj interface{}) (model.AddUserWorkoutInput, error) {
+	var it model.AddUserWorkoutInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "userEmail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userEmail"))
+			it.UserEmail, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "gymDay":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("gymDay"))
+			it.GymDay, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "exerciseName":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("exerciseName"))
+			it.ExerciseName, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "weight":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("weight"))
+			it.Weight, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "Unit":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Unit"))
+			it.Unit, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "Sets":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Sets"))
+			it.Sets, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "Reps":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Reps"))
+			it.Reps, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, obj interface{}) (model.CreateUserInput, error) {
 	var it model.CreateUserInput
 	asMap := map[string]interface{}{}
@@ -3905,6 +4054,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "createUser":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createUser(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "addUserWorkout":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addUserWorkout(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
@@ -4737,6 +4896,11 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
+func (ec *executionContext) unmarshalNAddUserWorkoutInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐAddUserWorkoutInput(ctx context.Context, v interface{}) (model.AddUserWorkoutInput, error) {
+	res, err := ec.unmarshalInputAddUserWorkoutInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNBaseExercise2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx context.Context, sel ast.SelectionSet, v model.BaseExercise) graphql.Marshaler {
 	return ec._BaseExercise(ctx, sel, &v)
 }
@@ -5035,6 +5199,10 @@ func (ec *executionContext) marshalNUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408�
 		return graphql.Null
 	}
 	return ec._UserWorkoutPlan(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNWorkoutPerDay2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐWorkoutPerDay(ctx context.Context, sel ast.SelectionSet, v model.WorkoutPerDay) graphql.Marshaler {
+	return ec._WorkoutPerDay(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNWorkoutPerDay2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐWorkoutPerDayᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.WorkoutPerDay) graphql.Marshaler {
