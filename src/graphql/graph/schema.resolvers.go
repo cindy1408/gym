@@ -94,7 +94,15 @@ func (r *queryResolver) GetMuscleSpecifics(ctx context.Context, input *model.Mus
 }
 
 func (r *queryResolver) GetUserIDByUserEmail(ctx context.Context, input string) (string, error) {
-	panic(fmt.Errorf("not implemented"))
+	if input == "" {
+		return "", errors.New("you must insert an email address")
+	}
+	for _, user := range r.users {
+		if user.Email == input {
+			return user.ID, nil 
+		}
+	}
+	return "", errors.New("please enter a valid email")
 }
 
 func (r *queryResolver) GetAllUsers(ctx context.Context) ([]*model.User, error) {
