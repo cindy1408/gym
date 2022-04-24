@@ -69,8 +69,28 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 }
 
 func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (*model.WorkoutPerDay, error) {
-	//TODO
-	panic(fmt.Errorf("not implemented"))
+	id, err := r.Query().GetUserIDByUserEmail(ctx, input.UserEmail)
+	if err != nil {
+		return nil, fmt.Errorf("error has occurred: ", err)
+	}
+
+	for _, eachExercise := range input.Exercises {
+		eachExercise := model.EachExercise{
+			UserID: id,
+			GymDay: input.GymDay,
+			Name:   eachExercise.Name,
+			Weight: eachExercise.Weight,
+			Sets:   eachExercise.Sets,
+			Reps:   eachExercise.Reps,
+		}
+		r.exercises = append(r.exercises, &eachExercise)
+	}
+
+	userWorkoutDay := model.WorkoutPerDay{
+		GymDay:    input.GymDay,
+		Exercises: r.exercises,
+	}
+	return &userWorkoutDay, nil
 }
 
 func (r *queryResolver) BaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {

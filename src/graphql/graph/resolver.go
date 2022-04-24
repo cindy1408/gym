@@ -11,5 +11,6 @@ import (
 // used to pull the interface in
 type Resolver struct {
 	baseExercise []*model.BaseExercise
-	users         []*model.User
+	users        []*model.User
+	exercises    []*model.EachExercise
 }

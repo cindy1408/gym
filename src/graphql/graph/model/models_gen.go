@@ -3,13 +3,9 @@
 package model
 
 type AddUserWorkoutInput struct {
-	UserEmail    string `json:"userEmail"`
-	GymDay       string `json:"gymDay"`
-	ExerciseName string `json:"exerciseName"`
-	Weight       int    `json:"weight"`
-	Unit         string `json:"Unit"`
-	Sets         int    `json:"Sets"`
-	Reps         int    `json:"Reps"`
+	UserEmail string               `json:"userEmail"`
+	GymDay    string               `json:"gymDay"`
+	Exercises []*EachExerciseInput `json:"exercises"`
 }
 
 type AvoidGiven struct {
@@ -37,7 +33,16 @@ type CreateUserInput struct {
 }
 
 type EachExercise struct {
-	ID     string `json:"id"`
+	UserID string `json:"userId"`
+	GymDay string `json:"gymDay"`
+	Name   string `json:"name"`
+	Weight int    `json:"weight"`
+	Unit   string `json:"Unit"`
+	Sets   int    `json:"Sets"`
+	Reps   int    `json:"Reps"`
+}
+
+type EachExerciseInput struct {
 	Name   string `json:"name"`
 	Weight int    `json:"weight"`
 	Unit   string `json:"Unit"`

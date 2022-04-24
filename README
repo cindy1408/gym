@@ -93,7 +93,9 @@ Read https://thenewstack.io/understanding-golang-packages/
 
 Get all User - done
 
-Get User Id by Email && check if email is valid 
+Get User Id by Email && check if email is valid - done 
+
+connect user id with exercise name, reps and sets (AddUserWorkout)
 
 To be able to update baseExercise
 

@@ -73,7 +73,8 @@ type WorkoutPerDay {
 
 # Each Exercise 
 type EachExercise {
-    id: String!
+    userId: String!
+    gymDay: String!
     name: String!
     weight: Int!
     Unit: String!
@@ -84,11 +85,15 @@ type EachExercise {
 input AddUserWorkoutInput {
   userEmail: String!
   gymDay: String! 
-  exerciseName: String! 
-  weight: Int! 
-  Unit: String! 
-  Sets: Int! 
-  Reps: Int! 
+  exercises: [EachExerciseInput!]
+}
+
+input EachExerciseInput {
+    name: String!
+    weight: Int!
+    Unit: String!
+    Sets: Int!
+    Reps: Int!
 }
 
 input CreateUserInput {
