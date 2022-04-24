@@ -58,6 +58,13 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		return nil, errors.New("invalid email address")
 	}
 
+	for _, user := range r.users {
+		if input.Email == user.Email {
+			return nil, errors.New("email already exists")
+		}
+
+	}
+
 	newUser := model.User{
 		ID:        uuid.New().String(),
 		FirstName: input.FirstName,
