@@ -16,11 +16,6 @@ import (
 
 const defaultPort = "8080"
 
-// func aboutMe(response http.ResponseWriter, r *http.Request) {
-// 	fmt.Printf("My name is Cindy")
-// 	fmt.Println("Endpoint hit: ABOUT ME")
-// }
-
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -39,8 +34,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// http.HandleFunc("/aboutMe", aboutMe)
 
 }
 
