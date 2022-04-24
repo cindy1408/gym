@@ -87,6 +87,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 			GymDay: input.GymDay,
 			Name:   eachExercise.Name,
 			Weight: eachExercise.Weight,
+			Unit:   eachExercise.Unit,
 			Sets:   eachExercise.Sets,
 			Reps:   eachExercise.Reps,
 		}
@@ -94,6 +95,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 	}
 
 	userWorkoutDay := model.WorkoutPerDay{
+		ID: uuid.New().String(),
 		GymDay:    input.GymDay,
 		Exercises: r.exercises,
 	}
