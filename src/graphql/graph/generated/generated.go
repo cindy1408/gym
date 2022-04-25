@@ -86,6 +86,7 @@ type ComplexityRoot struct {
 		CreateBaseExercise  func(childComplexity int, input *model.BaseExerciseInput) int
 		CreateUser          func(childComplexity int, input model.CreateUserInput) int
 		HydrateBaseExercise func(childComplexity int) int
+		UpdateBaseExercise  func(childComplexity int, input *model.BaseExerciseInput) int
 	}
 
 	Query struct {
@@ -121,6 +122,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error)
+	UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error)
 	HydrateBaseExercise(ctx context.Context) ([]*model.BaseExercise, error)
 	CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error)
 	AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (*model.WorkoutPerDay, error)
@@ -333,6 +335,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.HydrateBaseExercise(childComplexity), true
+
+	case "Mutation.updateBaseExercise":
+		if e.complexity.Mutation.UpdateBaseExercise == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateBaseExercise_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateBaseExercise(childComplexity, args["input"].(*model.BaseExerciseInput)), true
 
 	case "Query.baseExercises":
 		if e.complexity.Query.BaseExercises == nil {
@@ -551,6 +565,7 @@ extend type Query {
 
 extend type Mutation {
   createBaseExercise(input: baseExerciseInput): BaseExercise!
+  updateBaseExercise(input: baseExerciseInput): BaseExercise!
   hydrateBaseExercise: [BaseExercise]!
   createUser(input: CreateUserInput!): User!
   addUserWorkout(input: AddUserWorkoutInput!): WorkoutPerDay!
@@ -699,6 +714,21 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNCreateUserInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐCreateUserInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateBaseExercise_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.BaseExerciseInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalObaseExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1510,6 +1540,48 @@ func (ec *executionContext) _Mutation_createBaseExercise(ctx context.Context, fi
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Mutation().CreateBaseExercise(rctx, args["input"].(*model.BaseExerciseInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.BaseExercise)
+	fc.Result = res
+	return ec.marshalNBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateBaseExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateBaseExercise_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateBaseExercise(rctx, args["input"].(*model.BaseExerciseInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4115,6 +4187,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "createBaseExercise":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createBaseExercise(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "updateBaseExercise":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateBaseExercise(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)

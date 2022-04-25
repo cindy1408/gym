@@ -29,6 +29,10 @@ func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.
 	return &newExercise, nil
 }
 
+func (r *mutationResolver) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.BaseExercise, error) {
 	for _, eachBaseExercise := range Data {
 		newExercise := model.BaseExercise{
@@ -95,7 +99,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 	}
 
 	userWorkoutDay := model.WorkoutPerDay{
-		ID: uuid.New().String(),
+		ID:        uuid.New().String(),
 		GymDay:    input.GymDay,
 		Exercises: r.exercises,
 	}
