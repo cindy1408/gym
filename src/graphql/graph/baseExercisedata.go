@@ -8,7 +8,6 @@ import (
 var Data = []model.BaseExercise{
 	// Compound Movements
 	{ID: uuid.New().String(), Name: "Bench Press", MuscleGroup: "", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
-	{ID: uuid.New().String(), Name: "Bench Press", MuscleGroup: "", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
 	{ID: uuid.New().String(), Name: "Overhead Press", MuscleGroup: "", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
 	{ID: uuid.New().String(), Name: "Bent Over Rows", MuscleGroup: "", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
 	{ID: uuid.New().String(), Name: "Bent Over Rows", MuscleGroup: "", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},

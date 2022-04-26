@@ -24,13 +24,30 @@ func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.
 		AvoidGiven:    input.AvoidGiven,
 		MovementType:  input.MovementType,
 	}
-	r.baseExercise = append(r.baseExercise, &newExercise)
+	r.baseExercises = append(r.baseExercises, &newExercise)
 
 	return &newExercise, nil
 }
 
 func (r *mutationResolver) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
-	panic(fmt.Errorf("not implemented"))
+	updatedExercise := model.BaseExercise{}
+
+	for i, baseExercise := range r.baseExercises {
+		if input.Name == baseExercise.Name {
+			updatedExercise = model.BaseExercise{
+				ID: baseExercise.ID,
+				Name: input.Name,
+				MuscleGroup: input.MuscleGroup,
+				SpecificParts: input.SpecificParts,
+				Level: input.Level,
+				AvoidGiven: input.AvoidGiven,
+				MovementType: input.MovementType,
+			}
+			r.baseExercises[i] = &updatedExercise
+			return &updatedExercise, nil 
+		}
+	}
+	return nil, errors.New("unable to find exercise name in database")
 }
 
 func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.BaseExercise, error) {
@@ -44,9 +61,9 @@ func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.Ba
 			AvoidGiven:    eachBaseExercise.AvoidGiven,
 			MovementType:  eachBaseExercise.MovementType,
 		}
-		r.baseExercise = append(r.baseExercise, &newExercise)
+		r.baseExercises = append(r.baseExercises, &newExercise)
 	}
-	return r.baseExercise, nil
+	return r.baseExercises, nil
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
@@ -107,7 +124,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 }
 
 func (r *queryResolver) BaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
-	return r.baseExercise, nil
+	return r.baseExercises, nil
 }
 
 func (r *queryResolver) GetAllAvaliableBaseExercises(ctx context.Context) ([]string, error) {
