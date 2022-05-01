@@ -33,7 +33,7 @@ type BaseExercise {
 }
 
 type User {
-  id: String!
+  id: String! 
   firstName: String! 
   lastName: String!
   email: String!
@@ -116,7 +116,3 @@ input baseExerciseInput {
 input muscleSpecificInput {
   name: String!
 }
-
-# gymday: Push
-# exercises: [["bench", "20", "kg", "3", "4"], ["chest fly", "20", "kg", "3", "4"]]
-

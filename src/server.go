@@ -12,9 +12,15 @@ import (
 	"github.com/cindy1408/gym/src/graphql/graph/generated"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 const defaultPort = "8080"
+
+type server struct {
+	server http.Server
+	db     gorm.DB
+}
 
 func main() {
 	port := os.Getenv("PORT")
@@ -30,31 +36,28 @@ func main() {
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 
-	_, err := NewDatabase()
+	_, err := Connect()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 }
 
-// New Database
-func NewDatabase() (*gorm.DB, error) {
-	databaseURL := "postgresql://user:password@localhost:5432/gym?sslmode=disable"
-	fmt.Println("INIT DATABASE")
-	return gorm.Open(postgres.New(postgres.Config{
-		DSN: databaseURL,
-	}), &gorm.Config{})
-}
+func Connect() (gorm.DB, error) {
 
-// // connecting to the database
-// func (s *server) Connect() error {
-// 	dsn := "postgresql://user:password@localhost:5432/gym?sslmode=disable"
-// 	_, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-// 	if err != nil {
-// 		fmt.Sprintf("cannot connect to database! error: %w", err)
-// 		return nil
-// 	} else {
-// 		fmt.Println("Connected to database!")
-// 	}
-// 	return nil
-// }
+	connStr := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=disable",
+		"user",
+		"password",
+		"host",
+		"port",
+		"gym")
+
+	// connect to the postgres db just to be able to run the create db statement
+	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Silent)})
+	if err != nil {
+		return *db, err
+	}
+	fmt.Println("successful!")
+	return *db, nil
+}
