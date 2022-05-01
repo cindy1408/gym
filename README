@@ -50,32 +50,6 @@ go run github.com/99designs/gqlgen generate
 go run server.go
 
 
-
-Database 
-
-using postgres through docker 
-
-visit https://hub.docker.com/ and find the images needed (this case it was postgres)
-
-in the terminal: 
-
-(to login to your account)
-$docker login 
-
-
-
-in this case: 
-docker run --name gym -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres
-
-to stop postgres 
-$docker stop gym
-
-checks what's running 
-docker ps 
-
-need to remove the container and then run it again. 
-docker rm gym
-
 GORM: 
 
 go get -u gorm.io/gorm
@@ -99,7 +73,45 @@ connect user id with exercise name, reps and sets (AddUserWorkout) - done
 
 To be able to update baseExercise - done 
 
-to match the schema with the ERD diagram (tables)
+ERD diagram - done 
+
+set up docker 
+
+look into gorm migrate (migrate schema and create tables keeping them up to date)
+
+to match the schema with the ERD diagram (tables) 
 
 Look into docker compose up and docker compose down 
 
+
+
+
+
+
+
+
+// container is called gym, user is postgres with password as password
+docker run --name gym -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres
+
+// to  pre-populated database we need a docker file and docker image 
+
+// creates the image and tells Docker to build an image from the Dockerfile and give it a name of 'gym-db'
+docker build -t gym-db ./
+
+// to view docker image 
+
+docker images -a
+
+// to run the container 
+
+docker run -d --name gym -p 5432:5432 gym-db
+
+// to restart container 
+
+docker restart gym 
+
+
+BEEKEEPER 
+username: postgres
+password: password
+database: gym 
