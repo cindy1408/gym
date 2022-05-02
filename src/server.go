@@ -44,7 +44,6 @@ func main() {
 }
 
 func Connect() (gorm.DB, error) {
-
 	connStr := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=disable",
 		"user",
 		"password",
