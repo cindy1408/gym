@@ -33,13 +33,13 @@ type CreateUserInput struct {
 }
 
 type EachExercise struct {
-	UserID string `json:"userId"`
-	GymDay string `json:"gymDay"`
-	Name   string `json:"name"`
-	Weight int    `json:"weight"`
-	Unit   string `json:"Unit"`
-	Sets   int    `json:"Sets"`
-	Reps   int    `json:"Reps"`
+	ID              string `json:"id"`
+	WorkoutPerDayID string `json:"workoutPerDayId"`
+	Name            string `json:"name"`
+	Weight          int    `json:"weight"`
+	Unit            string `json:"Unit"`
+	Sets            int    `json:"Sets"`
+	Reps            int    `json:"Reps"`
 }
 
 type EachExerciseInput struct {
@@ -61,22 +61,36 @@ type MuscleGroupSpecific struct {
 }
 
 type User struct {
-	ID        string `json:"id"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	Email     string `json:"email"`
+	ID             string  `json:"id"`
+	WorkoutCycleID *string `json:"workoutCycleId"`
+	FirstName      string  `json:"firstName"`
+	LastName       string  `json:"lastName"`
+	Email          string  `json:"email"`
+	Password       string  `json:"password"`
 }
 
 type UserWorkoutPlan struct {
-	UserID string           `json:"userId"`
-	Name   string           `json:"name"`
-	Cycle  []*WorkoutPerDay `json:"cycle"`
+	WorkoutCycleID  string `json:"workoutCycleId"`
+	WorkoutPerDayID string `json:"workoutPerDayId"`
+	WorkoutDay      string `json:"workoutDay"`
+	ExerciseName    string `json:"exerciseName"`
+	Weight          int    `json:"weight"`
+	Unit            string `json:"unit"`
+	Sets            int    `json:"sets"`
+	Reps            int    `json:"reps"`
+}
+
+type WorkoutCycle struct {
+	ID     string `json:"id"`
+	UserID string `json:"userId"`
+	Name   string `json:"name"`
 }
 
 type WorkoutPerDay struct {
-	ID        string          `json:"id"`
-	GymDay    string          `json:"gymDay"`
-	Exercises []*EachExercise `json:"exercises"`
+	ID             string  `json:"id"`
+	WorkoutCycleID string  `json:"workoutCycleId"`
+	GymDay         string  `json:"gymDay"`
+	ExerciseID     *string `json:"exerciseId"`
 }
 
 type BaseExerciseInput struct {

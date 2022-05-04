@@ -35,16 +35,16 @@ func (r *mutationResolver) UpdateBaseExercise(ctx context.Context, input *model.
 	for i, baseExercise := range r.baseExercises {
 		if input.Name == baseExercise.Name {
 			updatedExercise = model.BaseExercise{
-				ID: baseExercise.ID,
-				Name: input.Name,
-				MuscleGroup: input.MuscleGroup,
+				ID:            baseExercise.ID,
+				Name:          input.Name,
+				MuscleGroup:   input.MuscleGroup,
 				SpecificParts: input.SpecificParts,
-				Level: input.Level,
-				AvoidGiven: input.AvoidGiven,
-				MovementType: input.MovementType,
+				Level:         input.Level,
+				AvoidGiven:    input.AvoidGiven,
+				MovementType:  input.MovementType,
 			}
 			r.baseExercises[i] = &updatedExercise
-			return &updatedExercise, nil 
+			return &updatedExercise, nil
 		}
 	}
 	return nil, errors.New("unable to find exercise name in database")
@@ -102,15 +102,16 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 		return nil, fmt.Errorf("error has occurred: ", err)
 	}
 
+	// TODO: get workoutPerDayID through user email to get user id, then user id in workout_cycle and use workout_cycle to get workout_day id in workout_day table
 	for _, eachExercise := range input.Exercises {
 		eachExercise := model.EachExercise{
-			UserID: id,
-			GymDay: input.GymDay,
-			Name:   eachExercise.Name,
-			Weight: eachExercise.Weight,
-			Unit:   eachExercise.Unit,
-			Sets:   eachExercise.Sets,
-			Reps:   eachExercise.Reps,
+			ID:              id,
+			WorkoutPerDayID: uuid.Nil.String(),
+			Name:            eachExercise.Name,
+			Weight:          eachExercise.Weight,
+			Unit:            eachExercise.Unit,
+			Sets:            eachExercise.Sets,
+			Reps:            eachExercise.Reps,
 		}
 		r.exercises = append(r.exercises, &eachExercise)
 	}
@@ -118,7 +119,8 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 	userWorkoutDay := model.WorkoutPerDay{
 		ID:        uuid.New().String(),
 		GymDay:    input.GymDay,
-		Exercises: r.exercises,
+		// TODO: Get exercise id 
+		ExerciseID: nil,
 	}
 	return &userWorkoutDay, nil
 }
