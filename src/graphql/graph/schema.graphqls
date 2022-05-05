@@ -3,12 +3,10 @@
 # https://gqlgen.com/getting-started/
 
 extend type Query {
-  baseExercises: [BaseExercise]!
-  getAllAvaliableBaseExercises: [String!]!
+  listAllBaseExercises: [BaseExercise]!
+
   getAllEachExercise: [EachExercise!]!
-  getAllWorkoutDay: [WorkoutPerDay!]!
-  getAllUserWorkoutPlans: [UserWorkoutPlan!]!
-  getMuscleSpecifics(input: muscleSpecificInput): String!
+
   getUserIdByUserEmail(input: String!): String!
   getAllUsers: [User!]!
 }
@@ -16,9 +14,14 @@ extend type Query {
 extend type Mutation {
   createBaseExercise(input: baseExerciseInput): BaseExercise!
   updateBaseExercise(input: baseExerciseInput): BaseExercise!
+
   hydrateBaseExercise: [BaseExercise]!
+
   createUser(input: CreateUserInput!): User!
-  addUserWorkout(input: AddUserWorkoutInput!): WorkoutPerDay!
+
+  createWorkoutPerDay(input: CreateWorkoutPerDayInput!): WorkoutPerDay!
+  
+  createEachExercise(input: CreateEachExerciseInput!): EachExercise!
 }
 
 type User {
@@ -45,9 +48,22 @@ type WorkoutPerDay {
     exerciseId: String
 }
 
+input CreateWorkoutPerDayInput {
+  gymDay: String! 
+}
+
 # Each Exercise 
 type EachExercise {
     id:String!
+    workoutPerDayId: String!
+    name: String!
+    weight: Int!
+    Unit: String!
+    Sets: Int!
+    Reps: Int!
+}
+
+input CreateEachExerciseInput {
     workoutPerDayId: String!
     name: String!
     weight: Int!
@@ -88,35 +104,11 @@ type MuscleGroupSpecific {
     specificParts: String! 
 }
 
-type UserWorkoutPlan {
-  workoutCycleId: String!
-  workoutPerDayId: String!
-  workoutDay: String!
-  exerciseName: String! 
-  weight: Int!
-  unit: String!
-  sets: Int! 
-  reps: Int!
-}
-
-input AddUserWorkoutInput {
-  userEmail: String!
-  gymDay: String! 
-  exercises: [EachExerciseInput!]
-}
-
-input EachExerciseInput {
-    name: String!
-    weight: Int!
-    Unit: String!
-    Sets: Int!
-    Reps: Int!
-}
-
 input CreateUserInput {
   firstName: String!
   lastName: String!
   email: String!
+  password: String!
 }
 
 input baseExerciseInput {

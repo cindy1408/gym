@@ -73,6 +73,9 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 	if input.LastName == "" {
 		return nil, errors.New("last name is missing")
 	}
+	if input.Password == "" {
+		return nil, errors.New("password is missing")
+	}
 
 	_, err := mail.ParseAddress(input.Email)
 	if err != nil {
@@ -83,7 +86,6 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		if input.Email == user.Email {
 			return nil, errors.New("email already exists")
 		}
-
 	}
 
 	newUser := model.User{
@@ -91,61 +93,25 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		FirstName: input.FirstName,
 		LastName:  input.LastName,
 		Email:     input.Email,
+		Password:  input.Password,
 	}
 	r.users = append(r.users, &newUser)
 	return &newUser, nil
 }
 
-func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (*model.WorkoutPerDay, error) {
-	id, err := r.Query().GetUserIDByUserEmail(ctx, input.UserEmail)
-	if err != nil {
-		return nil, fmt.Errorf("error has occurred: ", err)
-	}
-
-	// TODO: get workoutPerDayID through user email to get user id, then user id in workout_cycle and use workout_cycle to get workout_day id in workout_day table
-	for _, eachExercise := range input.Exercises {
-		eachExercise := model.EachExercise{
-			ID:              id,
-			WorkoutPerDayID: uuid.Nil.String(),
-			Name:            eachExercise.Name,
-			Weight:          eachExercise.Weight,
-			Unit:            eachExercise.Unit,
-			Sets:            eachExercise.Sets,
-			Reps:            eachExercise.Reps,
-		}
-		r.exercises = append(r.exercises, &eachExercise)
-	}
-
-	userWorkoutDay := model.WorkoutPerDay{
-		ID:        uuid.New().String(),
-		GymDay:    input.GymDay,
-		// TODO: Get exercise id 
-		ExerciseID: nil,
-	}
-	return &userWorkoutDay, nil
+func (r *mutationResolver) CreateWorkoutPerDay(ctx context.Context, input model.CreateWorkoutPerDayInput) (*model.WorkoutPerDay, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) BaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
-	return r.baseExercises, nil
+func (r *mutationResolver) CreateEachExercise(ctx context.Context, input model.CreateEachExerciseInput) (*model.EachExercise, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) GetAllAvaliableBaseExercises(ctx context.Context) ([]string, error) {
+func (r *queryResolver) ListAllBaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *queryResolver) GetAllWorkoutDay(ctx context.Context) ([]*model.WorkoutPerDay, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *queryResolver) GetAllUserWorkoutPlans(ctx context.Context) ([]*model.UserWorkoutPlan, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *queryResolver) GetMuscleSpecifics(ctx context.Context, input *model.MuscleSpecificInput) (string, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 

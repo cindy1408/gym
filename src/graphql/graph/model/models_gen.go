@@ -2,12 +2,6 @@
 
 package model
 
-type AddUserWorkoutInput struct {
-	UserEmail string               `json:"userEmail"`
-	GymDay    string               `json:"gymDay"`
-	Exercises []*EachExerciseInput `json:"exercises"`
-}
-
 type AvoidGiven struct {
 	Name *string `json:"name"`
 }
@@ -26,10 +20,24 @@ type Body struct {
 	Name string `json:"name"`
 }
 
+type CreateEachExerciseInput struct {
+	WorkoutPerDayID string `json:"workoutPerDayId"`
+	Name            string `json:"name"`
+	Weight          int    `json:"weight"`
+	Unit            string `json:"Unit"`
+	Sets            int    `json:"Sets"`
+	Reps            int    `json:"Reps"`
+}
+
 type CreateUserInput struct {
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Email     string `json:"email"`
+	Password  string `json:"password"`
+}
+
+type CreateWorkoutPerDayInput struct {
+	GymDay string `json:"gymDay"`
 }
 
 type EachExercise struct {
@@ -40,14 +48,6 @@ type EachExercise struct {
 	Unit            string `json:"Unit"`
 	Sets            int    `json:"Sets"`
 	Reps            int    `json:"Reps"`
-}
-
-type EachExerciseInput struct {
-	Name   string `json:"name"`
-	Weight int    `json:"weight"`
-	Unit   string `json:"Unit"`
-	Sets   int    `json:"Sets"`
-	Reps   int    `json:"Reps"`
 }
 
 type MuscleGroup struct {
@@ -67,17 +67,6 @@ type User struct {
 	LastName       string  `json:"lastName"`
 	Email          string  `json:"email"`
 	Password       string  `json:"password"`
-}
-
-type UserWorkoutPlan struct {
-	WorkoutCycleID  string `json:"workoutCycleId"`
-	WorkoutPerDayID string `json:"workoutPerDayId"`
-	WorkoutDay      string `json:"workoutDay"`
-	ExerciseName    string `json:"exerciseName"`
-	Weight          int    `json:"weight"`
-	Unit            string `json:"unit"`
-	Sets            int    `json:"sets"`
-	Reps            int    `json:"reps"`
 }
 
 type WorkoutCycle struct {
