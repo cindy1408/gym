@@ -2,27 +2,6 @@
 #
 # https://gqlgen.com/getting-started/
 
-extend type Query {
-  listAllBaseExercises: [BaseExercise]!
-
-  getAllEachExercise: [EachExercise!]!
-
-  getUserIdByUserEmail(input: String!): String!
-  getAllUsers: [User!]!
-}
-
-extend type Mutation {
-  createBaseExercise(input: baseExerciseInput): BaseExercise!
-  updateBaseExercise(input: baseExerciseInput): BaseExercise!
-
-  hydrateBaseExercise: [BaseExercise]!
-
-  createUser(input: CreateUserInput!): User!
-
-  createWorkoutPerDay(input: CreateWorkoutPerDayInput!): WorkoutPerDay!
-  
-  createEachExercise(input: CreateEachExerciseInput!): EachExercise!
-}
 
 type User {
   id: String!
@@ -31,6 +10,7 @@ type User {
   lastName: String!
   email: String!
   password: String!
+  workoutCyle: WorkoutCycle
 }
 
 # user workout plan 
@@ -38,6 +18,7 @@ type WorkoutCycle {
     id: String!
     userId: String! 
     name: String!
+    workoutPerDay: [WorkoutPerDay]
 }
 
 # workout per day 
@@ -46,6 +27,7 @@ type WorkoutPerDay {
     workoutCycleId: String!
     gymDay: String!
     exerciseId: String
+    eachExercises: [eachExercises]
 }
 
 input CreateWorkoutPerDayInput {
@@ -124,6 +106,26 @@ input muscleSpecificInput {
   name: String!
 }
 
-# gymday: Push
-# exercises: [["bench", "20", "kg", "3", "4"], ["chest fly", "20", "kg", "3", "4"]]
 
+
+extend type Query {
+  listAllBaseExercises: [BaseExercise]!
+
+  getAllEachExercise: [EachExercise!]!
+
+  getUserIdByUserEmail(input: String!): String!
+  getAllUsers: [User!]!
+}
+
+extend type Mutation {
+  createBaseExercise(input: baseExerciseInput): BaseExercise!
+  updateBaseExercise(input: baseExerciseInput): BaseExercise!
+
+  hydrateBaseExercise: [BaseExercise]!
+
+  createUser(input: CreateUserInput!): User!
+
+  createWorkoutPerDay(input: CreateWorkoutPerDayInput!): WorkoutPerDay!
+  
+  createEachExercise(input: CreateEachExerciseInput!): EachExercise!
+}
