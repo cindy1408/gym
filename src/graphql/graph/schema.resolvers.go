@@ -147,11 +147,11 @@ func (r *queryResolver) GetAllAvaliableBaseExercises(ctx context.Context) ([]str
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
+func (r *mutationResolver) CreateEachExercise(ctx context.Context, input model.CreateEachExerciseInput) (*model.EachExercise, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) GetAllWorkoutDay(ctx context.Context) ([]*model.WorkoutPerDay, error) {
+func (r *queryResolver) ListAllBaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 

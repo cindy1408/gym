@@ -1,33 +1,10 @@
-# gym
 
-setting up structure with graphql 
+Create User 
+Using user id, create workout_cycle 
+insert workout cycle back into user 
+create workout_day using workout cycle id 
+create exercise using workout day id and then insert exercise id back into workout_day
 
-go mod init github.com/cindy1408/gym 
-
-cd src/cmd/graphql
-go get github.com/99designs/gqlgen
-
-this creates the structure 
-go run github.com/99designs/gqlgen init 
-
-to generate the schema and gen file 
-path: /graphql 
-go run github.com/99designs/gqlgen generate 
-
-
-
-THE STRUCTURE 
-
-gym/
-├── src
-│   ├── cmd
-|       ├── go-graphql
-|           ├── <code for the GraphQL api>
-│   ├── pkg
-|       ├── todo
-|           ├── <ToDo Interface - no implementations>
-|       ├── postgres
-|           ├── <Postgres implementation of the ToDo Interface>
 
 
 

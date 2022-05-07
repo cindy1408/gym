@@ -40,7 +40,62 @@ type User {
   lastName: String!
   email: String!
   password: String!
+  workoutCyle: WorkoutCycle
 }
+
+# user workout plan 
+type WorkoutCycle {
+    id: String!
+    userId: String! 
+    name: String!
+    workoutPerDay: [WorkoutPerDay]
+}
+
+# workout per day 
+type WorkoutPerDay {
+    id: String!
+    workoutCycleId: String!
+    gymDay: String!
+    exerciseId: String
+    eachExercises: [eachExercises]
+}
+
+input CreateWorkoutPerDayInput {
+  gymDay: String! 
+}
+
+# Each Exercise 
+type EachExercise {
+    id:String!
+    workoutPerDayId: String!
+    name: String!
+    weight: Int!
+    Unit: String!
+    Sets: Int!
+    Reps: Int!
+}
+
+input CreateEachExerciseInput {
+    workoutPerDayId: String!
+    name: String!
+    weight: Int!
+    Unit: String!
+    Sets: Int!
+    Reps: Int!
+}
+
+
+# base Exercise 
+type BaseExercise {
+    id: String! 
+    name: String! 
+    muscleGroup: String!
+    specificParts: String!
+    level: Int! 
+    avoidGiven: String
+    movementType: String!
+}
+
 
 type Body {
   name: String!
@@ -59,45 +114,6 @@ type MuscleGroupSpecific {
     id: String!
     muscleGroup: String! 
     specificParts: String! 
-}
-
-# user workout plan 
-type UserWorkoutPlan {
-    userId: String! 
-    name: String!
-    cycle: [WorkoutPerDay!]!
-}
-
-# workout per day 
-type WorkoutPerDay {
-    id: String!
-    gymDay: String!
-    exercises: [EachExercise!]!
-}
-
-# Each Exercise 
-type EachExercise {
-    userId: String!
-    gymDay: String!
-    name: String!
-    weight: Int!
-    Unit: String!
-    Sets: Int!
-    Reps: Int!
-}
-
-input AddUserWorkoutInput {
-  userEmail: String!
-  gymDay: String! 
-  exercises: [EachExerciseInput!]
-}
-
-input EachExerciseInput {
-    name: String!
-    weight: Int!
-    Unit: String!
-    Sets: Int!
-    Reps: Int!
 }
 
 input CreateUserInput {
