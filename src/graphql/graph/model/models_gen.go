@@ -30,6 +30,7 @@ type CreateUserInput struct {
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Email     string `json:"email"`
+	Password  string `json:"password"`
 }
 
 type EachExercise struct {
@@ -65,6 +66,7 @@ type User struct {
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Email     string `json:"email"`
+	Password  string `json:"password"`
 }
 
 type UserWorkoutPlan struct {
@@ -86,6 +88,12 @@ type BaseExerciseInput struct {
 	Level         int     `json:"level"`
 	AvoidGiven    *string `json:"avoidGiven"`
 	MovementType  string  `json:"movementType"`
+}
+
+type IncreaseRepInput struct {
+	UserID       string `json:"userID"`
+	GymDay       string `json:"gymDay"`
+	ExerciseName string `json:"exerciseName"`
 }
 
 type MuscleSpecificInput struct {
