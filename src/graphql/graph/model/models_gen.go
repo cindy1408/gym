@@ -61,12 +61,11 @@ type MuscleGroupSpecific struct {
 }
 
 type User struct {
-	ID             string  `json:"id"`
-	WorkoutCycleID *string `json:"workoutCycleId"`
-	FirstName      string  `json:"firstName"`
-	LastName       string  `json:"lastName"`
-	Email          string  `json:"email"`
-	Password       string  `json:"password"`
+	ID        string `json:"id"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
 }
 
 type WorkoutCycle struct {
@@ -89,6 +88,12 @@ type BaseExerciseInput struct {
 	Level         int     `json:"level"`
 	AvoidGiven    *string `json:"avoidGiven"`
 	MovementType  string  `json:"movementType"`
+}
+
+type IncreaseRepInput struct {
+	UserID       string `json:"userID"`
+	GymDay       string `json:"gymDay"`
+	ExerciseName string `json:"exerciseName"`
 }
 
 type MuscleSpecificInput struct {
