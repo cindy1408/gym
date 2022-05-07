@@ -2,6 +2,12 @@
 
 package model
 
+type AddUserWorkoutInput struct {
+	UserEmail string               `json:"userEmail"`
+	GymDay    string               `json:"gymDay"`
+	Exercises []*EachExerciseInput `json:"exercises"`
+}
+
 type AvoidGiven struct {
 	Name *string `json:"name"`
 }
@@ -20,15 +26,6 @@ type Body struct {
 	Name string `json:"name"`
 }
 
-type CreateEachExerciseInput struct {
-	WorkoutPerDayID string `json:"workoutPerDayId"`
-	Name            string `json:"name"`
-	Weight          int    `json:"weight"`
-	Unit            string `json:"Unit"`
-	Sets            int    `json:"Sets"`
-	Reps            int    `json:"Reps"`
-}
-
 type CreateUserInput struct {
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
@@ -36,18 +33,22 @@ type CreateUserInput struct {
 	Password  string `json:"password"`
 }
 
-type CreateWorkoutPerDayInput struct {
+type EachExercise struct {
+	UserID string `json:"userId"`
 	GymDay string `json:"gymDay"`
+	Name   string `json:"name"`
+	Weight int    `json:"weight"`
+	Unit   string `json:"Unit"`
+	Sets   int    `json:"Sets"`
+	Reps   int    `json:"Reps"`
 }
 
-type EachExercise struct {
-	ID              string `json:"id"`
-	WorkoutPerDayID string `json:"workoutPerDayId"`
-	Name            string `json:"name"`
-	Weight          int    `json:"weight"`
-	Unit            string `json:"Unit"`
-	Sets            int    `json:"Sets"`
-	Reps            int    `json:"Reps"`
+type EachExerciseInput struct {
+	Name   string `json:"name"`
+	Weight int    `json:"weight"`
+	Unit   string `json:"Unit"`
+	Sets   int    `json:"Sets"`
+	Reps   int    `json:"Reps"`
 }
 
 type MuscleGroup struct {
@@ -68,17 +69,16 @@ type User struct {
 	Password  string `json:"password"`
 }
 
-type WorkoutCycle struct {
-	ID     string `json:"id"`
-	UserID string `json:"userId"`
-	Name   string `json:"name"`
+type UserWorkoutPlan struct {
+	UserID string           `json:"userId"`
+	Name   string           `json:"name"`
+	Cycle  []*WorkoutPerDay `json:"cycle"`
 }
 
 type WorkoutPerDay struct {
-	ID             string  `json:"id"`
-	WorkoutCycleID string  `json:"workoutCycleId"`
-	GymDay         string  `json:"gymDay"`
-	ExerciseID     *string `json:"exerciseId"`
+	ID        string          `json:"id"`
+	GymDay    string          `json:"gymDay"`
+	Exercises []*EachExercise `json:"exercises"`
 }
 
 type BaseExerciseInput struct {

@@ -135,7 +135,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 	return &userWorkoutDay, nil
 }
 
-func (r *mutationResolver) IncreaseRep( ctx context.Context, input model.IncreaseRepInput) (*model.UserWorkoutPlan, error) {
+func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.IncreaseRepInput) (*model.UserWorkoutPlan, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
@@ -147,11 +147,11 @@ func (r *queryResolver) GetAllAvaliableBaseExercises(ctx context.Context) ([]str
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *mutationResolver) CreateEachExercise(ctx context.Context, input model.CreateEachExerciseInput) (*model.EachExercise, error) {
+func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) ListAllBaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
+func (r *queryResolver) GetAllWorkoutDay(ctx context.Context) ([]*model.WorkoutPerDay, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
@@ -179,7 +179,7 @@ func (r *queryResolver) GetUserWorkoutPlansByEmail(ctx context.Context, input st
 }
 
 func (r *queryResolver) GetAllUserWorkoutPlans(ctx context.Context) ([]*model.UserWorkoutPlan, error) {
-	return r.userWorkoutPlans, nil 
+	return r.userWorkoutPlans, nil
 }
 
 func (r *queryResolver) GetMuscleSpecifics(ctx context.Context, input *model.MuscleSpecificInput) (string, error) {
