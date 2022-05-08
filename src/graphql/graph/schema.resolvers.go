@@ -139,12 +139,16 @@ func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.Increase
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) BaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
+func (r *queryResolver) BaseExercises(ctx context.Context)([]*model.BaseExercise, error) {
 	return r.baseExercises, nil
 }
 
 func (r *queryResolver) GetAllAvaliableBaseExercises(ctx context.Context) ([]string, error) {
-	panic(fmt.Errorf("not implemented"))
+	var allBaseExerciseNames []string
+	for _, eachBaseExercise := range r.baseExercises {
+		allBaseExerciseNames = append(allBaseExerciseNames, eachBaseExercise.Name)
+	}
+	return allBaseExerciseNames, nil 
 }
 
 func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
