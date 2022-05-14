@@ -1,7 +1,10 @@
 package graph
 
 import (
+	"fmt"
+
 	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"gorm.io/gorm"
 )
 
 // This file will not be regenerated automatically.
@@ -10,9 +13,22 @@ import (
 
 // used to pull the interface in
 type Resolver struct {
+	DB               *gorm.DB
 	baseExercises    []*model.BaseExercise
 	users            []*model.User
 	exercises        []*model.EachExercise
 	userWorkoutPlans []*model.UserWorkoutPlan
 	userWorkoutDays  []*model.WorkoutPerDay
+}
+
+func (r *Resolver) Init() error {
+	err := r.DB.AutoMigrate(
+		&model.BaseExercise{},
+	)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return r.DB.Error
 }

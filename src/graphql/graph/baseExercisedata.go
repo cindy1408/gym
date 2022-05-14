@@ -10,7 +10,6 @@ var Data = []model.BaseExercise{
 	{ID: uuid.New().String(), Name: "Bench Press", MuscleGroup: "", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
 	{ID: uuid.New().String(), Name: "Overhead Press", MuscleGroup: "", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
 	{ID: uuid.New().String(), Name: "Bent Over Rows", MuscleGroup: "", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
-	{ID: uuid.New().String(), Name: "Bent Over Rows", MuscleGroup: "", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
 	{ID: uuid.New().String(), Name: "Convental Deadlifts", MuscleGroup: "", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
 	{ID: uuid.New().String(), Name: "Romanian Deadlift", MuscleGroup: "", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
 	{ID: uuid.New().String(), Name: "Sumo Deadlifts", MuscleGroup: "", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},

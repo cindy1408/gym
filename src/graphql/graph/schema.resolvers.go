@@ -52,17 +52,43 @@ func (r *mutationResolver) UpdateBaseExercise(ctx context.Context, input *model.
 
 func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.BaseExercise, error) {
 	for _, eachBaseExercise := range Data {
-		newExercise := model.BaseExercise{
-			ID:            uuid.New().String(),
-			Name:          eachBaseExercise.Name,
-			MuscleGroup:   eachBaseExercise.MuscleGroup,
-			SpecificParts: eachBaseExercise.SpecificParts,
-			Level:         eachBaseExercise.Level,
-			AvoidGiven:    eachBaseExercise.AvoidGiven,
-			MovementType:  eachBaseExercise.MovementType,
+
+		rows, err := r.DB.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
+		if err != nil {
+			fmt.Printf("%v , selecting database\n", eachBaseExercise.Name)
 		}
-		r.baseExercises = append(r.baseExercises, &newExercise)
+		defer rows.Close()
+		var name, avoidGiven string
+		var count int
+
+		for rows.Next() {
+			rows.Scan(&name, &avoidGiven)
+			if avoidGiven == "" {
+				if name == eachBaseExercise.Name {
+					count += 1
+					fmt.Printf("%v , exists in database!\n", eachBaseExercise.Name)
+				}
+			} else if name == eachBaseExercise.Name && &avoidGiven == eachBaseExercise.AvoidGiven {
+				fmt.Printf("%v , exists in database!\n", eachBaseExercise.Name)
+			}
+		}
+		if count == 0 {
+			r.DB.Create(eachBaseExercise)
+		}
+
+		// newExercise := model.BaseExercise{
+		// 	ID:            uuid.New().String(),
+		// 	Name:          eachBaseExercise.Name,
+		// 	MuscleGroup:   eachBaseExercise.MuscleGroup,
+		// 	SpecificParts: eachBaseExercise.SpecificParts,
+		// 	Level:         eachBaseExercise.Level,
+		// 	AvoidGiven:    eachBaseExercise.AvoidGiven,
+		// 	MovementType:  eachBaseExercise.MovementType,
+		// }
+		// r.baseExercises = append(r.baseExercises, &newExercise)
+
 	}
+
 	return r.baseExercises, nil
 }
 
@@ -139,7 +165,7 @@ func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.Increase
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) BaseExercises(ctx context.Context)([]*model.BaseExercise, error) {
+func (r *queryResolver) BaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
 	return r.baseExercises, nil
 }
 
@@ -148,7 +174,7 @@ func (r *queryResolver) GetAllAvaliableBaseExercises(ctx context.Context) ([]str
 	for _, eachBaseExercise := range r.baseExercises {
 		allBaseExerciseNames = append(allBaseExerciseNames, eachBaseExercise.Name)
 	}
-	return allBaseExerciseNames, nil 
+	return allBaseExerciseNames, nil
 }
 
 func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {

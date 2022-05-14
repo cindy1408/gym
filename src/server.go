@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,20 +13,51 @@ import (
 	"github.com/cindy1408/gym/src/graphql/graph/generated"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 const defaultPort = "8080"
 
 type server struct {
-	server http.Server
-	db     gorm.DB
+	server *http.Server
+	db     *gorm.DB
+	ctx    context.Context
 }
+
+type Server interface {
+	Connect() error
+	// ListenAndServe() error
+	// Shutdown(context.Context) error
+}
+
+const (
+	compressLevel = 5
+)
 
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
+	}
+
+	var db *gorm.DB
+
+	db, _ = NewDatabase()
+
+	resolver := &graph.Resolver{
+		DB: db,
+	}
+
+	// populate database tables
+	if err := resolver.Init(); err != nil {
+		log.Fatal("failed to create database: %v", err)
+	}
+
+	m := resolver.Mutation()
+
+	var ctx context.Context
+	_, err := m.HydrateBaseExercise(ctx)
+	if err != nil {
+		fmt.Println("Hydrate base exercise failed")
 	}
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
@@ -36,27 +68,13 @@ func main() {
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 
-	_, err := Connect()
-	if err != nil {
-		log.Fatal(err)
-	}
-
 }
 
-func Connect() (gorm.DB, error) {
-	connStr := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=disable",
-		"user",
-		"password",
-		"host",
-		"port",
-		"gym")
-
-	// connect to the postgres db just to be able to run the create db statement
-	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Silent)})
-	if err != nil {
-		return *db, err
-	}
-	fmt.Println("successful!")
-	return *db, nil
+func NewDatabase() (*gorm.DB, error) {
+	databaseURL := "host=localhost user=postgres password=password dbname=gym port=5432 sslmode=disable"
+	// databaseURL := "postgresql://user:password@localhost:5432/gym?sslmode=disable"
+	fmt.Println("INIT DATABASE")
+	return gorm.Open(postgres.New(postgres.Config{
+		DSN: databaseURL,
+	}), &gorm.Config{})
 }
