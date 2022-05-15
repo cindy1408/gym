@@ -75,18 +75,6 @@ func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.Ba
 		if count == 0 {
 			r.DB.Create(eachBaseExercise)
 		}
-
-		// newExercise := model.BaseExercise{
-		// 	ID:            uuid.New().String(),
-		// 	Name:          eachBaseExercise.Name,
-		// 	MuscleGroup:   eachBaseExercise.MuscleGroup,
-		// 	SpecificParts: eachBaseExercise.SpecificParts,
-		// 	Level:         eachBaseExercise.Level,
-		// 	AvoidGiven:    eachBaseExercise.AvoidGiven,
-		// 	MovementType:  eachBaseExercise.MovementType,
-		// }
-		// r.baseExercises = append(r.baseExercises, &newExercise)
-
 	}
 
 	return r.baseExercises, nil
