@@ -24,6 +24,7 @@ type Resolver struct {
 func (r *Resolver) Init() error {
 	err := r.DB.AutoMigrate(
 		&model.BaseExercise{},
+		&model.User{},
 	)
 	if err != nil {
 		fmt.Println(err)
