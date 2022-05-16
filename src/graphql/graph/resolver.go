@@ -25,6 +25,10 @@ func (r *Resolver) Init() error {
 	err := r.DB.AutoMigrate(
 		&model.BaseExercise{},
 		&model.User{},
+		&model.MuscleGroup{}, 
+		&model.UserWorkoutPlan{}, 
+		&model.WorkoutPerDay{}, 
+		&model.EachExercise{},
 	)
 	if err != nil {
 		fmt.Println(err)
