@@ -9,7 +9,8 @@ type AddUserWorkoutInput struct {
 }
 
 type AvoidGiven struct {
-	Name *string `json:"name"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type BaseExercise struct {
@@ -22,10 +23,6 @@ type BaseExercise struct {
 	MovementType  string  `json:"movementType"`
 }
 
-type Body struct {
-	Name string `json:"name"`
-}
-
 type CreateUserInput struct {
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
@@ -34,13 +31,13 @@ type CreateUserInput struct {
 }
 
 type EachExercise struct {
-	UserID string `json:"userId"`
-	GymDay string `json:"gymDay"`
-	Name   string `json:"name"`
-	Weight int    `json:"weight"`
-	Unit   string `json:"Unit"`
-	Sets   int    `json:"Sets"`
-	Reps   int    `json:"Reps"`
+	ID              string `json:"id"`
+	WorkoutPerDayID string `json:"workoutPerDayID"`
+	Name            string `json:"name"`
+	Weight          int    `json:"weight"`
+	Unit            string `json:"Unit"`
+	Sets            int    `json:"Sets"`
+	Reps            int    `json:"Reps"`
 }
 
 type EachExerciseInput struct {
@@ -52,13 +49,13 @@ type EachExerciseInput struct {
 }
 
 type MuscleGroup struct {
+	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
-type MuscleGroupSpecific struct {
-	ID            string `json:"id"`
-	MuscleGroup   string `json:"muscleGroup"`
-	SpecificParts string `json:"specificParts"`
+type SpecificParts struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type User struct {
@@ -71,15 +68,15 @@ type User struct {
 }
 
 type UserWorkoutPlan struct {
-	UserID string           `json:"userId"`
-	Name   string           `json:"name"`
-	Cycle  []*WorkoutPerDay `json:"cycle"`
+	UserID          string  `json:"userId"`
+	Name            string  `json:"name"`
+	WorkoutPerDayID *string `json:"workoutPerDayId"`
 }
 
 type WorkoutPerDay struct {
-	ID        string          `json:"id"`
-	GymDay    string          `json:"gymDay"`
-	Exercises []*EachExercise `json:"exercises"`
+	ID         string `json:"id"`
+	GymDay     string `json:"gymDay"`
+	ExerciseID string `json:"exerciseID"`
 }
 
 type BaseExerciseInput struct {

@@ -23,6 +23,21 @@ extend type Mutation {
   increaseRep(input: increaseRepInput!): UserWorkoutPlan!
 }
 
+type MuscleGroup {
+  id: String!
+  name: String! 
+}
+
+type SpecificParts {
+  id: String!
+  name: String!
+}
+
+type AvoidGiven {
+  id: String!
+  name: String!
+}
+
 # base Exercise 
 type BaseExercise {
     id: String! 
@@ -43,43 +58,24 @@ type User {
   UserWorkoutPlanId: String!
 }
 
-type Body {
-  name: String!
-}
-
-type MuscleGroup {
-  name: String! 
-}
-
-type AvoidGiven {
-  name: String
-}
-# muscle group
-
-type MuscleGroupSpecific {
-    id: String!
-    muscleGroup: String! 
-    specificParts: String! 
-}
-
 # user workout plan 
 type UserWorkoutPlan {
     userId: String! 
     name: String!
-    cycle: [WorkoutPerDay!]!
+    workoutPerDayId: String
 }
 
 # workout per day 
 type WorkoutPerDay {
     id: String!
     gymDay: String!
-    exercises: [EachExercise!]!
+    exerciseID: String!
 }
 
 # Each Exercise 
 type EachExercise {
-    userId: String!
-    gymDay: String!
+    id: String!
+    workoutPerDayID: String!
     name: String!
     weight: Int!
     Unit: String!

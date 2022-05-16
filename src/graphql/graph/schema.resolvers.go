@@ -120,8 +120,8 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 
 	for _, eachExercise := range input.Exercises {
 		eachExercise := model.EachExercise{
-			UserID: id,
-			GymDay: input.GymDay,
+			// UserID: id,
+			// GymDay: input.GymDay,
 			Name:   eachExercise.Name,
 			Weight: eachExercise.Weight,
 			Unit:   eachExercise.Unit,
@@ -132,9 +132,9 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 	}
 
 	userWorkoutDay := model.WorkoutPerDay{
-		ID:        uuid.New().String(),
-		GymDay:    input.GymDay,
-		Exercises: r.exercises,
+		ID:     uuid.New().String(),
+		GymDay: input.GymDay,
+		// Exercises: r.exercises,
 	}
 
 	r.userWorkoutDays = append(r.userWorkoutDays, &userWorkoutDay)
@@ -142,7 +142,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 	userWorkoutPlan := model.UserWorkoutPlan{
 		UserID: id,
 		Name:   input.GymDay,
-		Cycle:  r.userWorkoutDays,
+		// Cycle:  r.userWorkoutDays,
 	}
 	r.userWorkoutPlans = append(r.userWorkoutPlans, &userWorkoutPlan)
 
@@ -189,7 +189,7 @@ func (r *queryResolver) GetUserWorkoutPlansByEmail(ctx context.Context, input st
 			userWorkoutPlanResult = model.UserWorkoutPlan{
 				UserID: workoutPlan.UserID,
 				Name:   workoutPlan.Name,
-				Cycle:  workoutPlan.Cycle,
+				// Cycle:  workoutPlan.Cycle,
 			}
 		}
 	}
