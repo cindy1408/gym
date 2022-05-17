@@ -26,6 +26,7 @@ func (r *Resolver) Init() error {
 		&model.BaseExercise{},
 		&model.User{},
 		&model.MuscleGroup{}, 
+		&model.SpecificParts{},
 		&model.UserWorkoutPlan{}, 
 		&model.WorkoutPerDay{}, 
 		&model.EachExercise{},

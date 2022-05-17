@@ -55,7 +55,7 @@ type User {
   lastName: String!
   email: String!
   password: String!
-  UserWorkoutPlanId: String!
+  UserWorkoutPlanId: String
 }
 
 # user workout plan 

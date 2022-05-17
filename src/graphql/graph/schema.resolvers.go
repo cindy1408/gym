@@ -14,6 +14,10 @@ import (
 	"github.com/google/uuid"
 )
 
+// type MutationResolver struct {
+// 	DB *gorm.DB
+// }
+
 func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
 	newExercise := model.BaseExercise{
 		ID:            uuid.New().String(),
@@ -95,21 +99,30 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		return nil, errors.New("invalid email address")
 	}
 
-	for _, user := range r.users {
-		if input.Email == user.Email {
-			return nil, errors.New("email already exists")
-		}
-	}
-
-	newUser := model.User{
+	newUser := &model.User{
 		ID:        uuid.New().String(),
 		FirstName: input.FirstName,
 		LastName:  input.LastName,
 		Email:     input.Email,
 		Password:  input.Password,
 	}
-	r.users = append(r.users, &newUser)
-	return &newUser, nil
+
+	_ = r.DB.Model(&model.User{})
+	// if err != nil {
+	// 	fmt.Printf("%v , selecting database\n", newUser.Email)
+	// }
+	// defer rows.Close()
+	// var email string
+
+	// for rows.Next() {
+	// 	rows.Scan(&email)
+	// 	if email == newUser.Email {
+	// 		fmt.Printf("%v , exists in database!\n", newUser.Email)
+	// 	} else {
+	// 		r.DB.Create(newUser)
+	// 	}
+	// }
+	return newUser, nil
 }
 
 func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (*model.WorkoutPerDay, error) {
@@ -120,8 +133,6 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 
 	for _, eachExercise := range input.Exercises {
 		eachExercise := model.EachExercise{
-			// UserID: id,
-			// GymDay: input.GymDay,
 			Name:   eachExercise.Name,
 			Weight: eachExercise.Weight,
 			Unit:   eachExercise.Unit,
@@ -134,7 +145,6 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 	userWorkoutDay := model.WorkoutPerDay{
 		ID:     uuid.New().String(),
 		GymDay: input.GymDay,
-		// Exercises: r.exercises,
 	}
 
 	r.userWorkoutDays = append(r.userWorkoutDays, &userWorkoutDay)
