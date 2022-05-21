@@ -74,12 +74,14 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		AddUserWorkout      func(childComplexity int, input model.AddUserWorkoutInput) int
-		CreateBaseExercise  func(childComplexity int, input *model.BaseExerciseInput) int
-		CreateUser          func(childComplexity int, input model.CreateUserInput) int
-		HydrateBaseExercise func(childComplexity int) int
-		IncreaseRep         func(childComplexity int, input model.IncreaseRepInput) int
-		UpdateBaseExercise  func(childComplexity int, input *model.BaseExerciseInput) int
+		AddUserWorkout       func(childComplexity int, input model.AddUserWorkoutInput) int
+		CreateBaseExercise   func(childComplexity int, input *model.BaseExerciseInput) int
+		CreateUser           func(childComplexity int, input model.CreateUserInput) int
+		HydrateBaseExercise  func(childComplexity int) int
+		HydrateMuscleGroups  func(childComplexity int) int
+		HydrateSpecificParts func(childComplexity int) int
+		IncreaseRep          func(childComplexity int, input model.IncreaseRepInput) int
+		UpdateBaseExercise   func(childComplexity int, input *model.BaseExerciseInput) int
 	}
 
 	Query struct {
@@ -125,6 +127,8 @@ type MutationResolver interface {
 	CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error)
 	UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error)
 	HydrateBaseExercise(ctx context.Context) ([]*model.BaseExercise, error)
+	HydrateMuscleGroups(ctx context.Context) ([]*model.MuscleGroup, error)
+	HydrateSpecificParts(ctx context.Context) ([]*model.SpecificParts, error)
 	CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error)
 	AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (*model.WorkoutPerDay, error)
 	IncreaseRep(ctx context.Context, input model.IncreaseRepInput) (*model.UserWorkoutPlan, error)
@@ -324,6 +328,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.HydrateBaseExercise(childComplexity), true
+
+	case "Mutation.hydrateMuscleGroups":
+		if e.complexity.Mutation.HydrateMuscleGroups == nil {
+			break
+		}
+
+		return e.complexity.Mutation.HydrateMuscleGroups(childComplexity), true
+
+	case "Mutation.hydrateSpecificParts":
+		if e.complexity.Mutation.HydrateSpecificParts == nil {
+			break
+		}
+
+		return e.complexity.Mutation.HydrateSpecificParts(childComplexity), true
 
 	case "Mutation.increaseRep":
 		if e.complexity.Mutation.IncreaseRep == nil {
@@ -609,6 +627,8 @@ extend type Mutation {
   createBaseExercise(input: baseExerciseInput): BaseExercise!
   updateBaseExercise(input: baseExerciseInput): BaseExercise!
   hydrateBaseExercise: [BaseExercise]!
+  hydrateMuscleGroups: [MuscleGroup]!
+  hydrateSpecificParts: [SpecificParts]!
   createUser(input: CreateUserInput!): User!
   addUserWorkout(input: AddUserWorkoutInput!): WorkoutPerDay!
   increaseRep(input: increaseRepInput!): UserWorkoutPlan!
@@ -1637,6 +1657,76 @@ func (ec *executionContext) _Mutation_hydrateBaseExercise(ctx context.Context, f
 	res := resTmp.([]*model.BaseExercise)
 	fc.Result = res
 	return ec.marshalNBaseExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_hydrateMuscleGroups(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().HydrateMuscleGroups(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.MuscleGroup)
+	fc.Result = res
+	return ec.marshalNMuscleGroup2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐMuscleGroup(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_hydrateSpecificParts(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().HydrateSpecificParts(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.SpecificParts)
+	fc.Result = res
+	return ec.marshalNSpecificParts2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐSpecificParts(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4426,6 +4516,26 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "hydrateMuscleGroups":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_hydrateMuscleGroups(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "hydrateSpecificParts":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_hydrateSpecificParts(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "createUser":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createUser(ctx, field)
@@ -5510,6 +5620,82 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
+func (ec *executionContext) marshalNMuscleGroup2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐMuscleGroup(ctx context.Context, sel ast.SelectionSet, v []*model.MuscleGroup) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOMuscleGroup2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐMuscleGroup(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalNSpecificParts2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐSpecificParts(ctx context.Context, sel ast.SelectionSet, v []*model.SpecificParts) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOSpecificParts2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐSpecificParts(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -6040,6 +6226,20 @@ func (ec *executionContext) unmarshalOEachExerciseInput2ᚕᚖgithubᚗcomᚋcin
 		}
 	}
 	return res, nil
+}
+
+func (ec *executionContext) marshalOMuscleGroup2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐMuscleGroup(ctx context.Context, sel ast.SelectionSet, v *model.MuscleGroup) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._MuscleGroup(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSpecificParts2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐSpecificParts(ctx context.Context, sel ast.SelectionSet, v *model.SpecificParts) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SpecificParts(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {

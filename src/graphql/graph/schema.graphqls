@@ -18,6 +18,8 @@ extend type Mutation {
   createBaseExercise(input: baseExerciseInput): BaseExercise!
   updateBaseExercise(input: baseExerciseInput): BaseExercise!
   hydrateBaseExercise: [BaseExercise]!
+  hydrateMuscleGroups: [MuscleGroup]!
+  hydrateSpecificParts: [SpecificParts]!
   createUser(input: CreateUserInput!): User!
   addUserWorkout(input: AddUserWorkoutInput!): WorkoutPerDay!
   increaseRep(input: increaseRepInput!): UserWorkoutPlan!

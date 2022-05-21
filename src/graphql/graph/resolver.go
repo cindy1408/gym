@@ -17,6 +17,7 @@ type Resolver struct {
 	baseExercises    []*model.BaseExercise
 	users            []*model.User
 	exercises        []*model.EachExercise
+	muscleGroups     []*model.MuscleGroup
 	userWorkoutPlans []*model.UserWorkoutPlan
 	userWorkoutDays  []*model.WorkoutPerDay
 }
@@ -25,10 +26,10 @@ func (r *Resolver) Init() error {
 	err := r.DB.AutoMigrate(
 		&model.BaseExercise{},
 		&model.User{},
-		&model.MuscleGroup{}, 
+		&model.MuscleGroup{},
 		&model.SpecificParts{},
-		&model.UserWorkoutPlan{}, 
-		&model.WorkoutPerDay{}, 
+		&model.UserWorkoutPlan{},
+		&model.WorkoutPerDay{},
 		&model.EachExercise{},
 	)
 	if err != nil {

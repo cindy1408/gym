@@ -14,10 +14,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// type MutationResolver struct {
-// 	DB *gorm.DB
-// }
-
 func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
 	newExercise := model.BaseExercise{
 		ID:            uuid.New().String(),
@@ -55,13 +51,14 @@ func (r *mutationResolver) UpdateBaseExercise(ctx context.Context, input *model.
 }
 
 func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.BaseExercise, error) {
-	for _, eachBaseExercise := range Data {
+	for _, eachBaseExercise := range BaseExerciseData {
 
 		rows, err := r.DB.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
 		if err != nil {
 			fmt.Printf("%v , selecting database\n", eachBaseExercise.Name)
 		}
 		defer rows.Close()
+
 		var name, avoidGiven string
 		var count int
 
@@ -82,6 +79,39 @@ func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.Ba
 	}
 
 	return r.baseExercises, nil
+}
+
+func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) ([]*model.MuscleGroup, error) {
+	for _, eachMuscleGroup := range MuscleGroupData {
+		rows, err := r.DB.Model(&model.MuscleGroup{}).Select("name").Rows()
+		if err != nil {
+			fmt.Printf("%v, selecting database\n", eachMuscleGroup.Name)
+		}
+		defer rows.Close()
+
+		var name string 
+		var count int 
+
+		for rows.Next() {
+			rows.Scan(&name)
+			if name == eachMuscleGroup.Name {
+				count += 1 
+				fmt.Printf("%v , exists in database!\n", eachMuscleGroup.Name)
+			}
+		}
+		if count == 0 {
+			muscleGroup := model.MuscleGroup {
+				ID: uuid.NewString(),
+				Name: eachMuscleGroup.Name,
+			}
+			r.DB.Create(muscleGroup)
+		}
+	}
+	return r.muscleGroups, nil 
+}
+
+func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) ([]*model.SpecificParts, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
@@ -107,10 +137,10 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		Password:  input.Password,
 	}
 
-	_ = r.DB.Model(&model.User{})
-	// if err != nil {
-	// 	fmt.Printf("%v , selecting database\n", newUser.Email)
-	// }
+	_, err = r.DB.Model(&model.User{}).Select("email").Rows()
+	if err != nil {
+		fmt.Printf("%v , selecting database\n", newUser.Email)
+	}
 	// defer rows.Close()
 	// var email string
 
@@ -152,7 +182,6 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 	userWorkoutPlan := model.UserWorkoutPlan{
 		UserID: id,
 		Name:   input.GymDay,
-		// Cycle:  r.userWorkoutDays,
 	}
 	r.userWorkoutPlans = append(r.userWorkoutPlans, &userWorkoutPlan)
 
@@ -199,7 +228,6 @@ func (r *queryResolver) GetUserWorkoutPlansByEmail(ctx context.Context, input st
 			userWorkoutPlanResult = model.UserWorkoutPlan{
 				UserID: workoutPlan.UserID,
 				Name:   workoutPlan.Name,
-				// Cycle:  workoutPlan.Cycle,
 			}
 		}
 	}

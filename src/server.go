@@ -60,6 +60,11 @@ func main() {
 		fmt.Println("Hydrate base exercise failed")
 	}
 
+	_, err = m.HydrateMuscleGroups(ctx)
+	if err != nil {
+		fmt.Println("Hydrate group exercise failed")
+	}
+
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 	// standard package to make api calls
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))

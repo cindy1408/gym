@@ -5,7 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
-var Data = []model.BaseExercise{
+var BaseExerciseData = []model.BaseExercise{
 	// Compound Movements
 	{ID: uuid.New().String(), Name: "Bench Press", MuscleGroup: "Chest", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
 	{ID: uuid.New().String(), Name: "Overhead Press", MuscleGroup: "Arms", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
