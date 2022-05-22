@@ -65,7 +65,8 @@ func main() {
 		fmt.Println("Hydrate group exercise failed")
 	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	// Remember to pass the initialised database to the server
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{DB: db}}))
 	// standard package to make api calls
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
@@ -78,7 +79,6 @@ func main() {
 func NewDatabase() (*gorm.DB, error) {
 	databaseURL := "host=localhost user=postgres password=password dbname=gym port=5432 sslmode=disable"
 	// databaseURL := "postgresql://user:password@localhost:5432/gym?sslmode=disable"
-	fmt.Println("INIT DATABASE")
 	return gorm.Open(postgres.New(postgres.Config{
 		DSN: databaseURL,
 	}), &gorm.Config{})

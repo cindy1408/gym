@@ -114,7 +114,7 @@ func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) ([]*model.S
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
+func (m *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
 	if input.FirstName == "" {
 		return nil, errors.New("first name is missing")
 	}
@@ -136,12 +136,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		Password:  input.Password,
 	}
 
-	err = r.DB.Create(&newUser).Error
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	rows, err := r.DB.Model(&model.User{}).Select("email").Rows()
+	rows, err := m.DB.Model(&model.User{}).Select("email").Rows()
 	if err != nil {
 		fmt.Printf("%v , selecting database\n", newUser.Email)
 	}
@@ -153,7 +148,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		if email == newUser.Email {
 			fmt.Printf("%v , exists in database!\n", newUser.Email)
 		} else {
-			r.DB.Create(newUser)
+			m.DB.Create(&newUser)
 		}
 	}
 

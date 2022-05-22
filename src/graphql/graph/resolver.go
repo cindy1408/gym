@@ -36,6 +36,6 @@ func (r *Resolver) Init() error {
 		fmt.Println(err)
 		return err
 	}
-	
+
 	return r.DB.Error
 }
