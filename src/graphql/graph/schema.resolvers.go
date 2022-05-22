@@ -89,25 +89,25 @@ func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) ([]*model.Mu
 		}
 		defer rows.Close()
 
-		var name string 
-		var count int 
+		var name string
+		var count int
 
 		for rows.Next() {
 			rows.Scan(&name)
 			if name == eachMuscleGroup.Name {
-				count += 1 
+				count += 1
 				fmt.Printf("%v , exists in database!\n", eachMuscleGroup.Name)
 			}
 		}
 		if count == 0 {
-			muscleGroup := model.MuscleGroup {
-				ID: uuid.NewString(),
+			muscleGroup := model.MuscleGroup{
+				ID:   uuid.NewString(),
 				Name: eachMuscleGroup.Name,
 			}
 			r.DB.Create(muscleGroup)
 		}
 	}
-	return r.muscleGroups, nil 
+	return r.muscleGroups, nil
 }
 
 func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) ([]*model.SpecificParts, error) {
@@ -129,30 +129,39 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		return nil, errors.New("invalid email address")
 	}
 
-	newUser := &model.User{
-		ID:        uuid.New().String(),
+	newUser := model.User{
 		FirstName: input.FirstName,
 		LastName:  input.LastName,
 		Email:     input.Email,
 		Password:  input.Password,
 	}
 
-	_, err = r.DB.Model(&model.User{}).Select("email").Rows()
+	err = r.DB.Create(&newUser).Error
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	rows, err := r.DB.Model(&model.User{}).Select("email").Rows()
 	if err != nil {
 		fmt.Printf("%v , selecting database\n", newUser.Email)
 	}
-	// defer rows.Close()
-	// var email string
+	defer rows.Close()
+	var email string
 
-	// for rows.Next() {
-	// 	rows.Scan(&email)
-	// 	if email == newUser.Email {
-	// 		fmt.Printf("%v , exists in database!\n", newUser.Email)
-	// 	} else {
-	// 		r.DB.Create(newUser)
-	// 	}
-	// }
-	return newUser, nil
+	for rows.Next() {
+		rows.Scan(&email)
+		if email == newUser.Email {
+			fmt.Printf("%v , exists in database!\n", newUser.Email)
+		} else {
+			r.DB.Create(newUser)
+		}
+	}
+
+	return nil, nil
+}
+
+func NewDatabase() {
+	panic("unimplemented")
 }
 
 func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (*model.WorkoutPerDay, error) {
@@ -220,7 +229,6 @@ func (r *queryResolver) GetUserWorkoutPlansByEmail(ctx context.Context, input st
 	}
 	for _, user := range r.users {
 		if user.Email == input {
-			userID = user.ID
 		}
 	}
 	for _, workoutPlan := range r.userWorkoutPlans {
@@ -248,7 +256,7 @@ func (r *queryResolver) GetUserIDByUserEmail(ctx context.Context, input string) 
 	}
 	for _, user := range r.users {
 		if user.Email == input {
-			return user.ID, nil
+			// return user.ID, nil
 		}
 	}
 	return "", errors.New("please enter a valid email")
