@@ -130,6 +130,7 @@ func (m *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 	}
 
 	newUser := model.User{
+		ID:        uuid.New().String(),
 		FirstName: input.FirstName,
 		LastName:  input.LastName,
 		Email:     input.Email,
@@ -141,18 +142,21 @@ func (m *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		fmt.Printf("%v , selecting database\n", newUser.Email)
 	}
 	defer rows.Close()
-	var email string
 
+	var email string
+	var count int
 	for rows.Next() {
 		rows.Scan(&email)
 		if email == newUser.Email {
 			fmt.Printf("%v , exists in database!\n", newUser.Email)
-		} else {
-			m.DB.Create(&newUser)
 		}
 	}
 
-	return nil, nil
+	if count == 0 {
+		m.DB.Create(&newUser)
+	}
+
+	return &newUser, nil
 }
 
 func NewDatabase() {
