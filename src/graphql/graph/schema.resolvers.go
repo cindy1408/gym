@@ -149,7 +149,12 @@ func (m *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		rows.Scan(&email)
 		if email == newUser.Email {
 			fmt.Printf("%v , exists in database!\n", newUser.Email)
-			count ++ 
+			count++
+			
+			var existUser model.User
+			m.DB.Model(&model.User{}).First(&model.User{Email: email}).Scan(&existUser)
+			
+			return &existUser, nil
 		}
 	}
 
