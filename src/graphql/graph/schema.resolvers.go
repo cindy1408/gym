@@ -150,10 +150,10 @@ func (m *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		if email == newUser.Email {
 			fmt.Printf("%v , exists in database!\n", newUser.Email)
 			count++
-			
+
 			var existUser model.User
 			m.DB.Model(&model.User{}).First(&model.User{Email: email}).Scan(&existUser)
-			
+
 			return &existUser, nil
 		}
 	}
@@ -163,10 +163,6 @@ func (m *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 	}
 
 	return &newUser, nil
-}
-
-func NewDatabase() {
-	panic("unimplemented")
 }
 
 func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (*model.WorkoutPerDay, error) {
@@ -226,25 +222,8 @@ func (r *queryResolver) GetAllWorkoutDay(ctx context.Context) ([]*model.WorkoutP
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) GetUserWorkoutPlansByEmail(ctx context.Context, input string) (*model.UserWorkoutPlan, error) {
-	var userID string
-	var userWorkoutPlanResult model.UserWorkoutPlan
-	if input == "" {
-		return nil, fmt.Errorf("empty user email")
-	}
-	for _, user := range r.users {
-		if user.Email == input {
-		}
-	}
-	for _, workoutPlan := range r.userWorkoutPlans {
-		if userID == workoutPlan.UserID {
-			userWorkoutPlanResult = model.UserWorkoutPlan{
-				UserID: workoutPlan.UserID,
-				Name:   workoutPlan.Name,
-			}
-		}
-	}
-	return &userWorkoutPlanResult, nil
+func (q *queryResolver) GetUserWorkoutPlansByEmail(ctx context.Context, email string) (*model.UserWorkoutPlan, error) {
+	return nil, nil
 }
 
 func (r *queryResolver) GetAllUserWorkoutPlans(ctx context.Context) ([]*model.UserWorkoutPlan, error) {
@@ -255,16 +234,23 @@ func (r *queryResolver) GetMuscleSpecifics(ctx context.Context, input *model.Mus
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) GetUserIDByUserEmail(ctx context.Context, input string) (string, error) {
-	if input == "" {
+func (q *queryResolver) GetUserIDByUserEmail(ctx context.Context, email string) (string, error) {
+	if email == "" {
 		return "", errors.New("you must insert an email address")
 	}
-	for _, user := range r.users {
-		if user.Email == input {
-			// return user.ID, nil
-		}
+
+	rows, err := q.DB.Model(&model.User{}).Select("email").Rows()
+	if err != nil {
+		fmt.Printf("%v , selecting database\n", email)
 	}
-	return "", errors.New("please enter a valid email")
+	defer rows.Close()
+
+	var existUser model.User
+	for rows.Next() {
+		q.DB.Model(&model.User{}).First(&model.User{Email: email}).Scan(&existUser)
+	}
+
+	return existUser.ID, nil
 }
 
 func (r *queryResolver) GetAllUsers(ctx context.Context) ([]*model.User, error) {
