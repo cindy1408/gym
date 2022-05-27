@@ -33,6 +33,7 @@ type MuscleGroup {
 type SpecificParts {
   id: String!
   name: String!
+  muscleGroup: String!
 }
 
 type AvoidGiven {
@@ -117,6 +118,7 @@ input baseExerciseInput {
 
 input muscleSpecificInput {
   name: String!
+  MuscleGroup: String!
 }
 
 input increaseRepInput {

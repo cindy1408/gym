@@ -54,8 +54,9 @@ type MuscleGroup struct {
 }
 
 type SpecificParts struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	MuscleGroup string `json:"muscleGroup"`
 }
 
 type User struct {
@@ -95,5 +96,6 @@ type IncreaseRepInput struct {
 }
 
 type MuscleSpecificInput struct {
-	Name string `json:"name"`
+	Name        string `json:"name"`
+	MuscleGroup string `json:"MuscleGroup"`
 }

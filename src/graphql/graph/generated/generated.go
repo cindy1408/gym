@@ -97,8 +97,9 @@ type ComplexityRoot struct {
 	}
 
 	SpecificParts struct {
-		ID   func(childComplexity int) int
-		Name func(childComplexity int) int
+		ID          func(childComplexity int) int
+		MuscleGroup func(childComplexity int) int
+		Name        func(childComplexity int) int
 	}
 
 	User struct {
@@ -452,6 +453,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SpecificParts.ID(childComplexity), true
 
+	case "SpecificParts.muscleGroup":
+		if e.complexity.SpecificParts.MuscleGroup == nil {
+			break
+		}
+
+		return e.complexity.SpecificParts.MuscleGroup(childComplexity), true
+
 	case "SpecificParts.name":
 		if e.complexity.SpecificParts.Name == nil {
 			break
@@ -642,6 +650,7 @@ type MuscleGroup {
 type SpecificParts {
   id: String!
   name: String!
+  muscleGroup: String!
 }
 
 type AvoidGiven {
@@ -726,6 +735,7 @@ input baseExerciseInput {
 
 input muscleSpecificInput {
   name: String!
+  MuscleGroup: String!
 }
 
 input increaseRepInput {
@@ -2316,6 +2326,41 @@ func (ec *executionContext) _SpecificParts_name(ctx context.Context, field graph
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SpecificParts_muscleGroup(ctx context.Context, field graphql.CollectedField, obj *model.SpecificParts) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SpecificParts",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MuscleGroup, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4192,6 +4237,14 @@ func (ec *executionContext) unmarshalInputmuscleSpecificInput(ctx context.Contex
 			if err != nil {
 				return it, err
 			}
+		case "MuscleGroup":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("MuscleGroup"))
+			it.MuscleGroup, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -4851,6 +4904,16 @@ func (ec *executionContext) _SpecificParts(ctx context.Context, sel ast.Selectio
 		case "name":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._SpecificParts_name(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "muscleGroup":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._SpecificParts_muscleGroup(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)

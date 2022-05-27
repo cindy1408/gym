@@ -111,10 +111,35 @@ func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) ([]*model.Mu
 }
 
 func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) ([]*model.SpecificParts, error) {
-	panic(fmt.Errorf("not implemented"))
+	for _, eachSpecificMuscleGroup := range SpecificMuscleGroupData {
+		rows, err := r.DB.Model(&model.SpecificParts{}).Select("name").Rows()
+		if err != nil {
+			fmt.Printf("%v, selecting database\n", eachSpecificMuscleGroup.Name)
+		}
+		defer rows.Close()
+
+		var name string
+		var count int
+
+		for rows.Next() {
+			rows.Scan(&name)
+			if name == eachSpecificMuscleGroup.Name {
+				fmt.Printf("%v, exists in database!\n", eachSpecificMuscleGroup.Name)
+			}
+		}
+		if count == 0 {
+			specificMuscleGroup := model.SpecificParts{
+				ID: uuid.NewString(),
+				Name: eachSpecificMuscleGroup.Name, 
+				MuscleGroup: eachSpecificMuscleGroup.MuscleGroup,
+			}
+			r.DB.Create(specificMuscleGroup)
+		}
+	}
+	return nil, nil 
 }
 
-func (m *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
 	if input.FirstName == "" {
 		return nil, errors.New("first name is missing")
 	}
@@ -137,7 +162,7 @@ func (m *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		Password:  input.Password,
 	}
 
-	rows, err := m.DB.Model(&model.User{}).Select("email").Rows()
+	rows, err := r.DB.Model(&model.User{}).Select("email").Rows()
 	if err != nil {
 		fmt.Printf("%v , selecting database\n", newUser.Email)
 	}
@@ -152,14 +177,14 @@ func (m *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 			count++
 
 			var existUser model.User
-			m.DB.Model(&model.User{}).First(&model.User{Email: email}).Scan(&existUser)
+			r.DB.Model(&model.User{}).First(&model.User{Email: email}).Scan(&existUser)
 
 			return &existUser, nil
 		}
 	}
 
 	if count == 0 {
-		m.DB.Create(&newUser)
+		r.DB.Create(&newUser)
 	}
 
 	return &newUser, nil
@@ -222,7 +247,7 @@ func (r *queryResolver) GetAllWorkoutDay(ctx context.Context) ([]*model.WorkoutP
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (q *queryResolver) GetUserWorkoutPlansByEmail(ctx context.Context, email string) (*model.UserWorkoutPlan, error) {
+func (r *queryResolver) GetUserWorkoutPlansByEmail(ctx context.Context, input string) (*model.UserWorkoutPlan, error) {
 	return nil, nil
 }
 
@@ -234,20 +259,20 @@ func (r *queryResolver) GetMuscleSpecifics(ctx context.Context, input *model.Mus
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (q *queryResolver) GetUserIDByUserEmail(ctx context.Context, email string) (string, error) {
-	if email == "" {
+func (r *queryResolver) GetUserIDByUserEmail(ctx context.Context, input string) (string, error) {
+	if input == "" {
 		return "", errors.New("you must insert an email address")
 	}
 
-	rows, err := q.DB.Model(&model.User{}).Select("email").Rows()
+	rows, err := r.DB.Model(&model.User{}).Select("email").Rows()
 	if err != nil {
-		fmt.Printf("%v , selecting database\n", email)
+		fmt.Printf("%v , selecting database\n", input)
 	}
 	defer rows.Close()
 
 	var existUser model.User
 	for rows.Next() {
-		q.DB.Model(&model.User{}).First(&model.User{Email: email}).Scan(&existUser)
+		r.DB.Model(&model.User{}).First(&model.User{Email: input}).Scan(&existUser)
 	}
 
 	return existUser.ID, nil
