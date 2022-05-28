@@ -129,14 +129,14 @@ func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) ([]*model.S
 		}
 		if count == 0 {
 			specificMuscleGroup := model.SpecificParts{
-				ID: uuid.NewString(),
-				Name: eachSpecificMuscleGroup.Name, 
+				ID:          uuid.NewString(),
+				Name:        eachSpecificMuscleGroup.Name,
 				MuscleGroup: eachSpecificMuscleGroup.MuscleGroup,
 			}
 			r.DB.Create(specificMuscleGroup)
 		}
 	}
-	return nil, nil 
+	return nil, nil
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
@@ -196,30 +196,44 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 		return nil, fmt.Errorf("error has occurred: ", err)
 	}
 
+	ID := uuid.New().String()
+	WorkoutPerDayID := uuid.New().String()
+
 	for _, eachExercise := range input.Exercises {
 		eachExercise := model.EachExercise{
-			Name:   eachExercise.Name,
-			Weight: eachExercise.Weight,
-			Unit:   eachExercise.Unit,
-			Sets:   eachExercise.Sets,
-			Reps:   eachExercise.Reps,
+			ID:              uuid.New().String(),
+			WorkoutPerDayID: WorkoutPerDayID,
+			Name:            eachExercise.Name,
+			Weight:          eachExercise.Weight,
+			Unit:            eachExercise.Unit,
+			Sets:            eachExercise.Sets,
+			Reps:            eachExercise.Reps,
 		}
 		r.exercises = append(r.exercises, &eachExercise)
+
+		workoutPerDay := model.WorkoutPerDay{
+			ID: uuid.New().String(),
+			GymDay: input.GymDay,
+			ExerciseID: eachExercise.ID,
+		}
+		r.DB.Create(workoutPerDay)
 	}
+
+	r.DB.Create(&r.exercises)
 
 	userWorkoutDay := model.WorkoutPerDay{
-		ID:     uuid.New().String(),
-		GymDay: input.GymDay,
+		ID:         ID,
+		GymDay:     input.GymDay,
+		ExerciseID: WorkoutPerDayID,
 	}
-
-	r.userWorkoutDays = append(r.userWorkoutDays, &userWorkoutDay)
 
 	userWorkoutPlan := model.UserWorkoutPlan{
-		UserID: id,
-		Name:   input.GymDay,
+		UserID:          id,
+		Name:            input.GymDay,
+		WorkoutPerDayID: &WorkoutPerDayID,
 	}
-	r.userWorkoutPlans = append(r.userWorkoutPlans, &userWorkoutPlan)
 
+	r.DB.Create(&userWorkoutPlan)
 	return &userWorkoutDay, nil
 }
 

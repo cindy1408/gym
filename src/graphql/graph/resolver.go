@@ -19,6 +19,7 @@ type Resolver struct {
 	exercises        []*model.EachExercise
 	muscleGroups     []*model.MuscleGroup
 	userWorkoutPlans []*model.UserWorkoutPlan
+	workoutPerDay    *model.WorkoutPerDay
 	userWorkoutDays  []*model.WorkoutPerDay
 }
 
