@@ -4,13 +4,11 @@
 
 extend type Query {
   baseExercises: [BaseExercise]!
-  getAllAvaliableBaseExercises: [String!]!
+  getAllAvailableBaseExercises: [String!]!
   getAllEachExercise: [EachExercise!]!
-  getAllWorkoutDay: [WorkoutPerDay!]!
   getUserWorkoutPlansByEmail(input: String!): UserWorkoutPlan!
   getAllUserWorkoutPlans: [UserWorkoutPlan!]!
   getMuscleSpecifics(input: muscleSpecificInput): String!
-  getUserIdByUserEmail(input: String!): String!
   getAllUsers: [User!]!
 }
 
@@ -21,39 +19,34 @@ extend type Mutation {
   hydrateMuscleGroups: [MuscleGroup]!
   hydrateSpecificParts: [SpecificParts]!
   createUser(input: CreateUserInput!): User!
-  addUserWorkout(input: AddUserWorkoutInput!): WorkoutPerDay!
+  addUserWorkout(input: AddUserWorkoutInput!): UserWorkoutPlan!
   increaseRep(input: increaseRepInput!): UserWorkoutPlan!
 }
-
+# used to check muscle input is valid
 type MuscleGroup {
-  id: String!
-  name: String! 
+  name: String!
 }
-
+# used to check specific parts input is valid
 type SpecificParts {
-  id: String!
   name: String!
   muscleGroup: String!
 }
 
-type AvoidGiven {
-  id: String!
+type AvoidGiven  {
   name: String!
 }
 
-# base Exercise 
-type BaseExercise {
-    id: String! 
-    name: String! 
+# base Exercise are pre-field exercises 
+type BaseExercise  {
+    name: String!
     muscleGroup: String!
     specificParts: String!
     level: Int! 
     avoidGiven: String
     movementType: String!
 }
-
-type User {
-  id: String! 
+# table that consists of users info and a link to user workoutPlanID 
+type User  {
   firstName: String! 
   lastName: String!
   email: String!
@@ -61,24 +54,17 @@ type User {
   UserWorkoutPlanId: String
 }
 
-# user workout plan 
-type UserWorkoutPlan {
+# user workout plan consists of userID, workoutID and name of the day eg. Push day
+type UserWorkoutPlan  {
+    id: String!
     userId: String! 
-    name: String!
-    workoutPerDayId: String
-}
-
-# workout per day 
-type WorkoutPerDay {
-    id: String!
     gymDay: String!
-    exerciseID: String!
 }
 
-# Each Exercise 
-type EachExercise {
-    id: String!
-    workoutPerDayID: String!
+# Each Exercise has the unique id, with all the info of the exercise and linked to userWorkoutPlanID 
+type EachExercise  {
+    id: String! 
+    userWorkoutPlanID: String!
     name: String!
     weight: Int!
     Unit: String!
@@ -89,7 +75,7 @@ type EachExercise {
 input AddUserWorkoutInput {
   userEmail: String!
   gymDay: String! 
-  exercises: [EachExerciseInput!]
+  exercises: [EachExerciseInput]
 }
 
 input EachExerciseInput {

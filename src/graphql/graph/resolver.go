@@ -19,8 +19,6 @@ type Resolver struct {
 	exercises        []*model.EachExercise
 	muscleGroups     []*model.MuscleGroup
 	userWorkoutPlans []*model.UserWorkoutPlan
-	workoutPerDay    *model.WorkoutPerDay
-	userWorkoutDays  []*model.WorkoutPerDay
 }
 
 func (r *Resolver) Init() error {
@@ -30,7 +28,6 @@ func (r *Resolver) Init() error {
 		&model.MuscleGroup{},
 		&model.SpecificParts{},
 		&model.UserWorkoutPlan{},
-		&model.WorkoutPerDay{},
 		&model.EachExercise{},
 	)
 	if err != nil {

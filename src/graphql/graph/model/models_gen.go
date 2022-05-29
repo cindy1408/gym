@@ -9,12 +9,10 @@ type AddUserWorkoutInput struct {
 }
 
 type AvoidGiven struct {
-	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
 type BaseExercise struct {
-	ID            string  `json:"id"`
 	Name          string  `json:"name"`
 	MuscleGroup   string  `json:"muscleGroup"`
 	SpecificParts string  `json:"specificParts"`
@@ -31,13 +29,13 @@ type CreateUserInput struct {
 }
 
 type EachExercise struct {
-	ID              string `json:"id"`
-	WorkoutPerDayID string `json:"workoutPerDayID"`
-	Name            string `json:"name"`
-	Weight          int    `json:"weight"`
-	Unit            string `json:"Unit"`
-	Sets            int    `json:"Sets"`
-	Reps            int    `json:"Reps"`
+	ID                string `json:"id"`
+	UserWorkoutPlanID string `json:"userWorkoutPlanID"`
+	Name              string `json:"name"`
+	Weight            int    `json:"weight"`
+	Unit              string `json:"Unit"`
+	Sets              int    `json:"Sets"`
+	Reps              int    `json:"Reps"`
 }
 
 type EachExerciseInput struct {
@@ -49,18 +47,15 @@ type EachExerciseInput struct {
 }
 
 type MuscleGroup struct {
-	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
 type SpecificParts struct {
-	ID          string `json:"id"`
 	Name        string `json:"name"`
 	MuscleGroup string `json:"muscleGroup"`
 }
 
 type User struct {
-	ID                string  `json:"id"`
 	FirstName         string  `json:"firstName"`
 	LastName          string  `json:"lastName"`
 	Email             string  `json:"email"`
@@ -69,15 +64,9 @@ type User struct {
 }
 
 type UserWorkoutPlan struct {
-	UserID          string  `json:"userId"`
-	Name            string  `json:"name"`
-	WorkoutPerDayID *string `json:"workoutPerDayId"`
-}
-
-type WorkoutPerDay struct {
-	ID         string `json:"id"`
-	GymDay     string `json:"gymDay"`
-	ExerciseID string `json:"exerciseID"`
+	ID     string `json:"id"`
+	UserID string `json:"userId"`
+	GymDay string `json:"gymDay"`
 }
 
 type BaseExerciseInput struct {
