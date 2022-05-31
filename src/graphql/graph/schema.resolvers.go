@@ -197,12 +197,10 @@ func (r *queryResolver) BaseExercises(ctx context.Context) ([]*model.BaseExercis
 	return r.baseExercises, nil
 }
 
-func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]string, error) {
-	var allBaseExerciseNames []string
-	for _, eachBaseExercise := range r.baseExercises {
-		allBaseExerciseNames = append(allBaseExerciseNames, eachBaseExercise.Name)
-	}
-	return nil, nil // return allBaseExerciseNames, nil
+func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
+	allBaseExercises := []*model.BaseExercise{}
+	r.DB.Table("base_exercises").Scan(&allBaseExercises)
+	return allBaseExercises, nil
 }
 
 func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
@@ -217,12 +215,15 @@ func (r *queryResolver) GetAllUserWorkoutPlans(ctx context.Context) ([]*model.Us
 	return r.userWorkoutPlans, nil
 }
 
-func (r *queryResolver) GetMuscleSpecifics(ctx context.Context, input *model.MuscleSpecificInput) (string, error) {
+func (r *queryResolver) GetMuscleSpecifics(ctx context.Context, input *model.MuscleSpecificInput) ([]string, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) GetAllUsers(ctx context.Context) ([]*model.User, error) {
-	return r.users, nil
+	allUsers := []*model.User{}
+	r.DB.Table("users").Scan(&allUsers)
+
+	return allUsers, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

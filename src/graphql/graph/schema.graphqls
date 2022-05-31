@@ -4,11 +4,11 @@
 
 extend type Query {
   baseExercises: [BaseExercise]!
-  getAllAvailableBaseExercises: [String!]!
+  getAllAvailableBaseExercises: [BaseExercise!]!
   getAllEachExercise: [EachExercise!]!
   getUserWorkoutPlansByEmail(input: String!): UserWorkoutPlan!
   getAllUserWorkoutPlans: [UserWorkoutPlan!]!
-  getMuscleSpecifics(input: muscleSpecificInput): String!
+  getMuscleSpecifics(input: muscleSpecificInput): [String!]
   getAllUsers: [User!]!
 }
 
