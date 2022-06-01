@@ -64,9 +64,9 @@ type User struct {
 }
 
 type UserWorkoutPlan struct {
-	ID     string `json:"id"`
-	UserID string `json:"userId"`
-	GymDay string `json:"gymDay"`
+	ID        string `json:"id"`
+	UserEmail string `json:"userEmail"`
+	GymDay    string `json:"gymDay"`
 }
 
 type BaseExerciseInput struct {

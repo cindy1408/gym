@@ -11,6 +11,7 @@ import (
 
 	"github.com/cindy1408/gym/src/graphql/graph/generated"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"github.com/google/uuid"
 )
 
 func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
@@ -185,7 +186,78 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 }
 
 func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (*model.UserWorkoutPlan, error) {
-	// TODO:
+	// check if the user email exists!
+	rows, err := r.DB.Model(&model.User{}).Select("email").Rows()
+	if err != nil {
+		fmt.Println("issue with user table")
+	}
+	defer rows.Close()
+
+	var existingEmail string
+	var exists int
+	for rows.Next() {
+		exists++
+		rows.Scan(&existingEmail)
+		if existingEmail == input.UserEmail {
+			continue
+		}
+	}
+
+	if exists == 0 {
+		fmt.Println("You need to sign up first")
+		return nil, nil
+	}
+
+	// assign user email to userworkout plan
+	rows, err = r.DB.Model(&model.UserWorkoutPlan{}).Select("user_email", "gym_day").Rows()
+	if err != nil {
+		fmt.Println("error with user workout plan")
+	}
+	defer rows.Close()
+
+	var existingUserEmail string
+	var existingUserGymDay string
+	var userWorkoutPlan *model.UserWorkoutPlan
+	var count int
+
+	for rows.Next() {
+		rows.Scan(&existingUserEmail, &existingUserGymDay)
+		if existingUserEmail == input.UserEmail && existingUserGymDay == input.GymDay {
+			count++
+			fmt.Println("User already has this gym day, please add exercise instead")
+		}
+	}
+
+	if count == 0 {
+		userWorkoutPlan = &model.UserWorkoutPlan{
+			ID:        uuid.New().String(),
+			UserEmail: input.UserEmail,
+			GymDay:    input.GymDay,
+		}
+		r.DB.Create(userWorkoutPlan)
+		
+		// update user table
+		r.DB.Model(&model.User{}).Where("email = ?", input.UserEmail).Update("user_workout_plan_id", userWorkoutPlan.ID)
+	}
+
+	if input.Exercises == nil {
+		return userWorkoutPlan, nil
+	}
+
+	// if exercise exists, add exercise in each_exercise table
+	for _, eachExercise := range input.Exercises {
+		addExercise := &model.EachExercise{
+			ID:                uuid.New().String(),
+			UserWorkoutPlanID: userWorkoutPlan.ID,
+			Name:              eachExercise.Name,
+			Weight:            eachExercise.Weight,
+			Sets:              eachExercise.Sets,
+			Reps:              eachExercise.Reps,
+		}
+
+		r.DB.Create(&addExercise)
+	}
+
 	return nil, nil
 }
 

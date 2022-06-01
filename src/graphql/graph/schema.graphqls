@@ -57,7 +57,7 @@ type User  {
 # user workout plan consists of userID, workoutID and name of the day eg. Push day
 type UserWorkoutPlan  {
     id: String!
-    userId: String! 
+    userEmail: String!
     gymDay: String!
 }
 

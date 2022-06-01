@@ -105,9 +105,9 @@ type ComplexityRoot struct {
 	}
 
 	UserWorkoutPlan struct {
-		GymDay func(childComplexity int) int
-		ID     func(childComplexity int) int
-		UserID func(childComplexity int) int
+		GymDay    func(childComplexity int) int
+		ID        func(childComplexity int) int
+		UserEmail func(childComplexity int) int
 	}
 }
 
@@ -454,12 +454,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UserWorkoutPlan.ID(childComplexity), true
 
-	case "UserWorkoutPlan.userId":
-		if e.complexity.UserWorkoutPlan.UserID == nil {
+	case "UserWorkoutPlan.userEmail":
+		if e.complexity.UserWorkoutPlan.UserEmail == nil {
 			break
 		}
 
-		return e.complexity.UserWorkoutPlan.UserID(childComplexity), true
+		return e.complexity.UserWorkoutPlan.UserEmail(childComplexity), true
 
 	}
 	return 0, false
@@ -584,7 +584,7 @@ type User  {
 # user workout plan consists of userID, workoutID and name of the day eg. Push day
 type UserWorkoutPlan  {
     id: String!
-    userId: String! 
+    userEmail: String!
     gymDay: String!
 }
 
@@ -2245,7 +2245,7 @@ func (ec *executionContext) _UserWorkoutPlan_id(ctx context.Context, field graph
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UserWorkoutPlan_userId(ctx context.Context, field graphql.CollectedField, obj *model.UserWorkoutPlan) (ret graphql.Marshaler) {
+func (ec *executionContext) _UserWorkoutPlan_userEmail(ctx context.Context, field graphql.CollectedField, obj *model.UserWorkoutPlan) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2263,7 +2263,7 @@ func (ec *executionContext) _UserWorkoutPlan_userId(ctx context.Context, field g
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.UserID, nil
+		return obj.UserEmail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4455,9 +4455,9 @@ func (ec *executionContext) _UserWorkoutPlan(ctx context.Context, sel ast.Select
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "userId":
+		case "userEmail":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._UserWorkoutPlan_userId(ctx, field, obj)
+				return ec._UserWorkoutPlan_userEmail(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
