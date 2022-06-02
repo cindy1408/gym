@@ -1,4 +1,4 @@
-package graph
+package resolvers
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -11,10 +11,15 @@ import (
 	"fmt"
 	"net/mail"
 
+	"github.com/cindy1408/gym/src/graphql/graph"
 	"github.com/cindy1408/gym/src/graphql/graph/generated"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/google/uuid"
 )
+
+func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExerciseInput) (*model.EachExercise, error) {
+	panic(fmt.Errorf("not implemented"))
+}
 
 func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
 	newExercise := model.BaseExercise{
@@ -51,7 +56,7 @@ func (r *mutationResolver) UpdateBaseExercise(ctx context.Context, input *model.
 }
 
 func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.BaseExercise, error) {
-	for _, eachBaseExercise := range BaseExerciseData {
+	for _, eachBaseExercise := range graph.BaseExerciseData {
 
 		rows, err := r.DB.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
 		if err != nil {
@@ -82,7 +87,7 @@ func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.Ba
 }
 
 func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) ([]*model.MuscleGroup, error) {
-	for _, eachMuscleGroup := range MuscleGroupData {
+	for _, eachMuscleGroup := range graph.MuscleGroupData {
 		rows, err := r.DB.Model(&model.MuscleGroup{}).Select("name").Rows()
 		if err != nil {
 			fmt.Printf("%v, selecting database\n", eachMuscleGroup.Name)
@@ -110,7 +115,7 @@ func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) ([]*model.Mu
 }
 
 func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) ([]*model.SpecificParts, error) {
-	for _, eachSpecificMuscleGroup := range SpecificMuscleGroupData {
+	for _, eachSpecificMuscleGroup := range graph.SpecificMuscleGroupData {
 		rows, err := r.DB.Model(&model.SpecificParts{}).Select("name").Rows()
 		if err != nil {
 			fmt.Printf("%v, selecting database\n", eachSpecificMuscleGroup.Name)
@@ -152,7 +157,6 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		return nil, errors.New("invalid email address")
 	}
 
-	// TODO: HASH PASSWORD!
 	hasher := sha256.New()
 	hasher.Write([]byte(input.Password))
 	strHash := hex.EncodeToString(hasher.Sum(nil))

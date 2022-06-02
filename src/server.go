@@ -9,8 +9,8 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/cindy1408/gym/src/graphql/graph"
 	"github.com/cindy1408/gym/src/graphql/graph/generated"
+	"github.com/cindy1408/gym/src/graphql/graph/resolvers"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -25,13 +25,7 @@ type server struct {
 
 type Server interface {
 	Connect() error
-	// ListenAndServe() error
-	// Shutdown(context.Context) error
 }
-
-const (
-	compressLevel = 5
-)
 
 func main() {
 	port := os.Getenv("PORT")
@@ -43,7 +37,7 @@ func main() {
 
 	db, _ = NewDatabase()
 
-	resolver := &graph.Resolver{
+	resolver := &resolvers.Resolver{
 		DB: db,
 	}
 
@@ -66,7 +60,7 @@ func main() {
 	}
 
 	// Remember to pass the initialised database to the server
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{DB: db}}))
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolvers.Resolver{DB: db}}))
 	// standard package to make api calls
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
@@ -78,7 +72,6 @@ func main() {
 
 func NewDatabase() (*gorm.DB, error) {
 	databaseURL := "host=localhost user=postgres password=password dbname=gym port=5432 sslmode=disable"
-	// databaseURL := "postgresql://user:password@localhost:5432/gym?sslmode=disable"
 	return gorm.Open(postgres.New(postgres.Config{
 		DSN: databaseURL,
 	}), &gorm.Config{})

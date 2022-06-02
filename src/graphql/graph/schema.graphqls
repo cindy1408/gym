@@ -13,6 +13,7 @@ extend type Query {
 }
 
 extend type Mutation {
+  addExercise(input: addExerciseInput): EachExercise!
   createBaseExercise(input: baseExerciseInput): BaseExercise!
   updateBaseExercise(input: baseExerciseInput): BaseExercise!
   hydrateBaseExercise: [BaseExercise]!
@@ -108,7 +109,13 @@ input muscleSpecificInput {
 }
 
 input increaseRepInput {
-  userID: String!
+  userEmail: String!
   gymDay: String!
   exerciseName: String!
+}
+
+input addExerciseInput {
+  userEmail: String!
+  gymDay: String!
+  EachExercise: [EachExerciseInput!]
 }
