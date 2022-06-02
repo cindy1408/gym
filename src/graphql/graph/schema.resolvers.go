@@ -5,6 +5,8 @@ package graph
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"net/mail"
@@ -150,11 +152,16 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		return nil, errors.New("invalid email address")
 	}
 
+	// TODO: HASH PASSWORD!
+	hasher := sha256.New()
+	hasher.Write([]byte(input.Password))
+	strHash := hex.EncodeToString(hasher.Sum(nil))
+
 	newUser := model.User{
 		FirstName: input.FirstName,
 		LastName:  input.LastName,
 		Email:     input.Email,
-		Password:  input.Password,
+		Password:  strHash,
 	}
 
 	rows, err := r.DB.Model(&model.User{}).Select("email").Rows()
@@ -235,7 +242,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 			GymDay:    input.GymDay,
 		}
 		r.DB.Create(userWorkoutPlan)
-		
+
 		// update user table
 		r.DB.Model(&model.User{}).Where("email = ?", input.UserEmail).Update("user_workout_plan_id", userWorkoutPlan.ID)
 	}
