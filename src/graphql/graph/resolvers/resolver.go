@@ -1,6 +1,8 @@
 package resolvers
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 
 	"github.com/cindy1408/gym/src/graphql/graph/model"
@@ -36,4 +38,10 @@ func (r *Resolver) Init() error {
 	}
 
 	return r.DB.Error
+}
+
+func Hasher(toHash string) string {
+	hasher := sha256.New()
+	hasher.Write([]byte(toHash))
+	return hex.EncodeToString(hasher.Sum(nil))
 }

@@ -17,11 +17,11 @@ import (
 
 const defaultPort = "8080"
 
-type server struct {
-	server *http.Server
-	db     *gorm.DB
-	ctx    context.Context
-}
+// type server struct {
+// 	server *http.Server
+// 	db     *gorm.DB
+// 	ctx    context.Context
+// }
 
 type Server interface {
 	Connect() error

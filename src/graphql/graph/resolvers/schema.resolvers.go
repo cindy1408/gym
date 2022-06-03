@@ -5,8 +5,6 @@ package resolvers
 
 import (
 	"context"
-	"crypto/sha256"
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"net/mail"
@@ -157,15 +155,13 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		return nil, errors.New("invalid email address")
 	}
 
-	hasher := sha256.New()
-	hasher.Write([]byte(input.Password))
-	strHash := hex.EncodeToString(hasher.Sum(nil))
+	hashedPw := Hasher(input.Password)
 
 	newUser := model.User{
 		FirstName: input.FirstName,
 		LastName:  input.LastName,
 		Email:     input.Email,
-		Password:  strHash,
+		Password:  hashedPw,
 	}
 
 	rows, err := r.DB.Model(&model.User{}).Select("email").Rows()
@@ -198,29 +194,15 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 
 func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (*model.UserWorkoutPlan, error) {
 	// check if the user email exists!
-	rows, err := r.DB.Model(&model.User{}).Select("email").Rows()
-	if err != nil {
-		fmt.Println("issue with user table")
-	}
-	defer rows.Close()
+	validated := r.ValidateUser(input.UserEmail)
 
-	var existingEmail string
-	var exists int
-	for rows.Next() {
-		exists++
-		rows.Scan(&existingEmail)
-		if existingEmail == input.UserEmail {
-			continue
-		}
-	}
-
-	if exists == 0 {
+	if !validated {
 		fmt.Println("You need to sign up first")
 		return nil, nil
 	}
 
 	// assign user email to userworkout plan
-	rows, err = r.DB.Model(&model.UserWorkoutPlan{}).Select("user_email", "gym_day").Rows()
+	rows, err := r.DB.Model(&model.UserWorkoutPlan{}).Select("user_email", "gym_day").Rows()
 	if err != nil {
 		fmt.Println("error with user workout plan")
 	}
