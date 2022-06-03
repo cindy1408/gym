@@ -13,14 +13,14 @@ extend type Query {
 }
 
 extend type Mutation {
-  addExercise(input: addExerciseInput): EachExercise!
-  createBaseExercise(input: baseExerciseInput): BaseExercise!
+  addExercise(input: addExerciseInput): String!
+  createBaseExercise(input: baseExerciseInput): String!
   updateBaseExercise(input: baseExerciseInput): BaseExercise!
-  hydrateBaseExercise: [BaseExercise]!
-  hydrateMuscleGroups: [MuscleGroup]!
-  hydrateSpecificParts: [SpecificParts]!
-  createUser(input: CreateUserInput!): User!
-  addUserWorkout(input: AddUserWorkoutInput!): UserWorkoutPlan!
+  hydrateBaseExercise: String!
+  hydrateMuscleGroups: String!
+  hydrateSpecificParts: String!
+  createUser(input: CreateUserInput!): String!
+  addUserWorkout(input: AddUserWorkoutInput!): String!
   increaseRep(input: increaseRepInput!): UserWorkoutPlan!
 }
 # used to check muscle input is valid

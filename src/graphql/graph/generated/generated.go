@@ -113,14 +113,14 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
-	AddExercise(ctx context.Context, input *model.AddExerciseInput) (*model.EachExercise, error)
-	CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error)
+	AddExercise(ctx context.Context, input *model.AddExerciseInput) (string, error)
+	CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (string, error)
 	UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error)
-	HydrateBaseExercise(ctx context.Context) ([]*model.BaseExercise, error)
-	HydrateMuscleGroups(ctx context.Context) ([]*model.MuscleGroup, error)
-	HydrateSpecificParts(ctx context.Context) ([]*model.SpecificParts, error)
-	CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error)
-	AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (*model.UserWorkoutPlan, error)
+	HydrateBaseExercise(ctx context.Context) (string, error)
+	HydrateMuscleGroups(ctx context.Context) (string, error)
+	HydrateSpecificParts(ctx context.Context) (string, error)
+	CreateUser(ctx context.Context, input model.CreateUserInput) (string, error)
+	AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (string, error)
 	IncreaseRep(ctx context.Context, input model.IncreaseRepInput) (*model.UserWorkoutPlan, error)
 }
 type QueryResolver interface {
@@ -554,14 +554,14 @@ extend type Query {
 }
 
 extend type Mutation {
-  addExercise(input: addExerciseInput): EachExercise!
-  createBaseExercise(input: baseExerciseInput): BaseExercise!
+  addExercise(input: addExerciseInput): String!
+  createBaseExercise(input: baseExerciseInput): String!
   updateBaseExercise(input: baseExerciseInput): BaseExercise!
-  hydrateBaseExercise: [BaseExercise]!
-  hydrateMuscleGroups: [MuscleGroup]!
-  hydrateSpecificParts: [SpecificParts]!
-  createUser(input: CreateUserInput!): User!
-  addUserWorkout(input: AddUserWorkoutInput!): UserWorkoutPlan!
+  hydrateBaseExercise: String!
+  hydrateMuscleGroups: String!
+  hydrateSpecificParts: String!
+  createUser(input: CreateUserInput!): String!
+  addUserWorkout(input: AddUserWorkoutInput!): String!
   increaseRep(input: increaseRepInput!): UserWorkoutPlan!
 }
 # used to check muscle input is valid
@@ -1399,9 +1399,9 @@ func (ec *executionContext) _Mutation_addExercise(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.EachExercise)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNEachExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createBaseExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1441,9 +1441,9 @@ func (ec *executionContext) _Mutation_createBaseExercise(ctx context.Context, fi
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.BaseExercise)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateBaseExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1518,9 +1518,9 @@ func (ec *executionContext) _Mutation_hydrateBaseExercise(ctx context.Context, f
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.BaseExercise)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNBaseExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_hydrateMuscleGroups(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1553,9 +1553,9 @@ func (ec *executionContext) _Mutation_hydrateMuscleGroups(ctx context.Context, f
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.MuscleGroup)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNMuscleGroup2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐMuscleGroup(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_hydrateSpecificParts(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1588,9 +1588,9 @@ func (ec *executionContext) _Mutation_hydrateSpecificParts(ctx context.Context, 
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.SpecificParts)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNSpecificParts2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐSpecificParts(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1630,9 +1630,9 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.User)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_addUserWorkout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1672,9 +1672,9 @@ func (ec *executionContext) _Mutation_addUserWorkout(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.UserWorkoutPlan)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_increaseRep(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5157,10 +5157,6 @@ func (ec *executionContext) unmarshalNCreateUserInput2githubᚗcomᚋcindy1408�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNEachExercise2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx context.Context, sel ast.SelectionSet, v model.EachExercise) graphql.Marshaler {
-	return ec._EachExercise(ctx, sel, &v)
-}
-
 func (ec *executionContext) marshalNEachExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.EachExercise) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -5235,82 +5231,6 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNMuscleGroup2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐMuscleGroup(ctx context.Context, sel ast.SelectionSet, v []*model.MuscleGroup) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalOMuscleGroup2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐMuscleGroup(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	return ret
-}
-
-func (ec *executionContext) marshalNSpecificParts2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐSpecificParts(ctx context.Context, sel ast.SelectionSet, v []*model.SpecificParts) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalOSpecificParts2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐSpecificParts(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	return ret
-}
-
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -5324,10 +5244,6 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
-}
-
-func (ec *executionContext) marshalNUser2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
-	return ec._User(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.User) graphql.Marshaler {
@@ -5779,20 +5695,6 @@ func (ec *executionContext) unmarshalOEachExerciseInput2ᚖgithubᚗcomᚋcindy1
 	}
 	res, err := ec.unmarshalInputEachExerciseInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOMuscleGroup2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐMuscleGroup(ctx context.Context, sel ast.SelectionSet, v *model.MuscleGroup) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._MuscleGroup(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOSpecificParts2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐSpecificParts(ctx context.Context, sel ast.SelectionSet, v *model.SpecificParts) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._SpecificParts(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {

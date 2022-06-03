@@ -15,19 +15,17 @@ import (
 	"github.com/google/uuid"
 )
 
-func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExerciseInput) (*model.EachExercise, error) {
+func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExerciseInput) (string, error) {
 	validated := r.ValidateUser(input.UserEmail)
 
 	if !validated {
-		fmt.Println("Please create an account first")
-		return nil, nil
+		return "Please create an account first", nil
 	}
 
 	// validate user workout plan
 	workoutPlanID, validated := r.ValidateUserWorkoutPlan(input.UserEmail, input.GymDay)
 	if !validated {
-		fmt.Println("You need to create a workout plan")
-		return nil, nil
+		return "You need to create a workout plan", nil
 	}
 
 	for _, eachExercise := range input.EachExercise {
@@ -43,10 +41,10 @@ func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExer
 		r.DB.Create(&addUserExercise)
 	}
 
-	return nil, nil
+	return "Your account has been successfully created", nil
 }
 
-func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
+func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (string, error) {
 	newExercise := model.BaseExercise{
 		Name:          input.Name,
 		MuscleGroup:   input.MuscleGroup,
@@ -57,7 +55,7 @@ func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.
 	}
 	r.baseExercises = append(r.baseExercises, &newExercise)
 
-	return &newExercise, nil
+	return fmt.Sprintf("base exercise %v has been added", input.Name), nil
 }
 
 func (r *mutationResolver) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
@@ -80,7 +78,7 @@ func (r *mutationResolver) UpdateBaseExercise(ctx context.Context, input *model.
 	return nil, errors.New("unable to find exercise name in database")
 }
 
-func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.BaseExercise, error) {
+func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) (string, error) {
 	for _, eachBaseExercise := range graph.BaseExerciseData {
 
 		rows, err := r.DB.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
@@ -108,10 +106,10 @@ func (r *mutationResolver) HydrateBaseExercise(ctx context.Context) ([]*model.Ba
 		}
 	}
 
-	return r.baseExercises, nil
+	return "Base exercise table has been hydrated!", nil
 }
 
-func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) ([]*model.MuscleGroup, error) {
+func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) (string, error) {
 	for _, eachMuscleGroup := range graph.MuscleGroupData {
 		rows, err := r.DB.Model(&model.MuscleGroup{}).Select("name").Rows()
 		if err != nil {
@@ -136,10 +134,10 @@ func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) ([]*model.Mu
 			r.DB.Create(muscleGroup)
 		}
 	}
-	return r.muscleGroups, nil
+	return "Muscle group table has been hydrated", nil
 }
 
-func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) ([]*model.SpecificParts, error) {
+func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) (string, error) {
 	for _, eachSpecificMuscleGroup := range graph.SpecificMuscleGroupData {
 		rows, err := r.DB.Model(&model.SpecificParts{}).Select("name").Rows()
 		if err != nil {
@@ -164,22 +162,22 @@ func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) ([]*model.S
 			r.DB.Create(specificMuscleGroup)
 		}
 	}
-	return nil, nil
+	return "Specific Parts has been hydrated", nil
 }
 
-func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (string, error) {
 	if input.FirstName == "" {
-		return nil, errors.New("first name is missing")
+		return "first name is missing", nil
 	}
 	if input.LastName == "" {
-		return nil, errors.New("last name is missing")
+		return "last name is missing", nil 
 	}
 	if input.Password == "" {
-		return nil, errors.New("password is missing")
+		return "password is missing", nil
 	}
 	_, err := mail.ParseAddress(input.Email)
 	if err != nil {
-		return nil, errors.New("invalid email address")
+		return "invalid email address", nil
 	}
 
 	hashedPw := Hasher(input.Password)
@@ -202,13 +200,12 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 	for rows.Next() {
 		rows.Scan(&email)
 		if email == newUser.Email {
-			fmt.Printf("%v , exists in database!\n", newUser.Email)
 			count++
 
 			var existUser model.User
 			r.DB.Model(&model.User{}).First(&model.User{Email: email}).Scan(&existUser)
 
-			return &existUser, nil
+			return fmt.Sprintf("%v , exists in database!\n", newUser.Email), nil
 		}
 	}
 
@@ -216,22 +213,21 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		r.DB.Create(&newUser)
 	}
 
-	return &newUser, nil
+	return fmt.Sprintf("user %v has been successfully created", input.FirstName), nil
 }
 
-func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (*model.UserWorkoutPlan, error) {
+func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (string, error) {
 	// check if the user email exists!
 	validated := r.ValidateUser(input.UserEmail)
 
 	if !validated {
-		fmt.Println("You need to sign up first")
-		return nil, nil
+		return "You need to sign up first", nil
 	}
 
 	// assign user email to userworkout plan
 	rows, err := r.DB.Model(&model.UserWorkoutPlan{}).Select("user_email", "gym_day").Rows()
 	if err != nil {
-		fmt.Println("error with user workout plan")
+		return "", errors.New("error with user workout plan")
 	}
 	defer rows.Close()
 
@@ -244,8 +240,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 		rows.Scan(&existingUserEmail, &existingUserGymDay)
 		if existingUserEmail == input.UserEmail && existingUserGymDay == input.GymDay {
 			count++
-			fmt.Println("User already has this gym day, please add exercise instead")
-			return nil, nil 
+			return fmt.Sprintf("User %v already has %v, please add exercise instead", existingUserEmail, existingUserGymDay), nil 
 		}
 	}
 
@@ -262,7 +257,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 	}
 
 	if input.Exercises == nil {
-		return userWorkoutPlan, nil
+		return fmt.Sprintf("User %v has been added", input.UserEmail), nil
 	}
 
 	// if exercise exists, add exercise in each_exercise table
@@ -279,7 +274,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 		r.DB.Create(&addExercise)
 	}
 
-	return nil, nil
+	return "User's workout and exercises has been updated", nil
 }
 
 func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.IncreaseRepInput) (*model.UserWorkoutPlan, error) {

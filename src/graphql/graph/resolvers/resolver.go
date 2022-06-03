@@ -17,8 +17,8 @@ import (
 type Resolver struct {
 	DB               *gorm.DB
 	baseExercises    []*model.BaseExercise
-	users            []*model.User
-	exercises        []*model.EachExercise
+	// users            []*model.User
+	// exercises        []*model.EachExercise
 	muscleGroups     []*model.MuscleGroup
 	userWorkoutPlans []*model.UserWorkoutPlan
 }
