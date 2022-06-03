@@ -16,7 +16,34 @@ import (
 )
 
 func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExerciseInput) (*model.EachExercise, error) {
-	panic(fmt.Errorf("not implemented"))
+	validated := r.ValidateUser(input.UserEmail)
+
+	if !validated {
+		fmt.Println("Please create an account first")
+		return nil, nil
+	}
+
+	// validate user workout plan
+	workoutPlanID, validated := r.ValidateUserWorkoutPlan(input.UserEmail, input.GymDay)
+	if !validated {
+		fmt.Println("You need to create a workout plan")
+		return nil, nil
+	}
+
+	for _, eachExercise := range input.EachExercise {
+		addUserExercise := model.EachExercise {
+			ID: uuid.NewString(),
+			UserWorkoutPlanID: workoutPlanID,
+			Name: eachExercise.Name,
+			Weight: eachExercise.Weight, 
+			Unit: eachExercise.Unit, 
+			Sets: eachExercise.Sets, 
+			Reps: eachExercise.Reps, 
+		}
+		r.DB.Create(&addUserExercise)
+	}
+
+	return nil, nil
 }
 
 func (r *mutationResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
@@ -218,6 +245,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 		if existingUserEmail == input.UserEmail && existingUserGymDay == input.GymDay {
 			count++
 			fmt.Println("User already has this gym day, please add exercise instead")
+			return nil, nil 
 		}
 	}
 
