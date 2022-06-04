@@ -19,7 +19,7 @@ type Resolver struct {
 	baseExercises    []*model.BaseExercise
 	// users            []*model.User
 	// exercises        []*model.EachExercise
-	muscleGroups     []*model.MuscleGroup
+	// muscleGroups     []*model.MuscleGroup
 	userWorkoutPlans []*model.UserWorkoutPlan
 }
 
