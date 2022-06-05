@@ -193,7 +193,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 
 	result, err := r.AddUserToDB(&newUser)
 	if err != nil {
-		return "", errors.Wrapf(err, "r.AddUserToDB, %v")
+		return "", errors.Wrapf(err, "r.AddUserToDB")
 	}
 
 	return result, nil
@@ -210,7 +210,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 	// assign user email to userworkout plan
 	rows, err := r.DB.Model(&model.UserWorkoutPlan{}).Select("user_email", "gym_day").Rows()
 	if err != nil {
-		return "", errors.Wrapf(err, "error with user workout plan %v")
+		return "", errors.Wrapf(err, "error with user workout plan")
 	}
 	defer rows.Close()
 
