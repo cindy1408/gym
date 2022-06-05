@@ -1,7 +1,43 @@
 package graph
 
+import (
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
+
+	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"gorm.io/gorm"
+)
+
 // This file will not be regenerated automatically.
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 
-type Resolver struct{}
+type Resolver struct {
+	db               *gorm.DB
+	baseExercises    []*model.BaseExercise
+	userWorkoutPlans []*model.UserWorkoutPlan
+}
+
+func (r *Resolver) Init() error {
+	err := r.db.AutoMigrate(
+		&model.BaseExercise{},
+		&model.User{},
+		&model.MuscleGroup{},
+		&model.SpecificParts{},
+		&model.UserWorkoutPlan{},
+		&model.EachExercise{},
+	)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return r.db.Error
+}
+
+func Hasher(toHash string) string {
+	hasher := sha256.New()
+	hasher.Write([]byte(toHash))
+	return hex.EncodeToString(hasher.Sum(nil))
+}

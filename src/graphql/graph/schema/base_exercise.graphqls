@@ -1,0 +1,29 @@
+extend type Query {
+    baseExercises: [BaseExercise]!
+    getAllAvailableBaseExercises: [BaseExercise!]!
+}
+
+extend type Query {
+    updateBaseExercise(input: baseExerciseInput): BaseExercise!
+    hydrateBaseExercise: String!
+    createBaseExercise(input: baseExerciseInput): String!
+}
+
+# base Exercise are pre-field exercises 
+type BaseExercise  {
+    name: String!
+    muscleGroup: String!
+    specificParts: String!
+    level: Int! 
+    avoidGiven: String
+    movementType: String!
+}
+
+input baseExerciseInput {
+    name: String!
+    muscleGroup: String!
+    specificParts: String!
+    level: Int! 
+    avoidGiven: String
+    movementType: String!
+}

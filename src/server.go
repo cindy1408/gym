@@ -46,10 +46,13 @@ func main() {
 		log.Fatal("failed to create database: %v", err)
 	}
 
+	q := resolver.Query()
 	m := resolver.Mutation()
 
 	var ctx context.Context
-	_, err := m.HydrateBaseExercise(ctx)
+	
+	
+	_, err := q.HydrateBaseExercise(ctx)
 	if err != nil {
 		fmt.Println("Hydrate base exercise failed")
 	}

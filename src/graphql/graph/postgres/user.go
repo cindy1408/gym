@@ -1,14 +1,19 @@
-package resolvers
+package postgres
 
 import (
 	"fmt"
 
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/pkg/errors"
+	"gorm.io/gorm"
 )
 
-func (r mutationResolver) AddUserToDB(newUser *model.User) (string, error) {
-	rows, err := r.DB.Model(&model.User{}).Select("email").Rows()
+type Database struct {
+	db *gorm.DB
+}
+
+func (r Database) AddUserToDB(newUser *model.User) (string, error) {
+	rows, err := r.db.Model(&model.User{}).Select("email").Rows()
 	if err != nil {
 		return "issue with user database", errors.Wrapf(err, "model.User{}, %v")
 	}
@@ -22,20 +27,20 @@ func (r mutationResolver) AddUserToDB(newUser *model.User) (string, error) {
 			count++
 
 			var existUser model.User
-			r.DB.Model(&model.User{}).First(&model.User{Email: email}).Scan(&existUser)
+			r.db.Model(&model.User{}).First(&model.User{Email: email}).Scan(&existUser)
 
 			return fmt.Sprintf("%v , exists in database!\n", newUser.Email), nil
 		}
 	}
 
 	if count == 0 {
-		r.DB.Create(&newUser)
+		r.db.Create(&newUser)
 	}
 	return fmt.Sprintf("user %v has been successfully created", newUser.FirstName), nil
 }
 
-func (r *mutationResolver) ValidateUser(email string) bool {
-	rows, err := r.DB.Model(&model.User{}).Select("email").Rows()
+func (r *Database) ValidateUser(email string) bool {
+	rows, err := r.db.Model(&model.User{}).Select("email").Rows()
 	if err != nil {
 		fmt.Println("issue with user table")
 	}
@@ -52,4 +57,10 @@ func (r *mutationResolver) ValidateUser(email string) bool {
 	}
 
 	return exists != 0
+}
+
+func (r *Database) UpdateUser(input model.AddUserWorkoutInput, workoutPlanID string) bool {
+	r.db.Model(&model.User{}).Where("email = ?", input.UserEmail).Update("user_workout_plan_id", workoutPlanID)
+
+	return true 
 }
