@@ -1,0 +1,23 @@
+extend type Query {
+  getAllUsers: [User!]!
+}
+
+extend type Mutation {
+  createUser(input: CreateUserInput!): String!
+}
+
+# table that consists of users info and a link to user workoutPlanID 
+type User  {
+  firstName: String! 
+  lastName: String!
+  email: String!
+  password: String!
+  UserWorkoutPlanId: String
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+}
