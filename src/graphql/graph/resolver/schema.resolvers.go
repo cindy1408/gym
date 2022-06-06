@@ -1,4 +1,4 @@
-package graph
+package resolver
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -7,11 +7,12 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/cindy1408/gym/src/graphql/graph"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 )
 
 func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) (string, error) {
-	for _, eachMuscleGroup := range MuscleGroupData {
+	for _, eachMuscleGroup := range graph.MuscleGroupData {
 		rows, err := r.DB.Model(&model.MuscleGroup{}).Select("name").Rows()
 		if err != nil {
 			fmt.Printf("%v, selecting database\n", eachMuscleGroup.Name)
@@ -39,7 +40,7 @@ func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) (string, err
 }
 
 func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) (string, error) {
-	for _, eachSpecificMuscleGroup := range SpecificMuscleGroupData {
+	for _, eachSpecificMuscleGroup := range graph.SpecificMuscleGroupData {
 		rows, err := r.DB.Model(&model.SpecificParts{}).Select("name").Rows()
 		if err != nil {
 			fmt.Printf("%v, selecting database\n", eachSpecificMuscleGroup.Name)

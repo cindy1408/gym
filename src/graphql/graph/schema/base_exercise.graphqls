@@ -1,5 +1,5 @@
 extend type Query {
-    baseExercises: [BaseExercise]!
+    getBaseExerciseByName(input: String!): BaseExercise!
     getAllAvailableBaseExercises: [BaseExercise!]!
 }
 

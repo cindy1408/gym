@@ -1,4 +1,4 @@
-package graph
+package resolver
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -31,7 +31,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 	// update user table
 	result := postgres.UpdateUser(input, userWorkoutPlan.ID)
 	if !result {
-		return "there was an error for update user", nil 
+		return "there was an error for update user", nil
 	}
 
 	if input.Exercises != nil {
