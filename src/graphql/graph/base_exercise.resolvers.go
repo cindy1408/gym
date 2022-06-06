@@ -17,7 +17,7 @@ func (r *queryResolver) BaseExercises(ctx context.Context) ([]*model.BaseExercis
 
 func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
 	allBaseExercises := []*model.BaseExercise{}
-	r.db.Table("base_exercises").Scan(&allBaseExercises)
+	r.DB.Table("base_exercises").Scan(&allBaseExercises)
 	return allBaseExercises, nil
 }
 
@@ -31,14 +31,14 @@ func (r *queryResolver) UpdateBaseExercise(ctx context.Context, input *model.Bas
 		MovementType:  input.MovementType,
 	}
 
-	r.db.Debug().Model(&model.BaseExercise{}).Where("name = ?", input.Name).Updates(updatedExercise)
+	r.DB.Debug().Model(&model.BaseExercise{}).Where("name = ?", input.Name).Updates(updatedExercise)
 
 	return &updatedExercise, nil
 }
 
 func (r *queryResolver) HydrateBaseExercise(ctx context.Context) (string, error) {
 	for _, eachBaseExercise := range BaseExerciseData {
-		rows, err := r.db.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
+		rows, err := r.DB.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
 		if err != nil {
 			fmt.Printf("%v , selecting database\n", eachBaseExercise.Name)
 		}
@@ -59,7 +59,7 @@ func (r *queryResolver) HydrateBaseExercise(ctx context.Context) (string, error)
 			}
 		}
 		if count == 0 {
-			r.db.Create(eachBaseExercise)
+			r.DB.Create(eachBaseExercise)
 		}
 	}
 

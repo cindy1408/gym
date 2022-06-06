@@ -49,7 +49,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 
 func (r *queryResolver) GetAllUsers(ctx context.Context) ([]*model.User, error) {
 	allUsers := []*model.User{}
-	r.db.Table("users").Scan(&allUsers)
+	r.DB.Table("users").Scan(&allUsers)
 
 	return allUsers, nil
 }

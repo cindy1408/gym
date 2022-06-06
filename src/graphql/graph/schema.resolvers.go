@@ -12,7 +12,7 @@ import (
 
 func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) (string, error) {
 	for _, eachMuscleGroup := range MuscleGroupData {
-		rows, err := r.db.Model(&model.MuscleGroup{}).Select("name").Rows()
+		rows, err := r.DB.Model(&model.MuscleGroup{}).Select("name").Rows()
 		if err != nil {
 			fmt.Printf("%v, selecting database\n", eachMuscleGroup.Name)
 		}
@@ -32,7 +32,7 @@ func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) (string, err
 			muscleGroup := model.MuscleGroup{
 				Name: eachMuscleGroup.Name,
 			}
-			r.db.Create(muscleGroup)
+			r.DB.Create(muscleGroup)
 		}
 	}
 	return "Muscle group table has been hydrated", nil
@@ -40,7 +40,7 @@ func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) (string, err
 
 func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) (string, error) {
 	for _, eachSpecificMuscleGroup := range SpecificMuscleGroupData {
-		rows, err := r.db.Model(&model.SpecificParts{}).Select("name").Rows()
+		rows, err := r.DB.Model(&model.SpecificParts{}).Select("name").Rows()
 		if err != nil {
 			fmt.Printf("%v, selecting database\n", eachSpecificMuscleGroup.Name)
 		}
@@ -60,7 +60,7 @@ func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) (string, er
 				Name:        eachSpecificMuscleGroup.Name,
 				MuscleGroup: eachSpecificMuscleGroup.MuscleGroup,
 			}
-			r.db.Create(specificMuscleGroup)
+			r.DB.Create(specificMuscleGroup)
 		}
 	}
 	return "Specific Parts has been hydrated", nil

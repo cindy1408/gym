@@ -14,13 +14,13 @@ import (
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	db               *gorm.DB
+	DB               *gorm.DB
 	baseExercises    []*model.BaseExercise
 	userWorkoutPlans []*model.UserWorkoutPlan
 }
 
 func (r *Resolver) Init() error {
-	err := r.db.AutoMigrate(
+	err := r.DB.AutoMigrate(
 		&model.BaseExercise{},
 		&model.User{},
 		&model.MuscleGroup{},
@@ -33,7 +33,7 @@ func (r *Resolver) Init() error {
 		return err
 	}
 
-	return r.db.Error
+	return r.DB.Error
 }
 
 func Hasher(toHash string) string {

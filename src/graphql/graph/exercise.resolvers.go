@@ -38,7 +38,7 @@ func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExer
 			Sets:              eachExercise.Sets,
 			Reps:              eachExercise.Reps,
 		}
-		r.db.Create(&addUserExercise)
+		r.DB.Create(&addUserExercise)
 	}
 
 	return "Your account has been successfully created", nil
