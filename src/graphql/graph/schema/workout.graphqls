@@ -1,0 +1,21 @@
+extend type Query {
+  getUserWorkoutPlansByEmail(input: String!): UserWorkoutPlan!
+  getAllUserWorkoutPlans: [UserWorkoutPlan!]!
+}
+
+extend type Mutation {
+  addUserWorkout(input: AddUserWorkoutInput!): String!
+}
+
+# user workout plan consists of userID, workoutID and name of the day eg. Push day
+type UserWorkoutPlan  {
+    id: String!
+    userEmail: String!
+    gymDay: String!
+}
+
+input AddUserWorkoutInput {
+  userEmail: String!
+  gymDay: String! 
+  exercises: [EachExerciseInput]
+}

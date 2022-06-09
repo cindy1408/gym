@@ -1,4 +1,4 @@
-package resolvers
+package resolver
 
 import (
 	"crypto/sha256"
@@ -13,7 +13,6 @@ import (
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 
-// used to pull the interface in
 type Resolver struct {
 	DB               *gorm.DB
 	baseExercises    []*model.BaseExercise

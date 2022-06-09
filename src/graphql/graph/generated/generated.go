@@ -73,23 +73,23 @@ type ComplexityRoot struct {
 	Mutation struct {
 		AddExercise          func(childComplexity int, input *model.AddExerciseInput) int
 		AddUserWorkout       func(childComplexity int, input model.AddUserWorkoutInput) int
-		CreateBaseExercise   func(childComplexity int, input *model.BaseExerciseInput) int
 		CreateUser           func(childComplexity int, input model.CreateUserInput) int
-		HydrateBaseExercise  func(childComplexity int) int
 		HydrateMuscleGroups  func(childComplexity int) int
 		HydrateSpecificParts func(childComplexity int) int
 		IncreaseRep          func(childComplexity int, input model.IncreaseRepInput) int
-		UpdateBaseExercise   func(childComplexity int, input *model.BaseExerciseInput) int
 	}
 
 	Query struct {
-		BaseExercises                func(childComplexity int) int
+		CreateBaseExercise           func(childComplexity int, input *model.BaseExerciseInput) int
 		GetAllAvailableBaseExercises func(childComplexity int) int
 		GetAllEachExercise           func(childComplexity int) int
 		GetAllUserWorkoutPlans       func(childComplexity int) int
 		GetAllUsers                  func(childComplexity int) int
+		GetBaseExerciseByName        func(childComplexity int, input string) int
 		GetMuscleSpecifics           func(childComplexity int, input *model.MuscleSpecificInput) int
 		GetUserWorkoutPlansByEmail   func(childComplexity int, input string) int
+		HydrateBaseExercise          func(childComplexity int) int
+		UpdateBaseExercise           func(childComplexity int, input *model.BaseExerciseInput) int
 	}
 
 	SpecificParts struct {
@@ -114,23 +114,23 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	AddExercise(ctx context.Context, input *model.AddExerciseInput) (string, error)
-	CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (string, error)
-	UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error)
-	HydrateBaseExercise(ctx context.Context) (string, error)
 	HydrateMuscleGroups(ctx context.Context) (string, error)
 	HydrateSpecificParts(ctx context.Context) (string, error)
+	IncreaseRep(ctx context.Context, input model.IncreaseRepInput) (*model.UserWorkoutPlan, error)
 	CreateUser(ctx context.Context, input model.CreateUserInput) (string, error)
 	AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (string, error)
-	IncreaseRep(ctx context.Context, input model.IncreaseRepInput) (*model.UserWorkoutPlan, error)
 }
 type QueryResolver interface {
-	BaseExercises(ctx context.Context) ([]*model.BaseExercise, error)
+	GetBaseExerciseByName(ctx context.Context, input string) (*model.BaseExercise, error)
 	GetAllAvailableBaseExercises(ctx context.Context) ([]*model.BaseExercise, error)
+	UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error)
+	HydrateBaseExercise(ctx context.Context) (string, error)
+	CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (string, error)
 	GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error)
-	GetUserWorkoutPlansByEmail(ctx context.Context, input string) (*model.UserWorkoutPlan, error)
-	GetAllUserWorkoutPlans(ctx context.Context) ([]*model.UserWorkoutPlan, error)
 	GetMuscleSpecifics(ctx context.Context, input *model.MuscleSpecificInput) ([]string, error)
 	GetAllUsers(ctx context.Context) ([]*model.User, error)
+	GetUserWorkoutPlansByEmail(ctx context.Context, input string) (*model.UserWorkoutPlan, error)
+	GetAllUserWorkoutPlans(ctx context.Context) ([]*model.UserWorkoutPlan, error)
 }
 
 type executableSchema struct {
@@ -277,18 +277,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.AddUserWorkout(childComplexity, args["input"].(model.AddUserWorkoutInput)), true
 
-	case "Mutation.createBaseExercise":
-		if e.complexity.Mutation.CreateBaseExercise == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_createBaseExercise_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.CreateBaseExercise(childComplexity, args["input"].(*model.BaseExerciseInput)), true
-
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
 			break
@@ -300,13 +288,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateUser(childComplexity, args["input"].(model.CreateUserInput)), true
-
-	case "Mutation.hydrateBaseExercise":
-		if e.complexity.Mutation.HydrateBaseExercise == nil {
-			break
-		}
-
-		return e.complexity.Mutation.HydrateBaseExercise(childComplexity), true
 
 	case "Mutation.hydrateMuscleGroups":
 		if e.complexity.Mutation.HydrateMuscleGroups == nil {
@@ -334,24 +315,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.IncreaseRep(childComplexity, args["input"].(model.IncreaseRepInput)), true
 
-	case "Mutation.updateBaseExercise":
-		if e.complexity.Mutation.UpdateBaseExercise == nil {
+	case "Query.createBaseExercise":
+		if e.complexity.Query.CreateBaseExercise == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_updateBaseExercise_args(context.TODO(), rawArgs)
+		args, err := ec.field_Query_createBaseExercise_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateBaseExercise(childComplexity, args["input"].(*model.BaseExerciseInput)), true
-
-	case "Query.baseExercises":
-		if e.complexity.Query.BaseExercises == nil {
-			break
-		}
-
-		return e.complexity.Query.BaseExercises(childComplexity), true
+		return e.complexity.Query.CreateBaseExercise(childComplexity, args["input"].(*model.BaseExerciseInput)), true
 
 	case "Query.getAllAvailableBaseExercises":
 		if e.complexity.Query.GetAllAvailableBaseExercises == nil {
@@ -381,6 +355,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.GetAllUsers(childComplexity), true
 
+	case "Query.getBaseExerciseByName":
+		if e.complexity.Query.GetBaseExerciseByName == nil {
+			break
+		}
+
+		args, err := ec.field_Query_getBaseExerciseByName_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetBaseExerciseByName(childComplexity, args["input"].(string)), true
+
 	case "Query.getMuscleSpecifics":
 		if e.complexity.Query.GetMuscleSpecifics == nil {
 			break
@@ -404,6 +390,25 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GetUserWorkoutPlansByEmail(childComplexity, args["input"].(string)), true
+
+	case "Query.hydrateBaseExercise":
+		if e.complexity.Query.HydrateBaseExercise == nil {
+			break
+		}
+
+		return e.complexity.Query.HydrateBaseExercise(childComplexity), true
+
+	case "Query.updateBaseExercise":
+		if e.complexity.Query.UpdateBaseExercise == nil {
+			break
+		}
+
+		args, err := ec.field_Query_updateBaseExercise_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.UpdateBaseExercise(childComplexity, args["input"].(*model.BaseExerciseInput)), true
 
 	case "SpecificParts.muscleGroup":
 		if e.complexity.SpecificParts.MuscleGroup == nil {
@@ -539,29 +544,78 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "graph/schema.graphqls", Input: `# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
+	{Name: "graph/schema/base_exercise.graphqls", Input: `extend type Query {
+    getBaseExerciseByName(input: String!): BaseExercise!
+    getAllAvailableBaseExercises: [BaseExercise!]!
+}
 
 extend type Query {
-  baseExercises: [BaseExercise]!
-  getAllAvailableBaseExercises: [BaseExercise!]!
+    updateBaseExercise(input: baseExerciseInput): BaseExercise!
+    hydrateBaseExercise: String!
+    createBaseExercise(input: baseExerciseInput): String!
+}
+
+# base Exercise are pre-field exercises 
+type BaseExercise  {
+    name: String!
+    muscleGroup: String!
+    specificParts: String!
+    level: Int! 
+    avoidGiven: String
+    movementType: String!
+}
+
+input baseExerciseInput {
+    name: String!
+    muscleGroup: String!
+    specificParts: String!
+    level: Int! 
+    avoidGiven: String
+    movementType: String!
+}`, BuiltIn: false},
+	{Name: "graph/schema/exercise.graphqls", Input: `extend type Query {
   getAllEachExercise: [EachExercise!]!
-  getUserWorkoutPlansByEmail(input: String!): UserWorkoutPlan!
-  getAllUserWorkoutPlans: [UserWorkoutPlan!]!
-  getMuscleSpecifics(input: muscleSpecificInput): [String!]
-  getAllUsers: [User!]!
 }
 
 extend type Mutation {
   addExercise(input: addExerciseInput): String!
-  createBaseExercise(input: baseExerciseInput): String!
-  updateBaseExercise(input: baseExerciseInput): BaseExercise!
-  hydrateBaseExercise: String!
+}
+
+# Each Exercise has the unique id, with all the info of the exercise and linked to userWorkoutPlanID 
+type EachExercise  {
+    id: String! 
+    userWorkoutPlanID: String!
+    name: String!
+    weight: Int!
+    Unit: String!
+    Sets: Int!
+    Reps: Int!
+}
+
+input EachExerciseInput {
+    name: String!
+    weight: Int!
+    Unit: String!
+    Sets: Int!
+    Reps: Int!
+}
+
+input addExerciseInput {
+  userEmail: String!
+  gymDay: String!
+  EachExercise: [EachExerciseInput!]
+}`, BuiltIn: false},
+	{Name: "graph/schema/schema.graphqls", Input: `# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+extend type Query {
+  getMuscleSpecifics(input: muscleSpecificInput): [String!]
+}
+
+extend type Mutation {
   hydrateMuscleGroups: String!
   hydrateSpecificParts: String!
-  createUser(input: CreateUserInput!): String!
-  addUserWorkout(input: AddUserWorkoutInput!): String!
   increaseRep(input: increaseRepInput!): UserWorkoutPlan!
 }
 # used to check muscle input is valid
@@ -578,72 +632,6 @@ type AvoidGiven  {
   name: String!
 }
 
-# base Exercise are pre-field exercises 
-type BaseExercise  {
-    name: String!
-    muscleGroup: String!
-    specificParts: String!
-    level: Int! 
-    avoidGiven: String
-    movementType: String!
-}
-# table that consists of users info and a link to user workoutPlanID 
-type User  {
-  firstName: String! 
-  lastName: String!
-  email: String!
-  password: String!
-  UserWorkoutPlanId: String
-}
-
-# user workout plan consists of userID, workoutID and name of the day eg. Push day
-type UserWorkoutPlan  {
-    id: String!
-    userEmail: String!
-    gymDay: String!
-}
-
-# Each Exercise has the unique id, with all the info of the exercise and linked to userWorkoutPlanID 
-type EachExercise  {
-    id: String! 
-    userWorkoutPlanID: String!
-    name: String!
-    weight: Int!
-    Unit: String!
-    Sets: Int!
-    Reps: Int!
-}
-
-input AddUserWorkoutInput {
-  userEmail: String!
-  gymDay: String! 
-  exercises: [EachExerciseInput]
-}
-
-input EachExerciseInput {
-    name: String!
-    weight: Int!
-    Unit: String!
-    Sets: Int!
-    Reps: Int!
-}
-
-input CreateUserInput {
-  firstName: String!
-  lastName: String!
-  email: String!
-  password: String!
-}
-
-input baseExerciseInput {
-    name: String!
-    muscleGroup: String!
-    specificParts: String!
-    level: Int! 
-    avoidGiven: String
-    movementType: String!
-}
-
 input muscleSpecificInput {
   name: String!
   MuscleGroup: String!
@@ -654,11 +642,50 @@ input increaseRepInput {
   gymDay: String!
   exerciseName: String!
 }
+`, BuiltIn: false},
+	{Name: "graph/schema/user.graphqls", Input: `extend type Query {
+  getAllUsers: [User!]!
+}
 
-input addExerciseInput {
+extend type Mutation {
+  createUser(input: CreateUserInput!): String!
+}
+
+# table that consists of users info and a link to user workoutPlanID 
+type User  {
+  firstName: String! 
+  lastName: String!
+  email: String!
+  password: String!
+  UserWorkoutPlanId: String
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+}`, BuiltIn: false},
+	{Name: "graph/schema/workout.graphqls", Input: `extend type Query {
+  getUserWorkoutPlansByEmail(input: String!): UserWorkoutPlan!
+  getAllUserWorkoutPlans: [UserWorkoutPlan!]!
+}
+
+extend type Mutation {
+  addUserWorkout(input: AddUserWorkoutInput!): String!
+}
+
+# user workout plan consists of userID, workoutID and name of the day eg. Push day
+type UserWorkoutPlan  {
+    id: String!
+    userEmail: String!
+    gymDay: String!
+}
+
+input AddUserWorkoutInput {
   userEmail: String!
-  gymDay: String!
-  EachExercise: [EachExerciseInput!]
+  gymDay: String! 
+  exercises: [EachExerciseInput]
 }`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -697,21 +724,6 @@ func (ec *executionContext) field_Mutation_addUserWorkout_args(ctx context.Conte
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_createBaseExercise_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *model.BaseExerciseInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalObaseExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -742,7 +754,22 @@ func (ec *executionContext) field_Mutation_increaseRep_args(ctx context.Context,
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_updateBaseExercise_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_createBaseExercise_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *model.BaseExerciseInput
@@ -757,18 +784,18 @@ func (ec *executionContext) field_Mutation_updateBaseExercise_args(ctx context.C
 	return args, nil
 }
 
-func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_getBaseExerciseByName_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
-	if tmp, ok := rawArgs["name"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["name"] = arg0
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -794,6 +821,21 @@ func (ec *executionContext) field_Query_getUserWorkoutPlansByEmail_args(ctx cont
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_updateBaseExercise_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.BaseExerciseInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalObaseExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1404,125 +1446,6 @@ func (ec *executionContext) _Mutation_addExercise(ctx context.Context, field gra
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_createBaseExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_createBaseExercise_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateBaseExercise(rctx, args["input"].(*model.BaseExerciseInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_updateBaseExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_updateBaseExercise_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateBaseExercise(rctx, args["input"].(*model.BaseExerciseInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.BaseExercise)
-	fc.Result = res
-	return ec.marshalNBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_hydrateBaseExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().HydrateBaseExercise(rctx)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Mutation_hydrateMuscleGroups(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1591,6 +1514,48 @@ func (ec *executionContext) _Mutation_hydrateSpecificParts(ctx context.Context, 
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_increaseRep(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_increaseRep_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().IncreaseRep(rctx, args["input"].(model.IncreaseRepInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.UserWorkoutPlan)
+	fc.Result = res
+	return ec.marshalNUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1677,49 +1642,7 @@ func (ec *executionContext) _Mutation_addUserWorkout(ctx context.Context, field 
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_increaseRep(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_increaseRep_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().IncreaseRep(rctx, args["input"].(model.IncreaseRepInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.UserWorkoutPlan)
-	fc.Result = res
-	return ec.marshalNUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Query_baseExercises(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Query_getBaseExerciseByName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1735,9 +1658,16 @@ func (ec *executionContext) _Query_baseExercises(ctx context.Context, field grap
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_getBaseExerciseByName_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().BaseExercises(rctx)
+		return ec.resolvers.Query().GetBaseExerciseByName(rctx, args["input"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1749,9 +1679,9 @@ func (ec *executionContext) _Query_baseExercises(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.BaseExercise)
+	res := resTmp.(*model.BaseExercise)
 	fc.Result = res
-	return ec.marshalNBaseExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, field.Selections, res)
+	return ec.marshalNBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getAllAvailableBaseExercises(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1789,6 +1719,125 @@ func (ec *executionContext) _Query_getAllAvailableBaseExercises(ctx context.Cont
 	return ec.marshalNBaseExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_updateBaseExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_updateBaseExercise_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().UpdateBaseExercise(rctx, args["input"].(*model.BaseExerciseInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.BaseExercise)
+	fc.Result = res
+	return ec.marshalNBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_hydrateBaseExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().HydrateBaseExercise(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_createBaseExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_createBaseExercise_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CreateBaseExercise(rctx, args["input"].(*model.BaseExerciseInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_getAllEachExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1822,6 +1871,80 @@ func (ec *executionContext) _Query_getAllEachExercise(ctx context.Context, field
 	res := resTmp.([]*model.EachExercise)
 	fc.Result = res
 	return ec.marshalNEachExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_getMuscleSpecifics(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_getMuscleSpecifics_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetMuscleSpecifics(rctx, args["input"].(*model.MuscleSpecificInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalOString2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_getAllUsers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetAllUsers(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getUserWorkoutPlansByEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1899,80 +2022,6 @@ func (ec *executionContext) _Query_getAllUserWorkoutPlans(ctx context.Context, f
 	res := resTmp.([]*model.UserWorkoutPlan)
 	fc.Result = res
 	return ec.marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlanᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Query_getMuscleSpecifics(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_getMuscleSpecifics_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetMuscleSpecifics(rctx, args["input"].(*model.MuscleSpecificInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]string)
-	fc.Result = res
-	return ec.marshalOString2ᚕstringᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Query_getAllUsers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetAllUsers(rctx)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*model.User)
-	fc.Result = res
-	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4160,36 +4209,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "createBaseExercise":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createBaseExercise(ctx, field)
-			}
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "updateBaseExercise":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateBaseExercise(ctx, field)
-			}
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "hydrateBaseExercise":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_hydrateBaseExercise(ctx, field)
-			}
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "hydrateMuscleGroups":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_hydrateMuscleGroups(ctx, field)
@@ -4210,6 +4229,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "increaseRep":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_increaseRep(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "createUser":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createUser(ctx, field)
@@ -4223,16 +4252,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "addUserWorkout":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_addUserWorkout(ctx, field)
-			}
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "increaseRep":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_increaseRep(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
@@ -4270,7 +4289,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "baseExercises":
+		case "getBaseExerciseByName":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -4279,7 +4298,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_baseExercises(ctx, field)
+				res = ec._Query_getBaseExerciseByName(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -4316,6 +4335,75 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "updateBaseExercise":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_updateBaseExercise(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "hydrateBaseExercise":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_hydrateBaseExercise(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "createBaseExercise":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_createBaseExercise(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "getAllEachExercise":
 			field := field
 
@@ -4326,6 +4414,49 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getAllEachExercise(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "getMuscleSpecifics":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getMuscleSpecifics(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "getAllUsers":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getAllUsers(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -4372,49 +4503,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getAllUserWorkoutPlans(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return rrm(innerCtx)
-			})
-		case "getMuscleSpecifics":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_getMuscleSpecifics(ctx, field)
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return rrm(innerCtx)
-			})
-		case "getAllUsers":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_getAllUsers(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -5045,44 +5133,6 @@ func (ec *executionContext) marshalNBaseExercise2githubᚗcomᚋcindy1408ᚋgym�
 	return ec._BaseExercise(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNBaseExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx context.Context, sel ast.SelectionSet, v []*model.BaseExercise) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalOBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	return ret
-}
-
 func (ec *executionContext) marshalNBaseExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.BaseExercise) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -5614,13 +5664,6 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 func (ec *executionContext) unmarshalNincreaseRepInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐIncreaseRepInput(ctx context.Context, v interface{}) (model.IncreaseRepInput, error) {
 	res, err := ec.unmarshalInputincreaseRepInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx context.Context, sel ast.SelectionSet, v *model.BaseExercise) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._BaseExercise(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {

@@ -10,7 +10,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/cindy1408/gym/src/graphql/graph/generated"
-	"github.com/cindy1408/gym/src/graphql/graph/resolvers"
+	"github.com/cindy1408/gym/src/graphql/graph/resolver"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -37,7 +37,7 @@ func main() {
 
 	db, _ = NewDatabase()
 
-	resolver := &resolvers.Resolver{
+	resolver := &resolver.Resolver{
 		DB: db,
 	}
 
@@ -46,10 +46,12 @@ func main() {
 		log.Fatal("failed to create database: %v", err)
 	}
 
+	q := resolver.Query()
 	m := resolver.Mutation()
 
 	var ctx context.Context
-	_, err := m.HydrateBaseExercise(ctx)
+
+	_, err := q.HydrateBaseExercise(ctx)
 	if err != nil {
 		fmt.Println("Hydrate base exercise failed")
 	}
