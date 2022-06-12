@@ -14,7 +14,7 @@ import (
 )
 
 func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExerciseInput) (string, error) {
-	postgres := postgres.Database{}
+	postgres := postgres.Resolver{}
 	validated := postgres.ValidateUser(input.UserEmail)
 
 	if !validated {

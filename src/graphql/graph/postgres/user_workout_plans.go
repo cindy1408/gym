@@ -8,11 +8,11 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (r *Database) ValidateUserWorkoutPlan(userEmail string, gymDay string) (string, bool) {
+func (r *Resolver) ValidateUserWorkoutPlan(userEmail string, gymDay string) (string, bool) {
 
 	fmt.Println(gymDay, userEmail)
 	var total int64
-	r.db.Model(&model.UserWorkoutPlan{}).Where("user_email = ? AND gym_day = ?", userEmail, gymDay).Count(&total)
+	r.DB.Model(&model.UserWorkoutPlan{}).Where("user_email = ? AND gym_day = ?", userEmail, gymDay).Count(&total)
 
 	if total == 0 {
 		return "", false
@@ -20,7 +20,7 @@ func (r *Database) ValidateUserWorkoutPlan(userEmail string, gymDay string) (str
 
 	var userWorkoutPlanID, userEmailDB, gymDayDB string
 
-	row, err := r.db.Model(&model.UserWorkoutPlan{}).Select("id", "user_email", "gym_day").Rows()
+	row, err := r.DB.Model(&model.UserWorkoutPlan{}).Select("id", "user_email", "gym_day").Rows()
 	if err != nil {
 		fmt.Println("issue with user workout plan database")
 	}
@@ -36,8 +36,8 @@ func (r *Database) ValidateUserWorkoutPlan(userEmail string, gymDay string) (str
 	return "", false
 }
 
-func (r *Database) AssignUserWorkoutPlan(input model.AddUserWorkoutInput) (*model.UserWorkoutPlan, error) {
-	rows, err := r.db.Model(&model.UserWorkoutPlan{}).Select("user_email", "gym_day").Rows()
+func (r *Resolver) AssignUserWorkoutPlan(input model.AddUserWorkoutInput) (*model.UserWorkoutPlan, error) {
+	rows, err := r.DB.Model(&model.UserWorkoutPlan{}).Select("user_email", "gym_day").Rows()
 	if err != nil {
 		return nil, errors.Wrapf(err, "error with user workout plan")
 	}
@@ -62,7 +62,7 @@ func (r *Database) AssignUserWorkoutPlan(input model.AddUserWorkoutInput) (*mode
 			UserEmail: input.UserEmail,
 			GymDay:    input.GymDay,
 		}
-		r.db.Create(userWorkoutPlan)
+		r.DB.Create(userWorkoutPlan)
 	}
 	return userWorkoutPlan, nil
 }

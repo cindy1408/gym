@@ -5,7 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (r Database) AddEachExercisesToDB(userWorkoutID string, eachExercises []*model.EachExerciseInput) (string, error) {
+func (r Resolver) AddEachExercisesToDB(userWorkoutID string, eachExercises []*model.EachExerciseInput) (string, error) {
 	for _, eachExercise := range eachExercises {
 		addExercise := &model.EachExercise{
 			ID:                uuid.New().String(),
@@ -16,7 +16,7 @@ func (r Database) AddEachExercisesToDB(userWorkoutID string, eachExercises []*mo
 			Reps:              eachExercise.Reps,
 		}
 
-		r.db.Create(&addExercise)
+		r.DB.Create(&addExercise)
 	}
 	return "User's workout and exercises has been updated", nil
 }

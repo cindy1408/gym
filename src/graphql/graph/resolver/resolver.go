@@ -16,7 +16,7 @@ import (
 type Resolver struct {
 	DB               *gorm.DB
 	baseExercises    []*model.BaseExercise
-	userWorkoutPlans []*model.UserWorkoutPlan
+	// userWorkoutPlans []*model.UserWorkoutPlan
 }
 
 func (r *Resolver) Init() error {
