@@ -5,7 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
-resolve := resolver.Resolver
+resolver := resolver.Resolver
 
 func (r Resolver) AddEachExercisesToDB(userWorkoutID string, eachExercises []*model.EachExerciseInput) (string, error) {
 	for _, eachExercise := range eachExercises {
