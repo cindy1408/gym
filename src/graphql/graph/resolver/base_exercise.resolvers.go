@@ -8,21 +8,21 @@ import (
 	"fmt"
 
 	"github.com/cindy1408/gym/src/graphql/graph"
-	"github.com/cindy1408/gym/src/graphql/graph/generated"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"gorm.io/gorm"
 )
 
-func (r *queryResolver) GetBaseExerciseByName(ctx context.Context, input string) (*model.BaseExercise, error) {
+func (r *BaseExerciseResolver) GetBaseExerciseByName(ctx context.Context, input string) (*model.BaseExercise, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
+func (r *BaseExerciseResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
 	allBaseExercises := []*model.BaseExercise{}
 	r.DB.Table("base_exercises").Scan(&allBaseExercises)
 	return allBaseExercises, nil
 }
 
-func (r *queryResolver) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
+func (r *BaseExerciseResolver) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
 	updatedExercise := model.BaseExercise{
 		Name:          input.Name,
 		MuscleGroup:   input.MuscleGroup,
@@ -37,7 +37,7 @@ func (r *queryResolver) UpdateBaseExercise(ctx context.Context, input *model.Bas
 	return &updatedExercise, nil
 }
 
-func (r *queryResolver) HydrateBaseExercise(ctx context.Context) (string, error) {
+func (r *BaseExerciseResolver) HydrateBaseExercise(ctx context.Context) (string, error) {
 	for _, eachBaseExercise := range graph.BaseExerciseData {
 		rows, err := r.DB.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
 		if err != nil {
@@ -67,7 +67,7 @@ func (r *queryResolver) HydrateBaseExercise(ctx context.Context) (string, error)
 	return "Base exercise table has been hydrated!", nil
 }
 
-func (r *queryResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (string, error) {
+func (r *BaseExerciseResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (string, error) {
 	if input.Name == "" ||
 		input.MuscleGroup == "" ||
 		input.SpecificParts == "" ||
@@ -88,7 +88,18 @@ func (r *queryResolver) CreateBaseExercise(ctx context.Context, input *model.Bas
 	return fmt.Sprintf("base exercise %v has been added", input.Name), nil
 }
 
-// Query returns generated.QueryResolver implementation.
-func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
+type BaseExerciseResolver struct {
+	DB            *gorm.DB
+	baseExercises []*model.BaseExercise
+}
 
-type queryResolver struct{ *Resolver }
+func NewBaseExerciseResolver(db *gorm.DB) *BaseExerciseResolver {
+	return &BaseExerciseResolver{
+		DB: db,
+	}
+}
+
+// Query returns generated.QueryResolver implementation.
+// func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
+
+// type queryResolver struct{ *Resolver }
