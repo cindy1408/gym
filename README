@@ -25,11 +25,7 @@ go get -u gorm.io/gorm
 go get -u gorm.io/driver/postgres
 
 
-
 NEXT STEP: 
-
-look into postgres packages and using the DB from resolver
-
 
 
 

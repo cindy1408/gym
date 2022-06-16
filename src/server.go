@@ -27,13 +27,13 @@ type Server interface {
 	Connect() error
 }
 
+var db *gorm.DB
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
 	}
-
-	var db *gorm.DB
 
 	db, _ = NewDatabase()
 

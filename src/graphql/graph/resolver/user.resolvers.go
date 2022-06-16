@@ -5,7 +5,6 @@ package resolver
 
 import (
 	"context"
-	"fmt"
 	"net/mail"
 
 	"github.com/cindy1408/gym/src/graphql/graph/model"
@@ -14,8 +13,6 @@ import (
 )
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (string, error) {
-	fmt.Printf("here2")
-
 	if input.FirstName == "" {
 		return "first name is missing", nil
 	}
@@ -40,7 +37,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		Password:  hashedPw,
 	}
 
-	result, err := postgres.AddUserToDB(ctx, &newUser)
+	result, err := postgres.AddUserToDB(r.DB, &newUser)
 	if err != nil {
 		return "", errors.Wrapf(err, "r.AddUserToDB")
 	}

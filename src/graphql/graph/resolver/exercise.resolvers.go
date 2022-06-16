@@ -12,14 +12,14 @@ import (
 )
 
 func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExerciseInput) (string, error) {
-	validated := postgres.ValidateUser(input.UserEmail)
+	validated := postgres.ValidateUser(r.DB, input.UserEmail)
 
 	if !validated {
 		return "Please create an account first", nil
 	}
 
 	// validate user workout plan
-	workoutPlanID, validated := postgres.ValidateUserWorkoutPlan(input.UserEmail, input.GymDay)
+	workoutPlanID, validated := postgres.ValidateUserWorkoutPlan(r.DB, input.UserEmail, input.GymDay)
 	if !validated {
 		return "You need to create a workout plan", nil
 	}

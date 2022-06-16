@@ -13,7 +13,7 @@ import (
 
 func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (string, error) {
 	// check if the user email exists!
-	validated := postgres.ValidateUser(input.UserEmail)
+	validated := postgres.ValidateUser(r.DB, input.UserEmail)
 
 	if !validated {
 		return "You need to sign up first", nil
@@ -21,13 +21,13 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 
 	// assign user email to userworkout plan
 
-	userWorkoutPlan, err := postgres.AssignUserWorkoutPlan(input)
+	userWorkoutPlan, err := postgres.AssignUserWorkoutPlan(r.DB, input)
 	if err != nil {
 		return "there was an error", nil
 	}
 
 	// update user table
-	result := postgres.UpdateUser(input, userWorkoutPlan.ID)
+	result := postgres.UpdateUser(r.DB, input, userWorkoutPlan.ID)
 	if !result {
 		return "there was an error for update user", nil
 	}
