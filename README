@@ -28,22 +28,7 @@ go get -u gorm.io/driver/postgres
 
 NEXT STEP: 
 
-Hydrating directly to the database - DONE
-
-Create User - DONE 
-
-Read https://thenewstack.io/understanding-golang-packages/
-
-
-
-set up docker 
-
-look into gorm migrate (migrate schema and create tables keeping them up to date)
-
-to match the schema with the ERD diagram (tables) 
-
-Look into docker compose up and docker compose down 
-
+look into postgres packages and using the DB from resolver
 
 
 
