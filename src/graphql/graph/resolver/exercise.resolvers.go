@@ -20,7 +20,6 @@ func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExer
 	}
 
 	// validate user workout plan
-
 	workoutPlanID, validated := postgres.ValidateUserWorkoutPlan(input.UserEmail, input.GymDay)
 	if !validated {
 		return "You need to create a workout plan", nil

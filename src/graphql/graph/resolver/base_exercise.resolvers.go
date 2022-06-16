@@ -12,7 +12,9 @@ import (
 )
 
 func (r *queryResolver) GetBaseExerciseByName(ctx context.Context, input string) (*model.BaseExercise, error) {
-	panic(fmt.Errorf("not implemented"))
+	var baseExercise *model.BaseExercise
+	r.DB.Where("name", input).Find(&model.BaseExercise{}).Scan(&baseExercise)
+	return baseExercise, nil 
 }
 
 func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
