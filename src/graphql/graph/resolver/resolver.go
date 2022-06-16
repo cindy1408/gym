@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
+	"github.com/cindy1408/gym/src/graphql/graph/generated"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"gorm.io/gorm"
 )
@@ -14,10 +15,20 @@ import (
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	DB               *gorm.DB
-	baseExercises    []*model.BaseExercise
-	// userWorkoutPlans []*model.UserWorkoutPlan
+	DB                 *gorm.DB
+	baseExercises      []*model.BaseExercise
 }
+
+// Query returns generated.QueryResolver implementation.
+func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
+
+type queryResolver struct{ *Resolver }
+
+// Mutation returns generated.MutationResolver implementation.
+func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
+
+type mutationResolver struct{ *Resolver }
+
 
 func (r *Resolver) Init() error {
 	err := r.DB.AutoMigrate(

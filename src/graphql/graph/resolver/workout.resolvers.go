@@ -12,8 +12,6 @@ import (
 )
 
 func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (string, error) {
-	postgres := postgres.Resolver{}
-
 	// check if the user email exists!
 	validated := postgres.ValidateUser(input.UserEmail)
 

@@ -14,8 +14,6 @@ import (
 )
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (string, error) {
-	postgres := postgres.Resolver{}
-
 	fmt.Printf("here2")
 
 	if input.FirstName == "" {

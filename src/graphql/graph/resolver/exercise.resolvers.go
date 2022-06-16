@@ -7,14 +7,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cindy1408/gym/src/graphql/graph/generated"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/cindy1408/gym/src/graphql/graph/postgres"
 	"github.com/google/uuid"
 )
 
 func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExerciseInput) (string, error) {
-	postgres := postgres.Resolver{}
 	validated := postgres.ValidateUser(input.UserEmail)
 
 	if !validated {
@@ -47,8 +45,3 @@ func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExer
 func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
 	panic(fmt.Errorf("not implemented"))
 }
-
-// Mutation returns generated.MutationResolver implementation.
-func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
-
-type mutationResolver struct{ *Resolver }
