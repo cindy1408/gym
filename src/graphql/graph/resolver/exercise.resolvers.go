@@ -23,7 +23,7 @@ func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExer
 		return "You need to create a workout plan", nil
 	}
 
-	return postgres.AddEachExercisesToDB(r.DB, workoutPlanID, input.EachExercise)
+	return postgres.AddEachExercises(r.DB, workoutPlanID, input.EachExercise)
 }
 
 func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {

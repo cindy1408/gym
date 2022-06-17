@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func AddEachExercisesToDB(db *gorm.DB, userWorkoutID string, eachExercises []*model.EachExerciseInput) (string, error) {
+func AddEachExercises(db *gorm.DB, userWorkoutID string, eachExercises []*model.EachExerciseInput) (string, error) {
 	for _, eachExercise := range eachExercises {
 		addExercise := &model.EachExercise{
 			ID:                uuid.New().String(),
