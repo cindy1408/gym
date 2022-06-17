@@ -19,5 +19,5 @@ func AddEachExercisesToDB(db *gorm.DB, userWorkoutID string, eachExercises []*mo
 
 		db.Create(&addExercise)
 	}
-	return "User's workout and exercises has been updated", nil
+	return "user exercises has been added", nil
 }

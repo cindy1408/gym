@@ -24,6 +24,7 @@ func ValidateUserWorkoutPlan(db *gorm.DB, userEmail string, gymDay string) (stri
 	if err != nil {
 		fmt.Println("issue with user workout plan database")
 	}
+	
 	defer row.Close()
 
 	for row.Next() {

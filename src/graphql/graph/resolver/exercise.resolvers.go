@@ -8,7 +8,6 @@ import (
 
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/cindy1408/gym/src/graphql/graph/postgres"
-	"github.com/google/uuid"
 )
 
 func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExerciseInput) (string, error) {
@@ -24,20 +23,7 @@ func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExer
 		return "You need to create a workout plan", nil
 	}
 
-	for _, eachExercise := range input.EachExercise {
-		addUserExercise := model.EachExercise{
-			ID:                uuid.NewString(),
-			UserWorkoutPlanID: workoutPlanID,
-			Name:              eachExercise.Name,
-			Weight:            eachExercise.Weight,
-			Unit:              eachExercise.Unit,
-			Sets:              eachExercise.Sets,
-			Reps:              eachExercise.Reps,
-		}
-		r.DB.Create(&addUserExercise)
-	}
-
-	return "Your account has been successfully created", nil
+	return postgres.AddEachExercisesToDB(r.DB, workoutPlanID, input.EachExercise)
 }
 
 func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
