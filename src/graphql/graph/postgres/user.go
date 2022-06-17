@@ -13,6 +13,7 @@ func AddUserToDB(db *gorm.DB, newUser *model.User) (string, error) {
 	if err != nil {
 		return "issue with user database", errors.Wrapf(err, "model.User{}, %v")
 	}
+
 	defer rows.Close()
 
 	var email string
@@ -32,6 +33,7 @@ func AddUserToDB(db *gorm.DB, newUser *model.User) (string, error) {
 	if count == 0 {
 		db.Create(&newUser)
 	}
+
 	return fmt.Sprintf("user %v has been successfully created", newUser.FirstName), nil
 }
 
@@ -40,6 +42,7 @@ func ValidateUser(db *gorm.DB, email string) bool {
 	if err != nil {
 		fmt.Println("issue with user table")
 	}
+
 	defer rows.Close()
 
 	var existingEmail string
@@ -57,5 +60,6 @@ func ValidateUser(db *gorm.DB, email string) bool {
 
 func UpdateUser(db *gorm.DB, input model.AddUserWorkoutInput, workoutPlanID string) bool {
 	db.Model(&model.User{}).Where("email = ?", input.UserEmail).Update("user_workout_plan_id", workoutPlanID)
+	
 	return true
 }

@@ -17,6 +17,7 @@ func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) (string, err
 		if err != nil {
 			fmt.Printf("%v, selecting database\n", eachMuscleGroup.Name)
 		}
+
 		defer rows.Close()
 
 		var name string
@@ -29,6 +30,7 @@ func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) (string, err
 				fmt.Printf("%v , exists in database!\n", eachMuscleGroup.Name)
 			}
 		}
+
 		if count == 0 {
 			muscleGroup := model.MuscleGroup{
 				Name: eachMuscleGroup.Name,
@@ -36,6 +38,7 @@ func (r *mutationResolver) HydrateMuscleGroups(ctx context.Context) (string, err
 			r.DB.Create(muscleGroup)
 		}
 	}
+
 	return "Muscle group table has been hydrated", nil
 }
 
@@ -45,6 +48,7 @@ func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) (string, er
 		if err != nil {
 			fmt.Printf("%v, selecting database\n", eachSpecificMuscleGroup.Name)
 		}
+		
 		defer rows.Close()
 
 		var name string
@@ -56,14 +60,17 @@ func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) (string, er
 				fmt.Printf("%v, exists in database!\n", eachSpecificMuscleGroup.Name)
 			}
 		}
+
 		if count == 0 {
 			specificMuscleGroup := model.SpecificParts{
 				Name:        eachSpecificMuscleGroup.Name,
 				MuscleGroup: eachSpecificMuscleGroup.MuscleGroup,
 			}
+
 			r.DB.Create(specificMuscleGroup)
 		}
 	}
+
 	return "Specific Parts has been hydrated", nil
 }
 
@@ -72,5 +79,8 @@ func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.Increase
 }
 
 func (r *queryResolver) GetMuscleSpecifics(ctx context.Context, input *model.MuscleSpecificInput) ([]string, error) {
-	panic(fmt.Errorf("not implemented"))
+	allSpecifics := []string{}
+	r.DB.Model(&model.SpecificParts{}).Where("name = ?", input.Name).Scan(&allSpecifics)
+	
+	return allSpecifics, nil 
 }
