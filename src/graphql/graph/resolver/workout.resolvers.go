@@ -20,7 +20,6 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 	}
 
 	// assign user email to userworkout plan
-
 	userWorkoutPlan, err := postgres.AssignUserWorkoutPlan(r.DB, input)
 	if err != nil {
 		return "there was an error", nil
@@ -44,5 +43,7 @@ func (r *queryResolver) GetUserWorkoutPlansByEmail(ctx context.Context, input st
 }
 
 func (r *queryResolver) GetAllUserWorkoutPlans(ctx context.Context) ([]*model.UserWorkoutPlan, error) {
-	panic(fmt.Errorf("not implemented"))
+	userWorkoutPlans := []*model.UserWorkoutPlan{}
+	r.DB.Table("user_workout_plan").Scan(&userWorkoutPlans)
+	return userWorkoutPlans, nil
 }
