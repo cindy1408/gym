@@ -5,16 +5,16 @@ package resolver
 
 import (
 	"context"
-	"fmt"
 
-	"github.com/cindy1408/gym/src/graphql/graph"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"github.com/cindy1408/gym/src/graphql/graph/postgres"
+	"github.com/pkg/errors"
 )
 
 func (r *queryResolver) GetBaseExerciseByName(ctx context.Context, input string) (*model.BaseExercise, error) {
 	var baseExercise *model.BaseExercise
 	r.DB.Where("name", input).Find(&model.BaseExercise{}).Scan(&baseExercise)
-	return baseExercise, nil 
+	return baseExercise, nil
 }
 
 func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
@@ -24,48 +24,21 @@ func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*mo
 }
 
 func (r *queryResolver) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
-	updatedExercise := model.BaseExercise{
-		Name:          input.Name,
-		MuscleGroup:   input.MuscleGroup,
-		SpecificParts: input.SpecificParts,
-		Level:         input.Level,
-		AvoidGiven:    input.AvoidGiven,
-		MovementType:  input.MovementType,
+	updatedExercise, err := postgres.UpdateBaseExercise(ctx, r.DB, input)
+	if err != nil {
+		return nil, errors.Wrap(err, "postgres.UpdateBaseexercise")
 	}
 
-	r.DB.Debug().Model(&model.BaseExercise{}).Where("name = ?", input.Name).Updates(updatedExercise)
-
-	return &updatedExercise, nil
+	return updatedExercise, nil
 }
 
 func (r *queryResolver) HydrateBaseExercise(ctx context.Context) (string, error) {
-	for _, eachBaseExercise := range graph.BaseExerciseData {
-		rows, err := r.DB.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
-		if err != nil {
-			fmt.Printf("%v , selecting database\n", eachBaseExercise.Name)
-		}
-		defer rows.Close()
-
-		var name, avoidGiven string
-		var count int
-
-		for rows.Next() {
-			rows.Scan(&name, &avoidGiven)
-			if avoidGiven == "" {
-				if name == eachBaseExercise.Name {
-					count += 1
-					fmt.Printf("%v , exists in database!\n", eachBaseExercise.Name)
-				}
-			} else if name == eachBaseExercise.Name && &avoidGiven == eachBaseExercise.AvoidGiven {
-				fmt.Printf("%v , exists in database!\n", eachBaseExercise.Name)
-			}
-		}
-		if count == 0 {
-			r.DB.Create(eachBaseExercise)
-		}
+	result, err := postgres.HydrateBaseExercise(ctx, r.DB)
+	if err != nil {
+		return "", errors.Wrap(err, "postgres.HydrateBaseExercise")
 	}
 
-	return "Base exercise table has been hydrated!", nil
+	return result, nil
 }
 
 func (r *queryResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (string, error) {
@@ -76,15 +49,13 @@ func (r *queryResolver) CreateBaseExercise(ctx context.Context, input *model.Bas
 		input.MovementType == "" {
 		return "at least one of the required field is missing", nil
 	}
-	newExercise := model.BaseExercise{
-		Name:          input.Name,
-		MuscleGroup:   input.MuscleGroup,
-		SpecificParts: input.SpecificParts,
-		Level:         input.Level,
-		AvoidGiven:    input.AvoidGiven,
-		MovementType:  input.MovementType,
-	}
-	r.baseExercises = append(r.baseExercises, &newExercise)
 
-	return fmt.Sprintf("base exercise %v has been added", input.Name), nil
+	// TODO: CHECK IF BASE EXERCISE ALREADY EXISTS!
+
+	result, err := postgres.AddBaseExercise(ctx, r.DB, input)
+	if err != nil {
+		return "", errors.Wrap(err, "postgres.AddBaseExercise")
+	}
+
+	return result, nil
 }
