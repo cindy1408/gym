@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/cindy1408/gym/src/graphql/graph/model"
@@ -60,6 +61,13 @@ func ValidateUser(db *gorm.DB, email string) bool {
 
 func UpdateUser(db *gorm.DB, input model.AddUserWorkoutInput, workoutPlanID string) bool {
 	db.Model(&model.User{}).Where("email = ?", input.UserEmail).Update("user_workout_plan_id", workoutPlanID)
-	
+
 	return true
+}
+
+func GetAllUsers(ctx context.Context, db *gorm.DB) ([]*model.User, error) {
+	allUsers := []*model.User{}
+	db.Table("users").Scan(&allUsers)
+	
+	return allUsers, nil 
 }

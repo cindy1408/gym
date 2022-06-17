@@ -46,8 +46,10 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 }
 
 func (r *queryResolver) GetAllUsers(ctx context.Context) ([]*model.User, error) {
-	allUsers := []*model.User{}
-	r.DB.Table("users").Scan(&allUsers)
+	allUsers, err := postgres.GetAllUsers(ctx, r.DB)
+	if err != nil {
+		return nil, errors.Wrap(err, "postgres.GetAllUsers")
+	}
 
 	return allUsers, nil
 }
