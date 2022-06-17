@@ -33,7 +33,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 	}
 
 	if input.Exercises != nil {
-		return postgres.AddEachExercisesToDB(userWorkoutPlan.ID, input.Exercises)
+		return postgres.AddEachExercisesToDB(r.DB, userWorkoutPlan.ID, input.Exercises)
 	}
 
 	return fmt.Sprintf("User %v has been added", input.UserEmail), nil
