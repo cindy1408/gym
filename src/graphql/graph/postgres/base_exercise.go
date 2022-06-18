@@ -67,7 +67,23 @@ func AddBaseExercise(ctx context.Context, db *gorm.DB, baseExercise *model.BaseE
 	return fmt.Sprintf("base exercise %v has been added", baseExercise.Name), nil
 }
 
-func ValidateBaseExercise(ctx context.Context, db *gorm.DB, name string) (bool, error) {
-	// TODO! 
-	return false, nil 
+func ValidateBaseExercise(ctx context.Context, db *gorm.DB, name string) bool {
+	rows, err := db.Model(&model.BaseExercise{}).Select("name").Rows()
+	if err != nil {
+		fmt.Println("issue with base exercise table")
+	}
+
+	defer rows.Close()
+
+	var existingBaseExercise string
+	var exists int
+	for rows.Next() {
+		exists++
+		rows.Scan(&existingBaseExercise)
+		if existingBaseExercise == name {
+			return true
+		}
+	}
+
+	return exists != 0
 }

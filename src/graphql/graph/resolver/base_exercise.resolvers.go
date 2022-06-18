@@ -50,7 +50,11 @@ func (r *queryResolver) CreateBaseExercise(ctx context.Context, input *model.Bas
 		return "at least one of the required field is missing", nil
 	}
 
-	// TODO: CHECK IF BASE EXERCISE ALREADY EXISTS!
+	exists := postgres.ValidateBaseExercise(ctx, r.DB, input.Name)
+
+	if !exists {
+		return "base exercise already exists", nil 
+	}
 
 	result, err := postgres.AddBaseExercise(ctx, r.DB, input)
 	if err != nil {
