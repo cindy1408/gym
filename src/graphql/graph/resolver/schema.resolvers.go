@@ -48,7 +48,7 @@ func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) (string, er
 		if err != nil {
 			fmt.Printf("%v, selecting database\n", eachSpecificMuscleGroup.Name)
 		}
-		
+
 		defer rows.Close()
 
 		var name string
@@ -74,13 +74,9 @@ func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) (string, er
 	return "Specific Parts has been hydrated", nil
 }
 
-func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.IncreaseRepInput) (*model.UserWorkoutPlan, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
 func (r *queryResolver) GetMuscleSpecifics(ctx context.Context, input *model.MuscleSpecificInput) ([]string, error) {
 	allSpecifics := []string{}
 	r.DB.Model(&model.SpecificParts{}).Where("name = ?", input.Name).Scan(&allSpecifics)
-	
-	return allSpecifics, nil 
+
+	return allSpecifics, nil
 }

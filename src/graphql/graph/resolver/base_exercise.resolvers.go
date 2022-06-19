@@ -53,7 +53,7 @@ func (r *queryResolver) CreateBaseExercise(ctx context.Context, input *model.Bas
 	exists := postgres.ValidateBaseExercise(ctx, r.DB, input.Name)
 
 	if !exists {
-		return "base exercise already exists", nil 
+		return "base exercise already exists", nil
 	}
 
 	result, err := postgres.AddBaseExercise(ctx, r.DB, input)

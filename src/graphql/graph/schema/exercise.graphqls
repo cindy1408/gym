@@ -4,6 +4,7 @@ extend type Query {
 
 extend type Mutation {
   addExercise(input: addExerciseInput): String!
+  increaseRep(input: increaseRepInput!): EachExercise!
 }
 
 # Each Exercise has the unique id, with all the info of the exercise and linked to userWorkoutPlanID 
@@ -29,4 +30,10 @@ input addExerciseInput {
   userEmail: String!
   gymDay: String!
   EachExercise: [EachExerciseInput!]
+}
+
+input increaseRepInput {
+  userEmail: String!
+  gymDay: String!
+  exerciseName: String!
 }

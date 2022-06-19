@@ -114,9 +114,9 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	AddExercise(ctx context.Context, input *model.AddExerciseInput) (string, error)
+	IncreaseRep(ctx context.Context, input model.IncreaseRepInput) (*model.EachExercise, error)
 	HydrateMuscleGroups(ctx context.Context) (string, error)
 	HydrateSpecificParts(ctx context.Context) (string, error)
-	IncreaseRep(ctx context.Context, input model.IncreaseRepInput) (*model.UserWorkoutPlan, error)
 	CreateUser(ctx context.Context, input model.CreateUserInput) (string, error)
 	AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (string, error)
 }
@@ -579,6 +579,7 @@ input baseExerciseInput {
 
 extend type Mutation {
   addExercise(input: addExerciseInput): String!
+  increaseRep(input: increaseRepInput!): EachExercise!
 }
 
 # Each Exercise has the unique id, with all the info of the exercise and linked to userWorkoutPlanID 
@@ -604,7 +605,14 @@ input addExerciseInput {
   userEmail: String!
   gymDay: String!
   EachExercise: [EachExerciseInput!]
-}`, BuiltIn: false},
+}
+
+input increaseRepInput {
+  userEmail: String!
+  gymDay: String!
+  exerciseName: String!
+}
+`, BuiltIn: false},
 	{Name: "graph/schema/schema.graphqls", Input: `# GraphQL schema example
 #
 # https://gqlgen.com/getting-started/
@@ -616,7 +624,6 @@ extend type Query {
 extend type Mutation {
   hydrateMuscleGroups: String!
   hydrateSpecificParts: String!
-  increaseRep(input: increaseRepInput!): UserWorkoutPlan!
 }
 # used to check muscle input is valid
 type MuscleGroup {
@@ -635,12 +642,6 @@ type AvoidGiven  {
 input muscleSpecificInput {
   name: String!
   MuscleGroup: String!
-}
-
-input increaseRepInput {
-  userEmail: String!
-  gymDay: String!
-  exerciseName: String!
 }
 `, BuiltIn: false},
 	{Name: "graph/schema/user.graphqls", Input: `extend type Query {
@@ -1446,6 +1447,48 @@ func (ec *executionContext) _Mutation_addExercise(ctx context.Context, field gra
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_increaseRep(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_increaseRep_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().IncreaseRep(rctx, args["input"].(model.IncreaseRepInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.EachExercise)
+	fc.Result = res
+	return ec.marshalNEachExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_hydrateMuscleGroups(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1514,48 +1557,6 @@ func (ec *executionContext) _Mutation_hydrateSpecificParts(ctx context.Context, 
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_increaseRep(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_increaseRep_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().IncreaseRep(rctx, args["input"].(model.IncreaseRepInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.UserWorkoutPlan)
-	fc.Result = res
-	return ec.marshalNUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4209,6 +4210,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "increaseRep":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_increaseRep(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "hydrateMuscleGroups":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_hydrateMuscleGroups(ctx, field)
@@ -4222,16 +4233,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "hydrateSpecificParts":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_hydrateSpecificParts(ctx, field)
-			}
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "increaseRep":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_increaseRep(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
@@ -5205,6 +5206,10 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 func (ec *executionContext) unmarshalNCreateUserInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐCreateUserInput(ctx context.Context, v interface{}) (model.CreateUserInput, error) {
 	res, err := ec.unmarshalInputCreateUserInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNEachExercise2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx context.Context, sel ast.SelectionSet, v model.EachExercise) graphql.Marshaler {
+	return ec._EachExercise(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNEachExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.EachExercise) graphql.Marshaler {

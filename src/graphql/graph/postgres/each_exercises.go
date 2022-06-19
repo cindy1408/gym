@@ -21,3 +21,4 @@ func AddEachExercises(db *gorm.DB, userWorkoutID string, eachExercises []*model.
 	}
 	return "user exercises has been added", nil
 }
+

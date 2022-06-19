@@ -9,7 +9,6 @@ extend type Query {
 extend type Mutation {
   hydrateMuscleGroups: String!
   hydrateSpecificParts: String!
-  increaseRep(input: increaseRepInput!): UserWorkoutPlan!
 }
 # used to check muscle input is valid
 type MuscleGroup {
@@ -28,10 +27,4 @@ type AvoidGiven  {
 input muscleSpecificInput {
   name: String!
   MuscleGroup: String!
-}
-
-input increaseRepInput {
-  userEmail: String!
-  gymDay: String!
-  exerciseName: String!
 }

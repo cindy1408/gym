@@ -15,7 +15,6 @@ import (
 
 type Resolver struct {
 	DB                 *gorm.DB
-	baseExercises      []*model.BaseExercise
 }
 
 // Query returns generated.QueryResolver implementation.
@@ -38,6 +37,7 @@ func (r *Resolver) Init() error {
 		&model.UserWorkoutPlan{},
 		&model.EachExercise{},
 	)
+
 	if err != nil {
 		fmt.Println(err)
 		return err

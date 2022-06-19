@@ -16,9 +16,11 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 	if input.FirstName == "" {
 		return "first name is missing", nil
 	}
+
 	if input.LastName == "" {
 		return "last name is missing", nil
 	}
+
 	if input.Password == "" {
 		return "password is missing", nil
 	}

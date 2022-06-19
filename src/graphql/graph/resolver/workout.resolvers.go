@@ -41,11 +41,13 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 func (r *queryResolver) GetUserWorkoutPlansByEmail(ctx context.Context, input string) (*model.UserWorkoutPlan, error) {
 	userWorkout := model.UserWorkoutPlan{}
 	r.DB.Model(&model.UserWorkoutPlan{}).Where("email = ?", input).Scan(&userWorkout)
-	return &userWorkout, nil 
+
+	return &userWorkout, nil
 }
 
 func (r *queryResolver) GetAllUserWorkoutPlans(ctx context.Context) ([]*model.UserWorkoutPlan, error) {
 	userWorkoutPlans := []*model.UserWorkoutPlan{}
 	r.DB.Table("user_workout_plan").Scan(&userWorkoutPlans)
+
 	return userWorkoutPlans, nil
 }
