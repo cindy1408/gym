@@ -5,7 +5,6 @@ package resolver
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/cindy1408/gym/src/graphql/graph/postgres"
@@ -28,7 +27,14 @@ func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExer
 }
 
 func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.IncreaseRepInput) (*model.EachExercise, error) {
-	panic(fmt.Errorf("not implemented"))
+	var requestedExercise *model.EachExercise
+	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_email = ?", input.ExerciseName, input.UserEmail).Scan(&requestedExercise)
+
+	requestedExercise.Reps = requestedExercise.Reps + 1
+
+	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_email = ?", input.ExerciseName, input.UserEmail).Updates(&requestedExercise)
+
+	return requestedExercise, nil
 }
 
 func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
@@ -36,4 +42,3 @@ func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachEx
 	r.DB.Table("each_exercises").Scan(&allEachExercises)
 	return allEachExercises, nil
 }
-
