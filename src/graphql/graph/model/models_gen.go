@@ -84,7 +84,7 @@ type BaseExerciseInput struct {
 	MovementType  string  `json:"movementType"`
 }
 
-type IncreaseRepInput struct {
+type IncreaseInput struct {
 	UserEmail    string `json:"userEmail"`
 	GymDay       string `json:"gymDay"`
 	ExerciseName string `json:"exerciseName"`
@@ -93,4 +93,9 @@ type IncreaseRepInput struct {
 type MuscleSpecificInput struct {
 	Name        string `json:"name"`
 	MuscleGroup string `json:"MuscleGroup"`
+}
+
+type UpdateExerciseInput struct {
+	UserEmail string `json:"userEmail"`
+	GymDay    string `json:"gymDay"`
 }

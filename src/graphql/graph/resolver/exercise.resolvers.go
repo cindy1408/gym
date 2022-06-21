@@ -5,6 +5,7 @@ package resolver
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/cindy1408/gym/src/graphql/graph/postgres"
@@ -26,7 +27,7 @@ func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExer
 	return postgres.AddEachExercises(r.DB, workoutPlanID, input.EachExercise)
 }
 
-func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.IncreaseRepInput) (*model.EachExercise, error) {
+func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
 	var requestedExercise *model.EachExercise
 	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_email = ?", input.ExerciseName, input.UserEmail).Scan(&requestedExercise)
 
@@ -35,6 +36,14 @@ func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.Increase
 	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_email = ?", input.ExerciseName, input.UserEmail).Updates(&requestedExercise)
 
 	return requestedExercise, nil
+}
+
+func (r *mutationResolver) IncreaseSet(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *mutationResolver) UpdateEachExercise(ctx context.Context, input model.UpdateExerciseInput) (*model.EachExercise, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {

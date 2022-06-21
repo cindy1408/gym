@@ -43,5 +43,5 @@ input increaseInput {
 input updateExerciseInput {
   userEmail: String!
   gymDay: String!
-  eachExercise: EachExercise!
+  # eachExercise: EachExercise!
 }
