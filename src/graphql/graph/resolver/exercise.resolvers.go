@@ -39,10 +39,12 @@ func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.Increase
 }
 
 func (r *mutationResolver) IncreaseSet(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
+	// TODO
 	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *mutationResolver) UpdateEachExercise(ctx context.Context, input model.UpdateExerciseInput) (*model.EachExercise, error) {
+	// TODO
 	panic(fmt.Errorf("not implemented"))
 }
 
