@@ -646,7 +646,7 @@ input increaseInput {
 input updateExerciseInput {
   userEmail: String!
   gymDay: String!
-  # eachExercise: EachExercise!
+  EachExercise: [EachExerciseInput!]
 }`, BuiltIn: false},
 	{Name: "graph/schema/schema.graphqls", Input: `# GraphQL schema example
 #
@@ -4113,6 +4113,14 @@ func (ec *executionContext) unmarshalInputupdateExerciseInput(ctx context.Contex
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("gymDay"))
 			it.GymDay, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "EachExercise":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("EachExercise"))
+			it.EachExercise, err = ec.unmarshalOEachExerciseInput2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
