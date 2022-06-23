@@ -96,7 +96,7 @@ type MuscleSpecificInput struct {
 }
 
 type UpdateExerciseInput struct {
-	UserEmail    string               `json:"userEmail"`
-	GymDay       string               `json:"gymDay"`
-	EachExercise []*EachExerciseInput `json:"EachExercise"`
+	UserEmail    string             `json:"userEmail"`
+	GymDay       string             `json:"gymDay"`
+	EachExercise *EachExerciseInput `json:"EachExercise"`
 }
