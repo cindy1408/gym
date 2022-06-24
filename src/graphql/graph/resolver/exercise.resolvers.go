@@ -37,14 +37,26 @@ func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.Increase
 
 	requestedExercise.Reps = requestedExercise.Reps + 1
 
-
 	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.ExerciseName, userDetails.UserWorkoutPlanID).Updates(&requestedExercise)
 
+	// TODO: we want to return the data from the database
 	return requestedExercise, nil
 }
 
 func (r *mutationResolver) IncreaseSet(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
-	panic(fmt.Errorf("not implemented"))
+	var requestedExercise *model.EachExercise
+
+	var userDetails *model.User
+	r.DB.Model(&model.User{}).Where("email = ?", input.UserEmail).Scan(&userDetails)
+
+	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.ExerciseName, userDetails.UserWorkoutPlanID).Scan(&requestedExercise)
+
+	requestedExercise.Sets = requestedExercise.Sets + 1
+
+	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.ExerciseName, userDetails.UserWorkoutPlanID).Updates(&requestedExercise)
+
+	// TODO: we want to return the data from the database
+	return requestedExercise, nil
 }
 
 func (r *mutationResolver) UpdateEachExercise(ctx context.Context, input model.UpdateExerciseInput) (*model.EachExercise, error) {
