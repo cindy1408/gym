@@ -5,7 +5,6 @@ package resolver
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/cindy1408/gym/src/graphql/graph/postgres"
@@ -60,8 +59,22 @@ func (r *mutationResolver) IncreaseSet(ctx context.Context, input model.Increase
 }
 
 func (r *mutationResolver) UpdateEachExercise(ctx context.Context, input model.UpdateExerciseInput) (*model.EachExercise, error) {
-	// TODO
-	panic(fmt.Errorf("not implemented"))
+	var requestedExercise *model.EachExercise
+
+	var userDetails *model.User
+	r.DB.Model(&model.User{}).Where("email = ?", input.UserEmail).Scan(&userDetails)
+
+	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.EachExercise.Name, userDetails.UserWorkoutPlanID).Scan(&requestedExercise)
+
+	requestedExercise.Name = input.EachExercise.Name
+	requestedExercise.Weight = input.EachExercise.Weight
+	requestedExercise.Unit = input.EachExercise.Unit
+	requestedExercise.Reps = input.EachExercise.Reps
+	requestedExercise.Sets = input.EachExercise.Sets
+
+	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.EachExercise.Name, userDetails.UserWorkoutPlanID).Updates(&requestedExercise)
+
+	return requestedExercise, nil
 }
 
 func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
