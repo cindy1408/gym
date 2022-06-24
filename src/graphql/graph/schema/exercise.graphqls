@@ -3,10 +3,10 @@ extend type Query {
 }
 
 extend type Mutation {
-  addExercise(input: addExerciseInput): String!
-  increaseRep(input: increaseInput!): EachExercise!
-  increaseSet(input: increaseInput!): EachExercise!
-  updateEachExercise(input: updateExerciseInput!): EachExercise!
+  addExercise(input: AddExerciseInput): String!
+  increaseRep(input: IncreaseInput!): EachExercise!
+  increaseSet(input: IncreaseInput!): EachExercise!
+  updateEachExercise(input: UpdateExerciseInput!): EachExercise!
 }
 
 # Each Exercise has the unique id, with all the info of the exercise and linked to userWorkoutPlanID 
@@ -15,33 +15,33 @@ type EachExercise  {
     userWorkoutPlanID: String!
     name: String!
     weight: Int!
-    Unit: String!
-    Sets: Int!
-    Reps: Int!
+    unit: String!
+    sets: Int!
+    reps: Int!
 }
 
 input EachExerciseInput {
     name: String!
     weight: Int!
-    Unit: String!
-    Sets: Int!
-    Reps: Int!
+    unit: String!
+    sets: Int!
+    reps: Int!
 }
 
-input addExerciseInput {
+input AddExerciseInput {
   userEmail: String!
   gymDay: String!
-  EachExercise: [EachExerciseInput!]
+  eachExercise: [EachExerciseInput!]
 }
 
-input increaseInput {
+input IncreaseInput {
   userEmail: String!
   gymDay: String!
   exerciseName: String!
 }
 
-input updateExerciseInput {
+input UpdateExerciseInput {
   userEmail: String!
   gymDay: String!
-  EachExercise: EachExerciseInput!
+  eachExercise: EachExerciseInput!
 }

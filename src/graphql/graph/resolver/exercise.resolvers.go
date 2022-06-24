@@ -29,11 +29,16 @@ func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExer
 
 func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
 	var requestedExercise *model.EachExercise
-	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_email = ?", input.ExerciseName, input.UserEmail).Scan(&requestedExercise)
+
+	var userDetails *model.User
+	r.DB.Model(&model.User{}).Where("email = ?", input.UserEmail).Scan(&userDetails)
+
+	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.ExerciseName, userDetails.UserWorkoutPlanID).Scan(&requestedExercise)
 
 	requestedExercise.Reps = requestedExercise.Reps + 1
 
-	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_email = ?", input.ExerciseName, input.UserEmail).Updates(&requestedExercise)
+
+	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.ExerciseName, userDetails.UserWorkoutPlanID).Updates(&requestedExercise)
 
 	return requestedExercise, nil
 }
