@@ -92,7 +92,10 @@ func (r *mutationResolver) increase(ctx context.Context, input model.IncreaseInp
 		return nil, errors.New("target needs to be either set or rep")
 	}
 
-	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.ExerciseName, userDetails.UserWorkoutPlanID).Updates(&requestedExercise)
+	err = postgres.UpdateExercise(r.DB, requestedExercise)
+	if err != nil {
+		return nil, errors.Wrapf(err, "postgres.UpdateExercise")
+	}
 
 	// Grab the data from database and return it
 	eachExercise, err := postgres.GetExerciseByID(r.DB, requestedExercise.ID)

@@ -3,6 +3,7 @@ package postgres
 import (
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
@@ -34,4 +35,14 @@ func GetExerciseByNameAndWorkoutPlanID(db *gorm.DB, exerciseName string, userWor
 	db.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", exerciseName, userWorkoutID).Scan(&requestedExercise)
 
 	return requestedExercise, nil 
+}
+
+func UpdateExercise(db *gorm.DB, updateExercise *model.EachExercise) (error) {
+	result := db.Model(&model.EachExercise{}).Where("id = ?", updateExercise.ID).Updates(&updateExercise)
+
+	if result.RowsAffected == 0 {
+		return errors.Wrapf(result.Error, "issue with updating db")
+	}
+
+	return nil 
 }
