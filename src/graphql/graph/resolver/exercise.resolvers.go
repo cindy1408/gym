@@ -72,15 +72,17 @@ func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachEx
 	return allEachExercises, nil
 }
 
-
 func (r *mutationResolver) increase(ctx context.Context, input model.IncreaseInput, target string) (*model.EachExercise, error) {
 
-	var requestedExercise *model.EachExercise
+	userDetails, err := postgres.GetUserByEmail(ctx, r.DB, input.UserEmail)
+	if err != nil {
+		return nil, errors.Wrapf(err, "postgres.GetUserByEmail")
+	}
 
-	var userDetails *model.User
-	r.DB.Model(&model.User{}).Where("email = ?", input.UserEmail).Scan(&userDetails)
-
-	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.ExerciseName, userDetails.UserWorkoutPlanID).Scan(&requestedExercise)
+	requestedExercise, err := postgres.GetExerciseByNameAndWorkoutPlanID(r.DB, input.ExerciseName, *userDetails.UserWorkoutPlanID)
+	if err != nil {
+		return nil, errors.Wrapf(err, "postgres.GetExerciseByNameAndWorkoutPlanID")
+	}
 
 	if target == "set" {
 		requestedExercise.Sets = requestedExercise.Sets + 1
@@ -93,18 +95,10 @@ func (r *mutationResolver) increase(ctx context.Context, input model.IncreaseInp
 	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.ExerciseName, userDetails.UserWorkoutPlanID).Updates(&requestedExercise)
 
 	// Grab the data from database and return it
-	eachExercise, err := r.getExerciseByID(requestedExercise.ID)
+	eachExercise, err := postgres.GetExerciseByID(r.DB, requestedExercise.ID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "r.increase")
 	}
 
-	return eachExercise, nil 
-}
-
-
-func (r *mutationResolver) getExerciseByID(id string) (*model.EachExercise, error) {
-	var exercise *model.EachExercise
-	r.DB.Model(&model.EachExercise{}).Where("id = ?", id).Scan(&exercise)
-
-	return exercise, nil 
+	return eachExercise, nil
 }

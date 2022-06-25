@@ -22,3 +22,16 @@ func AddEachExercises(db *gorm.DB, userWorkoutID string, eachExercises []*model.
 	return "user exercises has been added", nil
 }
 
+func GetExerciseByID(db *gorm.DB, id string) (*model.EachExercise, error) {
+	var exercise *model.EachExercise
+	db.Model(&model.EachExercise{}).Where("id = ?", id).Scan(&exercise)
+
+	return exercise, nil 
+}
+
+func GetExerciseByNameAndWorkoutPlanID(db *gorm.DB, exerciseName string, userWorkoutID string) (*model.EachExercise, error) {
+	var requestedExercise *model.EachExercise
+	db.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", exerciseName, userWorkoutID).Scan(&requestedExercise)
+
+	return requestedExercise, nil 
+}

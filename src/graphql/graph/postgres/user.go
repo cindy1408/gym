@@ -71,3 +71,10 @@ func GetAllUsers(ctx context.Context, db *gorm.DB) ([]*model.User, error) {
 	
 	return allUsers, nil 
 }
+
+func GetUserByEmail(ctx context.Context, db *gorm.DB, email string) (*model.User, error) {
+	var userDetails *model.User
+	db.Model(&model.User{}).Where("email = ?", email).Scan(&userDetails)
+
+	return userDetails, nil 
+}
