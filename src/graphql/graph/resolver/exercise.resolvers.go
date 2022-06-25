@@ -8,6 +8,7 @@ import (
 
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/cindy1408/gym/src/graphql/graph/postgres"
+	"github.com/pkg/errors"
 )
 
 func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExerciseInput) (string, error) {
@@ -27,35 +28,23 @@ func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExer
 }
 
 func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
-	var requestedExercise *model.EachExercise
 
-	var userDetails *model.User
-	r.DB.Model(&model.User{}).Where("email = ?", input.UserEmail).Scan(&userDetails)
+	exercise, err := r.increase(ctx, input, "rep")
+	if err != nil {
+		return nil, errors.Wrapf(err, "r.increase")
+	}
 
-	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.ExerciseName, userDetails.UserWorkoutPlanID).Scan(&requestedExercise)
-
-	requestedExercise.Reps = requestedExercise.Reps + 1
-
-	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.ExerciseName, userDetails.UserWorkoutPlanID).Updates(&requestedExercise)
-
-	// TODO: we want to return the data from the database
-	return requestedExercise, nil
+	return exercise, nil
 }
 
 func (r *mutationResolver) IncreaseSet(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
-	var requestedExercise *model.EachExercise
 
-	var userDetails *model.User
-	r.DB.Model(&model.User{}).Where("email = ?", input.UserEmail).Scan(&userDetails)
+	exercise, err := r.increase(ctx, input, "set")
+	if err != nil {
+		return nil, errors.Wrapf(err, "r.increase")
+	}
 
-	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.ExerciseName, userDetails.UserWorkoutPlanID).Scan(&requestedExercise)
-
-	requestedExercise.Sets = requestedExercise.Sets + 1
-
-	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.ExerciseName, userDetails.UserWorkoutPlanID).Updates(&requestedExercise)
-
-	// TODO: we want to return the data from the database
-	return requestedExercise, nil
+	return exercise, nil
 }
 
 func (r *mutationResolver) UpdateEachExercise(ctx context.Context, input model.UpdateExerciseInput) (*model.EachExercise, error) {
@@ -81,4 +70,41 @@ func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachEx
 	allEachExercises := []*model.EachExercise{}
 	r.DB.Table("each_exercises").Scan(&allEachExercises)
 	return allEachExercises, nil
+}
+
+
+func (r *mutationResolver) increase(ctx context.Context, input model.IncreaseInput, target string) (*model.EachExercise, error) {
+
+	var requestedExercise *model.EachExercise
+
+	var userDetails *model.User
+	r.DB.Model(&model.User{}).Where("email = ?", input.UserEmail).Scan(&userDetails)
+
+	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.ExerciseName, userDetails.UserWorkoutPlanID).Scan(&requestedExercise)
+
+	if target == "set" {
+		requestedExercise.Sets = requestedExercise.Sets + 1
+	} else if target == "rep" {
+		requestedExercise.Reps = requestedExercise.Reps + 1
+	} else {
+		return nil, errors.New("target needs to be either set or rep")
+	}
+
+	r.DB.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", input.ExerciseName, userDetails.UserWorkoutPlanID).Updates(&requestedExercise)
+
+	// Grab the data from database and return it
+	eachExercise, err := r.getExerciseByID(requestedExercise.ID)
+	if err != nil {
+		return nil, errors.Wrapf(err, "r.increase")
+	}
+
+	return eachExercise, nil 
+}
+
+
+func (r *mutationResolver) getExerciseByID(id string) (*model.EachExercise, error) {
+	var exercise *model.EachExercise
+	r.DB.Model(&model.EachExercise{}).Where("id = ?", id).Scan(&exercise)
+
+	return exercise, nil 
 }
