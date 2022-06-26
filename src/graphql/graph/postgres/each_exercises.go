@@ -46,3 +46,9 @@ func UpdateExercise(db *gorm.DB, updateExercise *model.EachExercise) error {
 
 	return nil
 }
+
+func GetAllEachExercise(db *gorm.DB) ([]*model.EachExercise, error) {
+	allEachExercises := []*model.EachExercise{}
+	db.Table("each_exercises").Scan(&allEachExercises)
+	return allEachExercises, nil
+}

@@ -70,7 +70,5 @@ func (r *mutationResolver) UpdateEachExercise(ctx context.Context, input model.U
 }
 
 func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
-	allEachExercises := []*model.EachExercise{}
-	r.DB.Table("each_exercises").Scan(&allEachExercises)
-	return allEachExercises, nil
+	return postgres.GetAllEachExercise(r.DB)
 }
