@@ -12,17 +12,11 @@ import (
 )
 
 func (r *queryResolver) GetBaseExerciseByName(ctx context.Context, input string) (*model.BaseExercise, error) {
-	var baseExercise *model.BaseExercise
-	r.DB.Where("name", input).Find(&model.BaseExercise{}).Scan(&baseExercise)
-
-	return baseExercise, nil
+	return postgres.GetBaseExerciseByName(ctx, r.DB, input)
 }
 
 func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
-	allBaseExercises := []*model.BaseExercise{}
-	r.DB.Table("base_exercises").Scan(&allBaseExercises)
-
-	return allBaseExercises, nil
+	return postgres.GetAllBaseExercise(ctx, r.DB)
 }
 
 func (r *queryResolver) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {

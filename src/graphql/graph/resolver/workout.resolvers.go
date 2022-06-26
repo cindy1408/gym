@@ -38,16 +38,10 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 	return fmt.Sprintf("User %v has been added", input.UserEmail), nil
 }
 
-func (r *queryResolver) GetUserWorkoutPlansByEmail(ctx context.Context, input string) (*model.UserWorkoutPlan, error) {
-	userWorkout := model.UserWorkoutPlan{}
-	r.DB.Model(&model.UserWorkoutPlan{}).Where("email = ?", input).Scan(&userWorkout)
-
-	return &userWorkout, nil
+func (r *queryResolver) GetUserWorkoutPlansByEmail(ctx context.Context, input string) ([]*model.UserWorkoutPlan, error) {
+	return postgres.GetUserWorkoutPlansByEmail(ctx, r.DB, input)
 }
 
 func (r *queryResolver) GetAllUserWorkoutPlans(ctx context.Context) ([]*model.UserWorkoutPlan, error) {
-	userWorkoutPlans := []*model.UserWorkoutPlan{}
-	r.DB.Table("user_workout_plan").Scan(&userWorkoutPlans)
-
-	return userWorkoutPlans, nil
+	return postgres.GetAllUserWorkoutPlans(ctx, r.DB)
 }

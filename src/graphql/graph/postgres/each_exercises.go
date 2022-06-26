@@ -27,22 +27,22 @@ func GetExerciseByID(db *gorm.DB, id string) (*model.EachExercise, error) {
 	var exercise *model.EachExercise
 	db.Model(&model.EachExercise{}).Where("id = ?", id).Scan(&exercise)
 
-	return exercise, nil 
+	return exercise, nil
 }
 
 func GetExerciseByNameAndWorkoutPlanID(db *gorm.DB, exerciseName string, userWorkoutID string) (*model.EachExercise, error) {
 	var requestedExercise *model.EachExercise
 	db.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", exerciseName, userWorkoutID).Scan(&requestedExercise)
 
-	return requestedExercise, nil 
+	return requestedExercise, nil
 }
 
-func UpdateExercise(db *gorm.DB, updateExercise *model.EachExercise) (error) {
+func UpdateExercise(db *gorm.DB, updateExercise *model.EachExercise) error {
 	result := db.Model(&model.EachExercise{}).Where("id = ?", updateExercise.ID).Updates(&updateExercise)
 
 	if result.RowsAffected == 0 {
 		return errors.Wrapf(result.Error, "issue with updating db")
 	}
 
-	return nil 
+	return nil
 }

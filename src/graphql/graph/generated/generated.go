@@ -133,7 +133,7 @@ type QueryResolver interface {
 	GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error)
 	GetMuscleSpecifics(ctx context.Context, input *model.MuscleSpecificInput) ([]string, error)
 	GetAllUsers(ctx context.Context) ([]*model.User, error)
-	GetUserWorkoutPlansByEmail(ctx context.Context, input string) (*model.UserWorkoutPlan, error)
+	GetUserWorkoutPlansByEmail(ctx context.Context, input string) ([]*model.UserWorkoutPlan, error)
 	GetAllUserWorkoutPlans(ctx context.Context) ([]*model.UserWorkoutPlan, error)
 }
 
@@ -703,7 +703,7 @@ input CreateUserInput {
   password: String!
 }`, BuiltIn: false},
 	{Name: "graph/schema/workout.graphqls", Input: `extend type Query {
-  getUserWorkoutPlansByEmail(input: String!): UserWorkoutPlan!
+  getUserWorkoutPlansByEmail(input: String!): [UserWorkoutPlan]!
   getAllUserWorkoutPlans: [UserWorkoutPlan!]!
 }
 
@@ -2134,9 +2134,9 @@ func (ec *executionContext) _Query_getUserWorkoutPlansByEmail(ctx context.Contex
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.UserWorkoutPlan)
+	res := resTmp.([]*model.UserWorkoutPlan)
 	fc.Result = res
-	return ec.marshalNUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx, field.Selections, res)
+	return ec.marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getAllUserWorkoutPlans(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5573,8 +5573,42 @@ func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrc
 	return ec._User(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNUserWorkoutPlan2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx context.Context, sel ast.SelectionSet, v model.UserWorkoutPlan) graphql.Marshaler {
-	return ec._UserWorkoutPlan(ctx, sel, &v)
+func (ec *executionContext) marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx context.Context, sel ast.SelectionSet, v []*model.UserWorkoutPlan) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
 }
 
 func (ec *executionContext) marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlanᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.UserWorkoutPlan) graphql.Marshaler {
@@ -6018,6 +6052,13 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	}
 	res := graphql.MarshalString(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx context.Context, sel ast.SelectionSet, v *model.UserWorkoutPlan) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UserWorkoutPlan(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

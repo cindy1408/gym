@@ -1,5 +1,5 @@
 extend type Query {
-  getUserWorkoutPlansByEmail(input: String!): UserWorkoutPlan!
+  getUserWorkoutPlansByEmail(input: String!): [UserWorkoutPlan]!
   getAllUserWorkoutPlans: [UserWorkoutPlan!]!
 }
 

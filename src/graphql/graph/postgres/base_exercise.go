@@ -6,6 +6,7 @@ import (
 
 	"github.com/cindy1408/gym/src/graphql/graph"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
@@ -64,6 +65,7 @@ func AddBaseExercise(ctx context.Context, db *gorm.DB, baseExercise *model.BaseE
 		MovementType:  baseExercise.MovementType,
 	}
 	db.Create(newExercise)
+
 	return fmt.Sprintf("base exercise %v has been added", baseExercise.Name), nil
 }
 
@@ -86,4 +88,54 @@ func ValidateBaseExercise(ctx context.Context, db *gorm.DB, name string) bool {
 	}
 
 	return exists != 0
+}
+
+func GetAllBaseExercise(ctx context.Context, db *gorm.DB) ([]*model.BaseExercise, error) {
+	allBaseExercises := []*model.BaseExercise{}
+	db.Table("base_exercises").Scan(&allBaseExercises)
+	return allBaseExercises, nil
+}
+
+func GetBaseExerciseByName(ctx context.Context, db *gorm.DB, name string) (*model.BaseExercise, error) {
+	var baseExercise *model.BaseExercise
+	result := db.Where("name", name).Find(&model.BaseExercise{}).Scan(&baseExercise)
+
+	if result.RowsAffected == 0 {
+		return nil, errors.Wrapf(result.Error, "unable to find base exercise")
+	}
+
+	return baseExercise, nil 
+}
+
+func Increase(ctx context.Context, db *gorm.DB, input model.IncreaseInput, target string) (*model.EachExercise, error) {
+	userDetails, err := GetUserByEmail(ctx, db, input.UserEmail)
+	if err != nil {
+		return nil, errors.Wrapf(err, "postgres.GetUserByEmail")
+	}
+
+	requestedExercise, err := GetExerciseByNameAndWorkoutPlanID(db, input.ExerciseName, *userDetails.UserWorkoutPlanID)
+	if err != nil {
+		return nil, errors.Wrapf(err, "postgres.GetExerciseByNameAndWorkoutPlanID")
+	}
+
+	if target == "set" {
+		requestedExercise.Sets = requestedExercise.Sets + 1
+	} else if target == "rep" {
+		requestedExercise.Reps = requestedExercise.Reps + 1
+	} else {
+		return nil, errors.New("target needs to be either set or rep")
+	}
+
+	err = UpdateExercise(db, requestedExercise)
+	if err != nil {
+		return nil, errors.Wrapf(err, "postgres.UpdateExercise")
+	}
+
+	// Grab the data from database and return it
+	eachExercise, err := GetExerciseByID(db, requestedExercise.ID)
+	if err != nil {
+		return nil, errors.Wrapf(err, "r.increase")
+	}
+
+	return eachExercise, nil
 }

@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/cindy1408/gym/src/graphql/graph/model"
@@ -24,7 +25,7 @@ func ValidateUserWorkoutPlan(db *gorm.DB, userEmail string, gymDay string) (stri
 	if err != nil {
 		fmt.Println("issue with user workout plan database")
 	}
-	
+
 	defer row.Close()
 
 	for row.Next() {
@@ -66,4 +67,25 @@ func AssignUserWorkoutPlan(db *gorm.DB, input model.AddUserWorkoutInput) (*model
 		db.Create(userWorkoutPlan)
 	}
 	return userWorkoutPlan, nil
+}
+
+func GetUserWorkoutPlansByEmail(ctx context.Context, db *gorm.DB, email string) ([]*model.UserWorkoutPlan, error) {
+	userWorkouts := []*model.UserWorkoutPlan{}
+	result := db.Model(&model.UserWorkoutPlan{}).Where("email = ?", email).Scan(&userWorkouts)
+
+	if result.RowsAffected == 0 {
+		return nil, errors.Wrapf(result.Error, "unable to find user workout plans by email")
+	}
+
+	return userWorkouts, nil 
+}
+
+func GetAllUserWorkoutPlans(ctx context.Context, db *gorm.DB) ([]*model.UserWorkoutPlan, error) {
+	userWorkoutPlans := []*model.UserWorkoutPlan{}
+	result := db.Table("user_workout_plan").Scan(&userWorkoutPlans)
+	if result.RowsAffected == 0 {
+		return nil, errors.Wrapf(result.Error, "unable to find user workout plans by email")
+	}
+	
+	return userWorkoutPlans, nil 
 }
