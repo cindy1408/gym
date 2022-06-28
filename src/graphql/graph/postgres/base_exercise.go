@@ -20,7 +20,11 @@ func UpdateBaseExercise(ctx context.Context, db *gorm.DB, input *model.BaseExerc
 		MovementType:  input.MovementType,
 	}
 
-	db.Debug().Model(&model.BaseExercise{}).Where("name = ?", input.Name).Updates(updatedExercise)
+	result := db.Debug().Model(&model.BaseExercise{}).Where("name = ?", input.Name).Updates(updatedExercise)
+
+	if result.RowsAffected == 0 {
+		return nil, errors.Wrapf(result.Error, "unable to update base exercise")
+	}
 
 	return &updatedExercise, nil
 }
@@ -97,6 +101,9 @@ func GetAllBaseExercise(ctx context.Context, db *gorm.DB) ([]*model.BaseExercise
 }
 
 func GetBaseExerciseByName(ctx context.Context, db *gorm.DB, name string) (*model.BaseExercise, error) {
+	if name == "" {
+		return nil, errors.Wrapf(nil, "base exercise name is empty")
+	}
 	var baseExercise *model.BaseExercise
 	result := db.Where("name", name).Find(&model.BaseExercise{}).Scan(&baseExercise)
 
@@ -138,4 +145,13 @@ func Increase(ctx context.Context, db *gorm.DB, input model.IncreaseInput, targe
 	}
 
 	return eachExercise, nil
+}
+
+func DeleteBaseExerciseByName(db *gorm.DB, name string) (error) {
+	result := db.Where("name = ?", name).Delete(&model.BaseExercise{})
+
+	if result.RowsAffected == 0 {
+		return result.Error
+	}
+	return nil 
 }

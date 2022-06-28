@@ -12,7 +12,7 @@ import (
 func AddUserToDB(db *gorm.DB, newUser *model.User) (string, error) {
 	rows, err := db.Model(&model.User{}).Select("email").Rows()
 	if err != nil {
-		return "issue with user database", errors.Wrapf(err, "model.User{}, %v")
+		return "issue with user database", errors.Wrapf(err, "model.User{}")
 	}
 
 	defer rows.Close()
