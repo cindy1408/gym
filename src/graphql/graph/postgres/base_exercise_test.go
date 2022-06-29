@@ -13,7 +13,7 @@ import (
 var _ = Describe("Postgres", func() {
 	var (
 		ctx context.Context
-		err          error
+		err error
 
 		db           *gorm.DB
 		postgresRepo postgres.Repo
