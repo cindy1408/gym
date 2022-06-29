@@ -27,7 +27,7 @@ func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExer
 }
 
 func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
-	exercise, err := postgres.Increase(ctx, r.DB, input, "rep")
+	exercise, err := postgres.Increase(ctx, r.DB, input, model.Rep)
 	if err != nil {
 		return nil, errors.Wrapf(err, "r.increase")
 	}
@@ -36,7 +36,7 @@ func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.Increase
 }
 
 func (r *mutationResolver) IncreaseSet(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
-	exercise, err := postgres.Increase(ctx, r.DB, input, "set")
+	exercise, err := postgres.Increase(ctx, r.DB, input, model.Set)
 	if err != nil {
 		return nil, errors.Wrapf(err, "r.increase")
 	}

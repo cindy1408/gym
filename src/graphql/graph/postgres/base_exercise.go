@@ -114,7 +114,7 @@ func GetBaseExerciseByName(ctx context.Context, db *gorm.DB, name string) (*mode
 	return baseExercise, nil 
 }
 
-func Increase(ctx context.Context, db *gorm.DB, input model.IncreaseInput, target string) (*model.EachExercise, error) {
+func Increase(ctx context.Context, db *gorm.DB, input model.IncreaseInput, target model.Details) (*model.EachExercise, error) {
 	userDetails, err := GetUserByEmail(ctx, db, input.UserEmail)
 	if err != nil {
 		return nil, errors.Wrapf(err, "postgres.GetUserByEmail")
@@ -125,9 +125,9 @@ func Increase(ctx context.Context, db *gorm.DB, input model.IncreaseInput, targe
 		return nil, errors.Wrapf(err, "postgres.GetExerciseByNameAndWorkoutPlanID")
 	}
 
-	if target == "set" {
+	if target == model.Set {
 		requestedExercise.Sets = requestedExercise.Sets + 1
-	} else if target == "rep" {
+	} else if target == model.Rep {
 		requestedExercise.Reps = requestedExercise.Reps + 1
 	} else {
 		return nil, errors.New("target needs to be either set or rep")
