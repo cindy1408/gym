@@ -10,6 +10,17 @@ import (
 	"gorm.io/gorm"
 )
 
+type BaseExercise interface {
+	UpdateBaseExercise(ctx context.Context, db *gorm.DB, input *model.BaseExerciseInput) (*model.BaseExercise, error)
+	HydrateBaseExercise(ctx context.Context, db *gorm.DB) (string, error)
+	AddBaseExercise(ctx context.Context, db *gorm.DB, baseExercise *model.BaseExerciseInput) (string, error)
+	ValidateBaseExercise(ctx context.Context, db *gorm.DB, name string) bool
+	GetAllBaseExercise(ctx context.Context, db *gorm.DB) ([]*model.BaseExercise, error)
+	GetBaseExerciseByName(ctx context.Context, db *gorm.DB, name string) (*model.BaseExercise, error)
+	Increase(ctx context.Context, db *gorm.DB, input model.IncreaseInput, target model.Details) (*model.EachExercise, error)
+	DeleteBaseExerciseByName(db *gorm.DB, name string) error
+}
+
 func UpdateBaseExercise(ctx context.Context, db *gorm.DB, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
 	updatedExercise := model.BaseExercise{
 		Name:          input.Name,
@@ -111,7 +122,7 @@ func GetBaseExerciseByName(ctx context.Context, db *gorm.DB, name string) (*mode
 		return nil, errors.Wrapf(result.Error, "unable to find base exercise")
 	}
 
-	return baseExercise, nil 
+	return baseExercise, nil
 }
 
 func Increase(ctx context.Context, db *gorm.DB, input model.IncreaseInput, target model.Details) (*model.EachExercise, error) {
@@ -147,11 +158,11 @@ func Increase(ctx context.Context, db *gorm.DB, input model.IncreaseInput, targe
 	return eachExercise, nil
 }
 
-func DeleteBaseExerciseByName(db *gorm.DB, name string) (error) {
+func DeleteBaseExerciseByName(db *gorm.DB, name string) error {
 	result := db.Where("name = ?", name).Delete(&model.BaseExercise{})
 
 	if result.RowsAffected == 0 {
 		return result.Error
 	}
-	return nil 
+	return nil
 }
