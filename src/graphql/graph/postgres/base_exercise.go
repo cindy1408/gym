@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type BaseExercise interface {
+type BaseExercises interface {
 	UpdateBaseExercise(ctx context.Context, db *gorm.DB, input *model.BaseExerciseInput) (*model.BaseExercise, error)
 	HydrateBaseExercise(ctx context.Context, db *gorm.DB) (string, error)
 	AddBaseExercise(ctx context.Context, db *gorm.DB, baseExercise *model.BaseExerciseInput) (string, error)

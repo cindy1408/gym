@@ -61,7 +61,7 @@ type IncreaseInput struct {
 type MuscleGroup struct {
 	Name string `json:"name"`
 }
-
+//TODO: Do i need this? 
 type SpecificParts struct {
 	Name        string `json:"name"`
 	MuscleGroup string `json:"muscleGroup"`
