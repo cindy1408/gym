@@ -1,13 +1,14 @@
 package postgres
 
 import (
+	"context"
+
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
-	"gorm.io/gorm"
 )
 
-func AddEachExercises(db *gorm.DB, userWorkoutID string, eachExercises []*model.EachExerciseInput) (string, error) {
+func (p Postgres) AddEachExercises(userWorkoutID string, eachExercises []*model.EachExerciseInput) (string, error) {
 	for _, eachExercise := range eachExercises {
 		addExercise := &model.EachExercise{
 			ID:                uuid.New().String(),
@@ -18,27 +19,27 @@ func AddEachExercises(db *gorm.DB, userWorkoutID string, eachExercises []*model.
 			Reps:              eachExercise.Reps,
 		}
 
-		db.Create(&addExercise)
+		p.db.Create(&addExercise)
 	}
 	return "user exercises has been added", nil
 }
 
-func GetExerciseByID(db *gorm.DB, id string) (*model.EachExercise, error) {
+func (p Postgres) GetExerciseByID(id string) (*model.EachExercise, error) {
 	var exercise *model.EachExercise
-	db.Model(&model.EachExercise{}).Where("id = ?", id).Scan(&exercise)
+	p.db.Model(&model.EachExercise{}).Where("id = ?", id).Scan(&exercise)
 
 	return exercise, nil
 }
 
-func GetExerciseByNameAndWorkoutPlanID(db *gorm.DB, exerciseName string, userWorkoutID string) (*model.EachExercise, error) {
+func (p Postgres) GetExerciseByNameAndWorkoutPlanID(exerciseName string, userWorkoutID string) (*model.EachExercise, error) {
 	var requestedExercise *model.EachExercise
-	db.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", exerciseName, userWorkoutID).Scan(&requestedExercise)
+	p.db.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", exerciseName, userWorkoutID).Scan(&requestedExercise)
 
 	return requestedExercise, nil
 }
 
-func UpdateExercise(db *gorm.DB, updateExercise *model.EachExercise) error {
-	result := db.Model(&model.EachExercise{}).Where("id = ?", updateExercise.ID).Updates(&updateExercise)
+func (p Postgres) UpdateExercise(updateExercise *model.EachExercise) error {
+	result := p.db.Model(&model.EachExercise{}).Where("id = ?", updateExercise.ID).Updates(&updateExercise)
 
 	if result.RowsAffected == 0 {
 		return errors.Wrapf(result.Error, "issue with updating db")
@@ -47,8 +48,8 @@ func UpdateExercise(db *gorm.DB, updateExercise *model.EachExercise) error {
 	return nil
 }
 
-func GetAllEachExercise(db *gorm.DB) ([]*model.EachExercise, error) {
+func (p Postgres) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
 	allEachExercises := []*model.EachExercise{}
-	db.Table("each_exercises").Scan(&allEachExercises)
+	p.db.Table("each_exercises").Scan(&allEachExercises)
 	return allEachExercises, nil
 }

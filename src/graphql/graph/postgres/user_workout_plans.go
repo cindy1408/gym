@@ -7,13 +7,12 @@ import (
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
-	"gorm.io/gorm"
 )
 
-func ValidateUserWorkoutPlan(db *gorm.DB, userEmail string, gymDay string) (string, bool) {
+func (p Postgres) ValidateUserWorkoutPlan(userEmail string, gymDay string) (string, bool) {
 	fmt.Println(gymDay, userEmail)
 	var total int64
-	db.Model(&model.UserWorkoutPlan{}).Where("user_email = ? AND gym_day = ?", userEmail, gymDay).Count(&total)
+	p.db.Model(&model.UserWorkoutPlan{}).Where("user_email = ? AND gym_day = ?", userEmail, gymDay).Count(&total)
 
 	if total == 0 {
 		return "", false
@@ -21,7 +20,7 @@ func ValidateUserWorkoutPlan(db *gorm.DB, userEmail string, gymDay string) (stri
 
 	var userWorkoutPlanID, userEmailDB, gymDayDB string
 
-	row, err := db.Model(&model.UserWorkoutPlan{}).Select("id", "user_email", "gym_day").Rows()
+	row, err := p.db.Model(&model.UserWorkoutPlan{}).Select("id", "user_email", "gym_day").Rows()
 	if err != nil {
 		fmt.Println("issue with user workout plan database")
 	}
@@ -38,8 +37,8 @@ func ValidateUserWorkoutPlan(db *gorm.DB, userEmail string, gymDay string) (stri
 	return "", false
 }
 
-func AssignUserWorkoutPlan(db *gorm.DB, input model.AddUserWorkoutInput) (*model.UserWorkoutPlan, error) {
-	rows, err := db.Model(&model.UserWorkoutPlan{}).Select("user_email", "gym_day").Rows()
+func (p Postgres) AssignUserWorkoutPlan(input model.AddUserWorkoutInput) (*model.UserWorkoutPlan, error) {
+	rows, err := p.db.Model(&model.UserWorkoutPlan{}).Select("user_email", "gym_day").Rows()
 	if err != nil {
 		return nil, errors.Wrapf(err, "error with user workout plan")
 	}
@@ -64,28 +63,28 @@ func AssignUserWorkoutPlan(db *gorm.DB, input model.AddUserWorkoutInput) (*model
 			UserEmail: input.UserEmail,
 			GymDay:    input.GymDay,
 		}
-		db.Create(userWorkoutPlan)
+		p.db.Create(userWorkoutPlan)
 	}
 	return userWorkoutPlan, nil
 }
 
-func GetUserWorkoutPlansByEmail(ctx context.Context, db *gorm.DB, email string) ([]*model.UserWorkoutPlan, error) {
+func (p Postgres) GetUserWorkoutPlansByEmail(ctx context.Context, email string) ([]*model.UserWorkoutPlan, error) {
 	userWorkouts := []*model.UserWorkoutPlan{}
-	result := db.Model(&model.UserWorkoutPlan{}).Where("email = ?", email).Scan(&userWorkouts)
+	result := p.db.Model(&model.UserWorkoutPlan{}).Where("email = ?", email).Scan(&userWorkouts)
 
 	if result.RowsAffected == 0 {
 		return nil, errors.Wrapf(result.Error, "unable to find user workout plans by email")
 	}
 
-	return userWorkouts, nil 
+	return userWorkouts, nil
 }
 
-func GetAllUserWorkoutPlans(ctx context.Context, db *gorm.DB) ([]*model.UserWorkoutPlan, error) {
+func (p Postgres) GetAllUserWorkoutPlans(ctx context.Context) ([]*model.UserWorkoutPlan, error) {
 	userWorkoutPlans := []*model.UserWorkoutPlan{}
-	result := db.Table("user_workout_plan").Scan(&userWorkoutPlans)
+	result := p.db.Table("user_workout_plan").Scan(&userWorkoutPlans)
 	if result.RowsAffected == 0 {
 		return nil, errors.Wrapf(result.Error, "unable to find user workout plans by email")
 	}
-	
-	return userWorkoutPlans, nil 
+
+	return userWorkoutPlans, nil
 }

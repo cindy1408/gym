@@ -12,22 +12,23 @@ import (
 )
 
 func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExerciseInput) (string, error) {
-	validated := postgres.ValidateUser(r.DB, input.UserEmail)
+	postgres := postgres.Postgres{}
+	validated := postgres.ValidateUser(input.UserEmail)
 	if !validated {
 		return "Please create an account first", nil
 	}
 
 	// validate user workout plan
-	workoutPlanID, validated := postgres.ValidateUserWorkoutPlan(r.DB, input.UserEmail, input.GymDay)
+	workoutPlanID, validated := postgres.ValidateUserWorkoutPlan(input.UserEmail, input.GymDay)
 	if !validated {
 		return "You need to create a workout plan", nil
 	}
 
-	return postgres.AddEachExercises(r.DB, workoutPlanID, input.EachExercise)
+	return postgres.AddEachExercises(workoutPlanID, input.EachExercise)
 }
 
 func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
-	exercise, err := postgres.Increase(ctx, r.DB, input, model.Rep)
+	exercise, err := Increase(ctx, input, model.Rep)
 	if err != nil {
 		return nil, errors.Wrapf(err, "r.increase")
 	}
@@ -36,7 +37,8 @@ func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.Increase
 }
 
 func (r *mutationResolver) IncreaseSet(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
-	exercise, err := postgres.Increase(ctx, r.DB, input, model.Set)
+	postgres := postgres.Postgres{}
+	exercise, err := postgres.Increase(ctx, input, model.Set)
 	if err != nil {
 		return nil, errors.Wrapf(err, "r.increase")
 	}
@@ -45,12 +47,13 @@ func (r *mutationResolver) IncreaseSet(ctx context.Context, input model.Increase
 }
 
 func (r *mutationResolver) UpdateEachExercise(ctx context.Context, input model.UpdateExerciseInput) (*model.EachExercise, error) {
-	userDetails, err := postgres.GetUserByEmail(ctx, r.DB, input.UserEmail)
+	postgres := postgres.Postgres{}
+	userDetails, err := postgres.GetUserByEmail(ctx, input.UserEmail)
 	if err != nil {
 		return nil, errors.Wrapf(err, "postgres.GetUserByEmail")
 	}
 
-	requestedExercise, err := postgres.GetExerciseByNameAndWorkoutPlanID(r.DB, input.EachExercise.Name, *userDetails.UserWorkoutPlanID)
+	requestedExercise, err := postgres.GetExerciseByNameAndWorkoutPlanID(input.EachExercise.Name, *userDetails.UserWorkoutPlanID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "postgres.GetExerciseByNameAndWorkoutPlanID")
 	}
@@ -61,7 +64,7 @@ func (r *mutationResolver) UpdateEachExercise(ctx context.Context, input model.U
 	requestedExercise.Reps = input.EachExercise.Reps
 	requestedExercise.Sets = input.EachExercise.Sets
 
-	err = postgres.UpdateExercise(r.DB, requestedExercise)
+	err = postgres.UpdateExercise(requestedExercise)
 	if err != nil {
 		return nil, errors.Wrapf(err, "postgres.UpdateExercise")
 	}
@@ -70,5 +73,6 @@ func (r *mutationResolver) UpdateEachExercise(ctx context.Context, input model.U
 }
 
 func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
-	return postgres.GetAllEachExercise(r.DB)
+	postgres := postgres.Postgres{}
+	return postgres.GetAllEachExercise(ctx)
 }

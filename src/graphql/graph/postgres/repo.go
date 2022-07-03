@@ -7,6 +7,10 @@ import (
 	"gorm.io/gorm"
 )
 
+type Postgres struct {
+	db *gorm.DB
+}
+
 type Repo interface {
 	GetBaseExerciseByName(
 		ctx context.Context, 

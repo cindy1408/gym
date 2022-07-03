@@ -39,7 +39,8 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		Password:  hashedPw,
 	}
 
-	result, err := postgres.AddUserToDB(r.DB, &newUser)
+	postgres := postgres.Postgres{}
+	result, err := postgres.AddUserToDB(&newUser)
 	if err != nil {
 		return "", errors.Wrapf(err, "r.AddUserToDB")
 	}
@@ -48,7 +49,8 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 }
 
 func (r *queryResolver) GetAllUsers(ctx context.Context) ([]*model.User, error) {
-	allUsers, err := postgres.GetAllUsers(ctx, r.DB)
+	postgres := postgres.Postgres{}
+	allUsers, err := postgres.GetAllUsers(ctx)
 	if err != nil {
 		return nil, errors.Wrap(err, "postgres.GetAllUsers")
 	}

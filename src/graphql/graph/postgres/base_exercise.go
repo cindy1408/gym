@@ -6,12 +6,13 @@ import (
 
 	"github.com/cindy1408/gym/src/graphql/graph"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"github.com/cindy1408/gym/src/graphql/graph/resolver"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
 type BaseExercises interface {
-	UpdateBaseExercise(ctx context.Context, db *gorm.DB, input *model.BaseExerciseInput) (*model.BaseExercise, error)
+	UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error)
 	HydrateBaseExercise(ctx context.Context, db *gorm.DB) (string, error)
 	AddBaseExercise(ctx context.Context, db *gorm.DB, baseExercise *model.BaseExerciseInput) (string, error)
 	ValidateBaseExercise(ctx context.Context, db *gorm.DB, name string) bool
@@ -21,7 +22,7 @@ type BaseExercises interface {
 	DeleteBaseExerciseByName(db *gorm.DB, name string) error
 }
 
-func UpdateBaseExercise(ctx context.Context, db *gorm.DB, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
+func (r resolver.Resolver) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
 	updatedExercise := model.BaseExercise{
 		Name:          input.Name,
 		MuscleGroup:   input.MuscleGroup,
@@ -31,7 +32,7 @@ func UpdateBaseExercise(ctx context.Context, db *gorm.DB, input *model.BaseExerc
 		MovementType:  input.MovementType,
 	}
 
-	result := db.Debug().Model(&model.BaseExercise{}).Where("name = ?", input.Name).Updates(updatedExercise)
+	result := r.DB.Debug().Model(&model.BaseExercise{}).Where("name = ?", input.Name).Updates(updatedExercise)
 
 	if result.RowsAffected == 0 {
 		return nil, errors.Wrapf(result.Error, "unable to update base exercise")
@@ -40,9 +41,9 @@ func UpdateBaseExercise(ctx context.Context, db *gorm.DB, input *model.BaseExerc
 	return &updatedExercise, nil
 }
 
-func HydrateBaseExercise(ctx context.Context, db *gorm.DB) (string, error) {
+func (p Postgres) HydrateBaseExercise(ctx context.Context) (string, error) {
 	for _, eachBaseExercise := range graph.BaseExerciseData {
-		rows, err := db.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
+		rows, err := p.db.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
 		if err != nil {
 			fmt.Printf("%v , selecting database\n", eachBaseExercise.Name)
 		}
@@ -63,14 +64,14 @@ func HydrateBaseExercise(ctx context.Context, db *gorm.DB) (string, error) {
 			}
 		}
 		if count == 0 {
-			db.Create(eachBaseExercise)
+			p.db.Create(eachBaseExercise)
 		}
 	}
 
 	return "Base exercise table has been hydrated!", nil
 }
 
-func AddBaseExercise(ctx context.Context, db *gorm.DB, baseExercise *model.BaseExerciseInput) (string, error) {
+func (p Postgres) AddBaseExercise(ctx context.Context, baseExercise *model.BaseExerciseInput) (string, error) {
 	newExercise := model.BaseExercise{
 		Name:          baseExercise.Name,
 		MuscleGroup:   baseExercise.MuscleGroup,
@@ -79,13 +80,13 @@ func AddBaseExercise(ctx context.Context, db *gorm.DB, baseExercise *model.BaseE
 		AvoidGiven:    baseExercise.AvoidGiven,
 		MovementType:  baseExercise.MovementType,
 	}
-	db.Create(newExercise)
+	p.db.Create(newExercise)
 
 	return fmt.Sprintf("base exercise %v has been added", baseExercise.Name), nil
 }
 
-func ValidateBaseExercise(ctx context.Context, db *gorm.DB, name string) bool {
-	rows, err := db.Model(&model.BaseExercise{}).Select("name").Rows()
+func (p Postgres) ValidateBaseExercise(ctx context.Context, name string) bool {
+	rows, err := p.db.Model(&model.BaseExercise{}).Select("name").Rows()
 	if err != nil {
 		fmt.Println("issue with base exercise table")
 	}
@@ -105,18 +106,18 @@ func ValidateBaseExercise(ctx context.Context, db *gorm.DB, name string) bool {
 	return exists != 0
 }
 
-func GetAllBaseExercise(ctx context.Context, db *gorm.DB) ([]*model.BaseExercise, error) {
+func (p Postgres) GetAllBaseExercise(ctx context.Context) ([]*model.BaseExercise, error) {
 	allBaseExercises := []*model.BaseExercise{}
-	db.Table("base_exercises").Scan(&allBaseExercises)
+	p.db.Table("base_exercises").Scan(&allBaseExercises)
 	return allBaseExercises, nil
 }
 
-func GetBaseExerciseByName(ctx context.Context, db *gorm.DB, name string) (*model.BaseExercise, error) {
+func (p Postgres) GetBaseExerciseByName(ctx context.Context, name string) (*model.BaseExercise, error) {
 	if name == "" {
 		return nil, errors.Wrapf(nil, "base exercise name is empty")
 	}
 	var baseExercise *model.BaseExercise
-	result := db.Where("name", name).Find(&model.BaseExercise{}).Scan(&baseExercise)
+	result := p.db.Where("name", name).Find(&model.BaseExercise{}).Scan(&baseExercise)
 
 	if result.RowsAffected == 0 {
 		return nil, errors.Wrapf(result.Error, "unable to find base exercise")
@@ -125,13 +126,13 @@ func GetBaseExerciseByName(ctx context.Context, db *gorm.DB, name string) (*mode
 	return baseExercise, nil
 }
 
-func Increase(ctx context.Context, db *gorm.DB, input model.IncreaseInput, target model.Details) (*model.EachExercise, error) {
-	userDetails, err := GetUserByEmail(ctx, db, input.UserEmail)
+func (p Postgres) Increase(ctx context.Context, input model.IncreaseInput, target model.Details) (*model.EachExercise, error) {
+	userDetails, err := p.GetUserByEmail(ctx, input.UserEmail)
 	if err != nil {
 		return nil, errors.Wrapf(err, "postgres.GetUserByEmail")
 	}
 
-	requestedExercise, err := GetExerciseByNameAndWorkoutPlanID(db, input.ExerciseName, *userDetails.UserWorkoutPlanID)
+	requestedExercise, err := p.GetExerciseByNameAndWorkoutPlanID(input.ExerciseName, *userDetails.UserWorkoutPlanID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "postgres.GetExerciseByNameAndWorkoutPlanID")
 	}
@@ -144,13 +145,13 @@ func Increase(ctx context.Context, db *gorm.DB, input model.IncreaseInput, targe
 		return nil, errors.New("target needs to be either set or rep")
 	}
 
-	err = UpdateExercise(db, requestedExercise)
+	err = p.UpdateExercise(requestedExercise)
 	if err != nil {
 		return nil, errors.Wrapf(err, "postgres.UpdateExercise")
 	}
 
 	// Grab the data from database and return it
-	eachExercise, err := GetExerciseByID(db, requestedExercise.ID)
+	eachExercise, err := p.GetExerciseByID(requestedExercise.ID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "r.increase")
 	}
@@ -158,8 +159,8 @@ func Increase(ctx context.Context, db *gorm.DB, input model.IncreaseInput, targe
 	return eachExercise, nil
 }
 
-func DeleteBaseExerciseByName(db *gorm.DB, name string) error {
-	result := db.Where("name = ?", name).Delete(&model.BaseExercise{})
+func (p Postgres) DeleteBaseExerciseByName(name string) error {
+	result := p.db.Where("name = ?", name).Delete(&model.BaseExercise{})
 
 	if result.RowsAffected == 0 {
 		return result.Error

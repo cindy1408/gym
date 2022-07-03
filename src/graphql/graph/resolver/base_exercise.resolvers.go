@@ -12,15 +12,17 @@ import (
 )
 
 func (r *queryResolver) GetBaseExerciseByName(ctx context.Context, input string) (*model.BaseExercise, error) {
-	return postgres.GetBaseExerciseByName(ctx, r.DB, input)
+	return r.Postgres.GetBaseExerciseByName(ctx, input)
 }
 
 func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
-	return postgres.GetAllBaseExercise(ctx, r.DB)
+	postgres := postgres.Postgres{}
+	return r.GetAllBaseExercise(ctx)
 }
 
 func (r *queryResolver) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
-	updatedExercise, err := postgres.UpdateBaseExercise(ctx, r.DB, input)
+	postgres := postgres.Postgres{}
+	updatedExercise, err := postgres.UpdateBaseExercise(ctx, input)
 	if err != nil {
 		return nil, errors.Wrap(err, "postgres.UpdateBaseexercise")
 	}
@@ -29,7 +31,8 @@ func (r *queryResolver) UpdateBaseExercise(ctx context.Context, input *model.Bas
 }
 
 func (r *queryResolver) HydrateBaseExercise(ctx context.Context) (string, error) {
-	result, err := postgres.HydrateBaseExercise(ctx, r.DB)
+	postgres := postgres.Postgres{}
+	result, err := postgres.HydrateBaseExercise(ctx)
 	if err != nil {
 		return "", errors.Wrap(err, "postgres.HydrateBaseExercise")
 	}
@@ -45,14 +48,14 @@ func (r *queryResolver) CreateBaseExercise(ctx context.Context, input *model.Bas
 		input.MovementType == "" {
 		return "at least one of the required field is missing", nil
 	}
-
-	exists := postgres.ValidateBaseExercise(ctx, r.DB, input.Name)
+	postgres := postgres.Postgres{}
+	exists := postgres.ValidateBaseExercise(ctx, input.Name)
 
 	if !exists {
 		return "base exercise already exists", nil
 	}
 
-	result, err := postgres.AddBaseExercise(ctx, r.DB, input)
+	result, err := postgres.AddBaseExercise(ctx, input)
 	if err != nil {
 		return "", errors.Wrap(err, "postgres.AddBaseExercise")
 	}

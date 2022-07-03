@@ -7,6 +7,7 @@ import (
 
 	"github.com/cindy1408/gym/src/graphql/graph/generated"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"github.com/cindy1408/gym/src/graphql/graph/postgres"
 	"gorm.io/gorm"
 )
 
@@ -14,7 +15,8 @@ import (
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	DB                 *gorm.DB
+	DB *gorm.DB
+	postgres.Postgres
 }
 
 // Query returns generated.QueryResolver implementation.
@@ -26,7 +28,6 @@ type queryResolver struct{ *Resolver }
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 type mutationResolver struct{ *Resolver }
-
 
 func (r *Resolver) Init() error {
 	err := r.DB.AutoMigrate(

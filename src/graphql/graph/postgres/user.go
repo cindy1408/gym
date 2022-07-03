@@ -6,11 +6,10 @@ import (
 
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/pkg/errors"
-	"gorm.io/gorm"
 )
 
-func AddUserToDB(db *gorm.DB, newUser *model.User) (string, error) {
-	rows, err := db.Model(&model.User{}).Select("email").Rows()
+func (p Postgres) AddUserToDB(newUser *model.User) (string, error) {
+	rows, err := p.db.Model(&model.User{}).Select("email").Rows()
 	if err != nil {
 		return "issue with user database", errors.Wrapf(err, "model.User{}")
 	}
@@ -25,21 +24,21 @@ func AddUserToDB(db *gorm.DB, newUser *model.User) (string, error) {
 			count++
 
 			var existUser model.User
-			db.Model(&model.User{}).First(&model.User{Email: email}).Scan(&existUser)
+			p.db.Model(&model.User{}).First(&model.User{Email: email}).Scan(&existUser)
 
 			return fmt.Sprintf("%v , exists in database!\n", newUser.Email), nil
 		}
 	}
 
 	if count == 0 {
-		db.Create(&newUser)
+		p.db.Create(&newUser)
 	}
 
 	return fmt.Sprintf("user %v has been successfully created", newUser.FirstName), nil
 }
 
-func ValidateUser(db *gorm.DB, email string) bool {
-	rows, err := db.Model(&model.User{}).Select("email").Rows()
+func (p Postgres) ValidateUser(email string) bool {
+	rows, err := p.db.Model(&model.User{}).Select("email").Rows()
 	if err != nil {
 		fmt.Println("issue with user table")
 	}
@@ -59,22 +58,22 @@ func ValidateUser(db *gorm.DB, email string) bool {
 	return exists != 0
 }
 
-func UpdateUser(db *gorm.DB, input model.AddUserWorkoutInput, workoutPlanID string) bool {
-	db.Model(&model.User{}).Where("email = ?", input.UserEmail).Update("user_workout_plan_id", workoutPlanID)
+func (p Postgres) UpdateUser(input model.AddUserWorkoutInput, workoutPlanID string) bool {
+	p.db.Model(&model.User{}).Where("email = ?", input.UserEmail).Update("user_workout_plan_id", workoutPlanID)
 
 	return true
 }
 
-func GetAllUsers(ctx context.Context, db *gorm.DB) ([]*model.User, error) {
+func (p Postgres) GetAllUsers(ctx context.Context) ([]*model.User, error) {
 	allUsers := []*model.User{}
-	db.Table("users").Scan(&allUsers)
-	
-	return allUsers, nil 
+	p.db.Table("users").Scan(&allUsers)
+
+	return allUsers, nil
 }
 
-func GetUserByEmail(ctx context.Context, db *gorm.DB, email string) (*model.User, error) {
+func (p Postgres) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
 	var userDetails *model.User
-	db.Model(&model.User{}).Where("email = ?", email).Scan(&userDetails)
+	p.db.Model(&model.User{}).Where("email = ?", email).Scan(&userDetails)
 
-	return userDetails, nil 
+	return userDetails, nil
 }
