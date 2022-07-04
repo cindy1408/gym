@@ -10,8 +10,8 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/cindy1408/gym/src/graphql/graph/generated"
+	"github.com/cindy1408/gym/src/graphql/graph/postgres"
 	"github.com/cindy1408/gym/src/graphql/graph/resolver"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -21,7 +21,7 @@ type Server interface {
 	Connect() error
 }
 
-var db *gorm.DB
+var DB *gorm.DB
 
 func main() {
 	port := os.Getenv("PORT")
@@ -29,14 +29,14 @@ func main() {
 		port = defaultPort
 	}
 
-	db, _ = NewDatabase()
+	DB, _ = postgres.NewDatabase()
 
-	resolver := &resolver.Resolver{
-		DB: db,
-	}
+	pgRepo := postgres.NewRepo(DB)
+
+	resolver := &resolver.Resolver{}
 
 	// populate database tables
-	if err := resolver.Init(); err != nil {
+	if err := pgRepo.Init(); err != nil {
 		log.Fatal("failed to create database: %v", err)
 	}
 
@@ -64,11 +64,4 @@ func main() {
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 
-}
-
-func NewDatabase() (*gorm.DB, error) {
-	databaseURL := "host=localhost user=postgres password=password dbname=gym port=5432 sslmode=disable"
-	return gorm.Open(postgres.New(postgres.Config{
-		DSN: databaseURL,
-	}), &gorm.Config{})
 }

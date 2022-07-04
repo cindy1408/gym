@@ -3,19 +3,15 @@ package resolver
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
 
 	"github.com/cindy1408/gym/src/graphql/graph/generated"
-	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/cindy1408/gym/src/graphql/graph/postgres"
-	"gorm.io/gorm"
 )
 
 // This file will not be regenerated automatically.
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	DB *gorm.DB
 	postgres.PgRepo
 }
 
@@ -29,23 +25,23 @@ func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResol
 
 type mutationResolver struct{ *Resolver }
 
-func (r *Resolver) Init() error {
-	err := r.DB.AutoMigrate(
-		&model.BaseExercise{},
-		&model.User{},
-		&model.MuscleGroup{},
-		&model.SpecificParts{},
-		&model.UserWorkoutPlan{},
-		&model.EachExercise{},
-	)
+// func (r *Resolver) Init() error {
+// 	err := r.DB.AutoMigrate(
+// 		&model.BaseExercise{},
+// 		&model.User{},
+// 		&model.MuscleGroup{},
+// 		&model.SpecificParts{},
+// 		&model.UserWorkoutPlan{},
+// 		&model.EachExercise{},
+// 	)
 
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return err
+// 	}
 
-	return r.DB.Error
-}
+// 	return r.DB.Error
+// }
 
 func Hasher(toHash string) string {
 	hasher := sha256.New()
