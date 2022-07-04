@@ -16,7 +16,7 @@ import (
 
 type Resolver struct {
 	DB *gorm.DB
-	postgres.Postgres
+	postgres.PgRepo
 }
 
 // Query returns generated.QueryResolver implementation.

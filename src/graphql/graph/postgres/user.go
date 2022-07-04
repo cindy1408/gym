@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (p Postgres) AddUserToDB(newUser *model.User) (string, error) {
+func (p PgRepo) AddUserToDB(newUser *model.User) (string, error) {
 	rows, err := p.db.Model(&model.User{}).Select("email").Rows()
 	if err != nil {
 		return "issue with user database", errors.Wrapf(err, "model.User{}")
@@ -37,7 +37,7 @@ func (p Postgres) AddUserToDB(newUser *model.User) (string, error) {
 	return fmt.Sprintf("user %v has been successfully created", newUser.FirstName), nil
 }
 
-func (p Postgres) ValidateUser(email string) bool {
+func (p PgRepo) ValidateUser(email string) bool {
 	rows, err := p.db.Model(&model.User{}).Select("email").Rows()
 	if err != nil {
 		fmt.Println("issue with user table")
@@ -58,20 +58,20 @@ func (p Postgres) ValidateUser(email string) bool {
 	return exists != 0
 }
 
-func (p Postgres) UpdateUser(input model.AddUserWorkoutInput, workoutPlanID string) bool {
+func (p PgRepo) UpdateUser(input model.AddUserWorkoutInput, workoutPlanID string) bool {
 	p.db.Model(&model.User{}).Where("email = ?", input.UserEmail).Update("user_workout_plan_id", workoutPlanID)
 
 	return true
 }
 
-func (p Postgres) GetAllUsers(ctx context.Context) ([]*model.User, error) {
+func (p PgRepo) GetAllUsers(ctx context.Context) ([]*model.User, error) {
 	allUsers := []*model.User{}
 	p.db.Table("users").Scan(&allUsers)
 
 	return allUsers, nil
 }
 
-func (p Postgres) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
+func (p PgRepo) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
 	var userDetails *model.User
 	p.db.Model(&model.User{}).Where("email = ?", email).Scan(&userDetails)
 

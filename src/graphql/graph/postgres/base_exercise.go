@@ -6,7 +6,6 @@ import (
 
 	"github.com/cindy1408/gym/src/graphql/graph"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
-	"github.com/cindy1408/gym/src/graphql/graph/resolver"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
@@ -22,7 +21,7 @@ type BaseExercises interface {
 	DeleteBaseExerciseByName(db *gorm.DB, name string) error
 }
 
-func (r resolver.Resolver) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
+func (p PgRepo) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
 	updatedExercise := model.BaseExercise{
 		Name:          input.Name,
 		MuscleGroup:   input.MuscleGroup,
@@ -32,7 +31,7 @@ func (r resolver.Resolver) UpdateBaseExercise(ctx context.Context, input *model.
 		MovementType:  input.MovementType,
 	}
 
-	result := r.DB.Debug().Model(&model.BaseExercise{}).Where("name = ?", input.Name).Updates(updatedExercise)
+	result := p.db.Debug().Model(&model.BaseExercise{}).Where("name = ?", input.Name).Updates(updatedExercise)
 
 	if result.RowsAffected == 0 {
 		return nil, errors.Wrapf(result.Error, "unable to update base exercise")
@@ -41,7 +40,7 @@ func (r resolver.Resolver) UpdateBaseExercise(ctx context.Context, input *model.
 	return &updatedExercise, nil
 }
 
-func (p Postgres) HydrateBaseExercise(ctx context.Context) (string, error) {
+func (p PgRepo) HydrateBaseExercise(ctx context.Context) (string, error) {
 	for _, eachBaseExercise := range graph.BaseExerciseData {
 		rows, err := p.db.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
 		if err != nil {
@@ -71,7 +70,7 @@ func (p Postgres) HydrateBaseExercise(ctx context.Context) (string, error) {
 	return "Base exercise table has been hydrated!", nil
 }
 
-func (p Postgres) AddBaseExercise(ctx context.Context, baseExercise *model.BaseExerciseInput) (string, error) {
+func (p PgRepo) AddBaseExercise(ctx context.Context, baseExercise *model.BaseExerciseInput) (string, error) {
 	newExercise := model.BaseExercise{
 		Name:          baseExercise.Name,
 		MuscleGroup:   baseExercise.MuscleGroup,
@@ -85,7 +84,7 @@ func (p Postgres) AddBaseExercise(ctx context.Context, baseExercise *model.BaseE
 	return fmt.Sprintf("base exercise %v has been added", baseExercise.Name), nil
 }
 
-func (p Postgres) ValidateBaseExercise(ctx context.Context, name string) bool {
+func (p PgRepo) ValidateBaseExercise(ctx context.Context, name string) bool {
 	rows, err := p.db.Model(&model.BaseExercise{}).Select("name").Rows()
 	if err != nil {
 		fmt.Println("issue with base exercise table")
@@ -106,13 +105,13 @@ func (p Postgres) ValidateBaseExercise(ctx context.Context, name string) bool {
 	return exists != 0
 }
 
-func (p Postgres) GetAllBaseExercise(ctx context.Context) ([]*model.BaseExercise, error) {
+func (p PgRepo) GetAllBaseExercise(ctx context.Context) ([]*model.BaseExercise, error) {
 	allBaseExercises := []*model.BaseExercise{}
 	p.db.Table("base_exercises").Scan(&allBaseExercises)
 	return allBaseExercises, nil
 }
 
-func (p Postgres) GetBaseExerciseByName(ctx context.Context, name string) (*model.BaseExercise, error) {
+func (p PgRepo) GetBaseExerciseByName(ctx context.Context, name string) (*model.BaseExercise, error) {
 	if name == "" {
 		return nil, errors.Wrapf(nil, "base exercise name is empty")
 	}
@@ -126,7 +125,7 @@ func (p Postgres) GetBaseExerciseByName(ctx context.Context, name string) (*mode
 	return baseExercise, nil
 }
 
-func (p Postgres) Increase(ctx context.Context, input model.IncreaseInput, target model.Details) (*model.EachExercise, error) {
+func (p PgRepo) Increase(ctx context.Context, input model.IncreaseInput, target model.Details) (*model.EachExercise, error) {
 	userDetails, err := p.GetUserByEmail(ctx, input.UserEmail)
 	if err != nil {
 		return nil, errors.Wrapf(err, "postgres.GetUserByEmail")
@@ -159,7 +158,7 @@ func (p Postgres) Increase(ctx context.Context, input model.IncreaseInput, targe
 	return eachExercise, nil
 }
 
-func (p Postgres) DeleteBaseExerciseByName(name string) error {
+func (p PgRepo) DeleteBaseExerciseByName(name string) error {
 	result := p.db.Where("name = ?", name).Delete(&model.BaseExercise{})
 
 	if result.RowsAffected == 0 {

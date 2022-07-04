@@ -7,28 +7,26 @@ import (
 	"context"
 
 	"github.com/cindy1408/gym/src/graphql/graph/model"
-	"github.com/cindy1408/gym/src/graphql/graph/postgres"
 	"github.com/pkg/errors"
 )
 
 func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExerciseInput) (string, error) {
-	postgres := postgres.Postgres{}
-	validated := postgres.ValidateUser(input.UserEmail)
+	validated := r.PgRepo.ValidateUser(input.UserEmail)
 	if !validated {
 		return "Please create an account first", nil
 	}
 
 	// validate user workout plan
-	workoutPlanID, validated := postgres.ValidateUserWorkoutPlan(input.UserEmail, input.GymDay)
+	workoutPlanID, validated := r.PgRepo.ValidateUserWorkoutPlan(input.UserEmail, input.GymDay)
 	if !validated {
 		return "You need to create a workout plan", nil
 	}
 
-	return postgres.AddEachExercises(workoutPlanID, input.EachExercise)
+	return r.PgRepo.AddEachExercises(workoutPlanID, input.EachExercise)
 }
 
 func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
-	exercise, err := Increase(ctx, input, model.Rep)
+	exercise, err := r.PgRepo.Increase(ctx, input, model.Rep)
 	if err != nil {
 		return nil, errors.Wrapf(err, "r.increase")
 	}
@@ -37,8 +35,7 @@ func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.Increase
 }
 
 func (r *mutationResolver) IncreaseSet(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
-	postgres := postgres.Postgres{}
-	exercise, err := postgres.Increase(ctx, input, model.Set)
+	exercise, err := r.PgRepo.Increase(ctx, input, model.Set)
 	if err != nil {
 		return nil, errors.Wrapf(err, "r.increase")
 	}
@@ -47,13 +44,12 @@ func (r *mutationResolver) IncreaseSet(ctx context.Context, input model.Increase
 }
 
 func (r *mutationResolver) UpdateEachExercise(ctx context.Context, input model.UpdateExerciseInput) (*model.EachExercise, error) {
-	postgres := postgres.Postgres{}
-	userDetails, err := postgres.GetUserByEmail(ctx, input.UserEmail)
+	userDetails, err := r.PgRepo.GetUserByEmail(ctx, input.UserEmail)
 	if err != nil {
 		return nil, errors.Wrapf(err, "postgres.GetUserByEmail")
 	}
 
-	requestedExercise, err := postgres.GetExerciseByNameAndWorkoutPlanID(input.EachExercise.Name, *userDetails.UserWorkoutPlanID)
+	requestedExercise, err := r.PgRepo.GetExerciseByNameAndWorkoutPlanID(input.EachExercise.Name, *userDetails.UserWorkoutPlanID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "postgres.GetExerciseByNameAndWorkoutPlanID")
 	}
@@ -64,7 +60,7 @@ func (r *mutationResolver) UpdateEachExercise(ctx context.Context, input model.U
 	requestedExercise.Reps = input.EachExercise.Reps
 	requestedExercise.Sets = input.EachExercise.Sets
 
-	err = postgres.UpdateExercise(requestedExercise)
+	err = r.PgRepo.UpdateExercise(requestedExercise)
 	if err != nil {
 		return nil, errors.Wrapf(err, "postgres.UpdateExercise")
 	}
@@ -73,6 +69,5 @@ func (r *mutationResolver) UpdateEachExercise(ctx context.Context, input model.U
 }
 
 func (r *queryResolver) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
-	postgres := postgres.Postgres{}
-	return postgres.GetAllEachExercise(ctx)
+	return r.PgRepo.GetAllEachExercise(ctx)
 }

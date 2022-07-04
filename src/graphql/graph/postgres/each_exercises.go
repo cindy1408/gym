@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (p Postgres) AddEachExercises(userWorkoutID string, eachExercises []*model.EachExerciseInput) (string, error) {
+func (p PgRepo) AddEachExercises(userWorkoutID string, eachExercises []*model.EachExerciseInput) (string, error) {
 	for _, eachExercise := range eachExercises {
 		addExercise := &model.EachExercise{
 			ID:                uuid.New().String(),
@@ -24,21 +24,21 @@ func (p Postgres) AddEachExercises(userWorkoutID string, eachExercises []*model.
 	return "user exercises has been added", nil
 }
 
-func (p Postgres) GetExerciseByID(id string) (*model.EachExercise, error) {
+func (p PgRepo) GetExerciseByID(id string) (*model.EachExercise, error) {
 	var exercise *model.EachExercise
 	p.db.Model(&model.EachExercise{}).Where("id = ?", id).Scan(&exercise)
 
 	return exercise, nil
 }
 
-func (p Postgres) GetExerciseByNameAndWorkoutPlanID(exerciseName string, userWorkoutID string) (*model.EachExercise, error) {
+func (p PgRepo) GetExerciseByNameAndWorkoutPlanID(exerciseName string, userWorkoutID string) (*model.EachExercise, error) {
 	var requestedExercise *model.EachExercise
 	p.db.Model(&model.EachExercise{}).Where("name = ? AND user_workout_plan_id = ?", exerciseName, userWorkoutID).Scan(&requestedExercise)
 
 	return requestedExercise, nil
 }
 
-func (p Postgres) UpdateExercise(updateExercise *model.EachExercise) error {
+func (p PgRepo) UpdateExercise(updateExercise *model.EachExercise) error {
 	result := p.db.Model(&model.EachExercise{}).Where("id = ?", updateExercise.ID).Updates(&updateExercise)
 
 	if result.RowsAffected == 0 {
@@ -48,7 +48,7 @@ func (p Postgres) UpdateExercise(updateExercise *model.EachExercise) error {
 	return nil
 }
 
-func (p Postgres) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
+func (p PgRepo) GetAllEachExercise(ctx context.Context) ([]*model.EachExercise, error) {
 	allEachExercises := []*model.EachExercise{}
 	p.db.Table("each_exercises").Scan(&allEachExercises)
 	return allEachExercises, nil

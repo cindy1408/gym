@@ -8,7 +8,6 @@ import (
 	"net/mail"
 
 	"github.com/cindy1408/gym/src/graphql/graph/model"
-	"github.com/cindy1408/gym/src/graphql/graph/postgres"
 	"github.com/pkg/errors"
 )
 
@@ -39,8 +38,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		Password:  hashedPw,
 	}
 
-	postgres := postgres.Postgres{}
-	result, err := postgres.AddUserToDB(&newUser)
+	result, err := r.PgRepo.AddUserToDB(&newUser)
 	if err != nil {
 		return "", errors.Wrapf(err, "r.AddUserToDB")
 	}
@@ -49,8 +47,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 }
 
 func (r *queryResolver) GetAllUsers(ctx context.Context) ([]*model.User, error) {
-	postgres := postgres.Postgres{}
-	allUsers, err := postgres.GetAllUsers(ctx)
+	allUsers, err := r.PgRepo.GetAllUsers(ctx)
 	if err != nil {
 		return nil, errors.Wrap(err, "postgres.GetAllUsers")
 	}

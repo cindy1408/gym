@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (p Postgres) ValidateUserWorkoutPlan(userEmail string, gymDay string) (string, bool) {
+func (p PgRepo) ValidateUserWorkoutPlan(userEmail string, gymDay string) (string, bool) {
 	fmt.Println(gymDay, userEmail)
 	var total int64
 	p.db.Model(&model.UserWorkoutPlan{}).Where("user_email = ? AND gym_day = ?", userEmail, gymDay).Count(&total)
@@ -37,7 +37,7 @@ func (p Postgres) ValidateUserWorkoutPlan(userEmail string, gymDay string) (stri
 	return "", false
 }
 
-func (p Postgres) AssignUserWorkoutPlan(input model.AddUserWorkoutInput) (*model.UserWorkoutPlan, error) {
+func (p PgRepo) AssignUserWorkoutPlan(input model.AddUserWorkoutInput) (*model.UserWorkoutPlan, error) {
 	rows, err := p.db.Model(&model.UserWorkoutPlan{}).Select("user_email", "gym_day").Rows()
 	if err != nil {
 		return nil, errors.Wrapf(err, "error with user workout plan")
@@ -68,7 +68,7 @@ func (p Postgres) AssignUserWorkoutPlan(input model.AddUserWorkoutInput) (*model
 	return userWorkoutPlan, nil
 }
 
-func (p Postgres) GetUserWorkoutPlansByEmail(ctx context.Context, email string) ([]*model.UserWorkoutPlan, error) {
+func (p PgRepo) GetUserWorkoutPlansByEmail(ctx context.Context, email string) ([]*model.UserWorkoutPlan, error) {
 	userWorkouts := []*model.UserWorkoutPlan{}
 	result := p.db.Model(&model.UserWorkoutPlan{}).Where("email = ?", email).Scan(&userWorkouts)
 
@@ -79,7 +79,7 @@ func (p Postgres) GetUserWorkoutPlansByEmail(ctx context.Context, email string) 
 	return userWorkouts, nil
 }
 
-func (p Postgres) GetAllUserWorkoutPlans(ctx context.Context) ([]*model.UserWorkoutPlan, error) {
+func (p PgRepo) GetAllUserWorkoutPlans(ctx context.Context) ([]*model.UserWorkoutPlan, error) {
 	userWorkoutPlans := []*model.UserWorkoutPlan{}
 	result := p.db.Table("user_workout_plan").Scan(&userWorkoutPlans)
 	if result.RowsAffected == 0 {
