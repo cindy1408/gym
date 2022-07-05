@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cindy1408/gym/src/graphql/graph"
+	"github.com/cindy1408/gym/src/data"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/pkg/errors"
 )
@@ -40,7 +40,7 @@ func (p PgRepo) UpdateBaseExercise(ctx context.Context, input *model.BaseExercis
 }
 
 func (p PgRepo) HydrateBaseExercise(ctx context.Context) (string, error) {
-	for _, eachBaseExercise := range graph.BaseExerciseData {
+	for _, eachBaseExercise := range data.BaseExerciseData {
 		// TODO: ISSUE HERE
 		rows, err := p.db.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
 		fmt.Println("here3")

@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 
 	"github.com/cindy1408/gym/src/graphql/graph/generated"
-	"github.com/cindy1408/gym/src/graphql/graph/postgres"
+	"github.com/cindy1408/gym/src/postgres"
 )
 
 // This file will not be regenerated automatically.

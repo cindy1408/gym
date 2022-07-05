@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cindy1408/gym/src/graphql/graph"
+	"github.com/cindy1408/gym/src/data"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/pkg/errors"
 	"gorm.io/driver/postgres"
@@ -75,7 +75,7 @@ func NewDatabase() (*gorm.DB, error) {
 }
 
 func (p *PgRepo) HydrateMuscleGroups(ctx context.Context) error {
-	for _, eachMuscleGroup := range graph.MuscleGroupData {
+	for _, eachMuscleGroup := range data.MuscleGroupData {
 		rows, err := p.db.Model(&model.MuscleGroup{}).Select("name").Rows()
 		if err != nil {
 			fmt.Printf("%v, selecting database\n", eachMuscleGroup.Name)
@@ -107,7 +107,7 @@ func (p *PgRepo) HydrateMuscleGroups(ctx context.Context) error {
 }
 
 func (p PgRepo) HydrateSpecificParts(ctx context.Context) error {
-	for _, eachSpecificMuscleGroup := range graph.SpecificMuscleGroupData {
+	for _, eachSpecificMuscleGroup := range data.SpecificMuscleGroupData {
 		rows, err := p.db.Model(&model.SpecificParts{}).Select("name").Rows()
 		if err != nil {
 			fmt.Printf("%v, selecting database\n", eachSpecificMuscleGroup.Name)

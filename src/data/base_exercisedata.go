@@ -1,4 +1,4 @@
-package graph
+package data
 
 import (
 	"github.com/cindy1408/gym/src/graphql/graph/model"
