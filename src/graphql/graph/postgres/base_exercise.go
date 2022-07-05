@@ -7,18 +7,17 @@ import (
 	"github.com/cindy1408/gym/src/graphql/graph"
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/pkg/errors"
-	"gorm.io/gorm"
 )
 
 type BaseExercises interface {
 	UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error)
-	HydrateBaseExercise(ctx context.Context, db *gorm.DB) (string, error)
-	AddBaseExercise(ctx context.Context, db *gorm.DB, baseExercise *model.BaseExerciseInput) (string, error)
-	ValidateBaseExercise(ctx context.Context, db *gorm.DB, name string) bool
-	GetAllBaseExercise(ctx context.Context, db *gorm.DB) ([]*model.BaseExercise, error)
-	GetBaseExerciseByName(ctx context.Context, db *gorm.DB, name string) (*model.BaseExercise, error)
-	Increase(ctx context.Context, db *gorm.DB, input model.IncreaseInput, target model.Details) (*model.EachExercise, error)
-	DeleteBaseExerciseByName(db *gorm.DB, name string) error
+	HydrateBaseExercise(ctx context.Context) (string, error)
+	AddBaseExercise(ctx context.Context, baseExercise *model.BaseExerciseInput) (string, error)
+	ValidateBaseExercise(ctx context.Context, name string) bool
+	GetAllBaseExercise(ctx context.Context) ([]*model.BaseExercise, error)
+	GetBaseExerciseByName(ctx context.Context, name string) (*model.BaseExercise, error)
+	Increase(ctx context.Context, input model.IncreaseInput, target model.Details) (*model.EachExercise, error)
+	DeleteBaseExerciseByName(ctx context.Context, name string) error
 }
 
 func (p PgRepo) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
@@ -42,7 +41,9 @@ func (p PgRepo) UpdateBaseExercise(ctx context.Context, input *model.BaseExercis
 
 func (p PgRepo) HydrateBaseExercise(ctx context.Context) (string, error) {
 	for _, eachBaseExercise := range graph.BaseExerciseData {
+		// TODO: ISSUE HERE
 		rows, err := p.db.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
+		fmt.Println("here3")
 		if err != nil {
 			fmt.Printf("%v , selecting database\n", eachBaseExercise.Name)
 		}
@@ -107,6 +108,8 @@ func (p PgRepo) ValidateBaseExercise(ctx context.Context, name string) bool {
 
 func (p PgRepo) GetAllBaseExercise(ctx context.Context) ([]*model.BaseExercise, error) {
 	allBaseExercises := []*model.BaseExercise{}
+	fmt.Println("here")
+	// TODO: ISSUE IS HERE
 	p.db.Table("base_exercises").Scan(&allBaseExercises)
 	return allBaseExercises, nil
 }

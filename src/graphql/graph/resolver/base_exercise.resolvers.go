@@ -5,6 +5,7 @@ package resolver
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cindy1408/gym/src/graphql/graph/model"
 	"github.com/pkg/errors"
@@ -28,7 +29,8 @@ func (r *queryResolver) UpdateBaseExercise(ctx context.Context, input *model.Bas
 }
 
 func (r *queryResolver) HydrateBaseExercise(ctx context.Context) (string, error) {
-	result, err := r.PgRepo.HydrateBaseExercise(ctx)
+	fmt.Println("here")
+	result, err := r.HydrateBaseExercise(ctx)
 	if err != nil {
 		return "", errors.Wrap(err, "postgres.HydrateBaseExercise")
 	}

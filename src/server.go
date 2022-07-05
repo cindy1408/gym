@@ -21,7 +21,7 @@ type Server interface {
 	Connect() error
 }
 
-var DB *gorm.DB
+var db *gorm.DB
 
 func main() {
 	port := os.Getenv("PORT")
@@ -29,9 +29,9 @@ func main() {
 		port = defaultPort
 	}
 
-	DB, _ = postgres.NewDatabase()
+	db, _ = postgres.NewDatabase()
 
-	pgRepo := postgres.NewRepo(DB)
+	pgRepo := postgres.NewRepo(db)
 
 	resolver := &resolver.Resolver{}
 
@@ -40,17 +40,19 @@ func main() {
 		log.Fatal("failed to create database: %v", err)
 	}
 
-	q := resolver.Query()
-	m := resolver.Mutation()
+	resolver.Query()
+	resolver.Mutation()
 
 	var ctx context.Context
 
-	_, err := q.HydrateBaseExercise(ctx)
+	_, err := pgRepo.HydrateBaseExercise(ctx)
+	// _, err := q.HydrateBaseExercise(ctx)
 	if err != nil {
 		fmt.Println("Hydrate base exercise failed")
 	}
 
-	_, err = m.HydrateMuscleGroups(ctx)
+	err = pgRepo.HydrateMuscleGroups(ctx)
+	// _, err = m.HydrateMuscleGroups(ctx)
 	if err != nil {
 		fmt.Println("Hydrate group exercise failed")
 	}
