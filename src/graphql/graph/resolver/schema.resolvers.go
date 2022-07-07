@@ -28,6 +28,5 @@ func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) (string, er
 }
 
 func (r *queryResolver) GetMuscleSpecifics(ctx context.Context, input *model.MuscleSpecificInput) ([]string, error) {
-
 	return r.PgRepo.GetMuscleSpecifics(ctx, input)
 }

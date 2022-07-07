@@ -19,12 +19,12 @@ type AvoidGiven struct {
 }
 
 type BaseExercise struct {
-	Name          string  `json:"name"`
-	MuscleGroup   string  `json:"muscleGroup"`
-	SpecificParts string  `json:"specificParts"`
-	Level         int     `json:"level"`
-	AvoidGiven    *string `json:"avoidGiven"`
-	MovementType  string  `json:"movementType"`
+	Name          string    `json:"name"`
+	MuscleGroup   string    `json:"muscleGroup"`
+	SpecificParts []*string `json:"specificParts"`
+	Level         int       `json:"level"`
+	AvoidGiven    *string   `json:"avoidGiven"`
+	MovementType  string    `json:"movementType"`
 }
 
 type CreateUserInput struct {
@@ -61,7 +61,7 @@ type IncreaseInput struct {
 type MuscleGroup struct {
 	Name string `json:"name"`
 }
-//TODO: Do i need this? 
+
 type SpecificParts struct {
 	Name        string `json:"name"`
 	MuscleGroup string `json:"muscleGroup"`
@@ -88,12 +88,12 @@ type UserWorkoutPlan struct {
 }
 
 type BaseExerciseInput struct {
-	Name          string  `json:"name"`
-	MuscleGroup   string  `json:"muscleGroup"`
-	SpecificParts string  `json:"specificParts"`
-	Level         int     `json:"level"`
-	AvoidGiven    *string `json:"avoidGiven"`
-	MovementType  string  `json:"movementType"`
+	Name          string    `json:"name"`
+	MuscleGroup   string    `json:"muscleGroup"`
+	SpecificParts []*string `json:"specificParts"`
+	Level         int       `json:"level"`
+	AvoidGiven    *string   `json:"avoidGiven"`
+	MovementType  string    `json:"movementType"`
 }
 
 type MuscleSpecificInput struct {

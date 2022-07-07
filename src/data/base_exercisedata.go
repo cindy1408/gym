@@ -6,15 +6,15 @@ import (
 
 var BaseExerciseData = []model.BaseExercise{
 	// Compound Movements
-	{Name: "Bench Press", MuscleGroup: "Chest", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
-	{Name: "Overhead Press", MuscleGroup: "Arms", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
-	{Name: "Bent Over Rows", MuscleGroup: "Back", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
-	{Name: "Convental Deadlifts", MuscleGroup: "Legs", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
-	{Name: "Romanian Deadlift", MuscleGroup: "Legs", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
-	{Name: "Sumo Deadlifts", MuscleGroup: "Legs", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
-	{Name: "Squats", MuscleGroup: "Legs", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
-	{Name: "Barbell Hip Thrust", MuscleGroup: "Glute", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
-	{Name: "Wide Squats", MuscleGroup: "Legs", SpecificParts: "", Level: 3, AvoidGiven: nil, MovementType: "Compound"},
+	{Name: "Bench Press", MuscleGroup: "Chest", SpecificParts: nil, Level: 3, AvoidGiven: nil, MovementType: "Compound"},
+	{Name: "Overhead Press", MuscleGroup: "Arms", SpecificParts: nil, Level: 3, AvoidGiven: nil, MovementType: "Compound"},
+	{Name: "Bent Over Rows", MuscleGroup: "Back", SpecificParts: nil, Level: 3, AvoidGiven: nil, MovementType: "Compound"},
+	{Name: "Convental Deadlifts", MuscleGroup: "Legs", SpecificParts: nil, Level: 3, AvoidGiven: nil, MovementType: "Compound"},
+	{Name: "Romanian Deadlift", MuscleGroup: "Legs", SpecificParts: nil, Level: 3, AvoidGiven: nil, MovementType: "Compound"},
+	{Name: "Sumo Deadlifts", MuscleGroup: "Legs", SpecificParts: nil, Level: 3, AvoidGiven: nil, MovementType: "Compound"},
+	{Name: "Squats", MuscleGroup: "Legs", SpecificParts: nil, Level: 3, AvoidGiven: nil, MovementType: "Compound"},
+	{Name: "Barbell Hip Thrust", MuscleGroup: "Glute", SpecificParts: nil, Level: 3, AvoidGiven: nil, MovementType: "Compound"},
+	{Name: "Wide Squats", MuscleGroup: "Legs", SpecificParts: nil, Level: 3, AvoidGiven: nil, MovementType: "Compound"},
 	// "Isolated" Movements
 	//chest
 	{Name: "Chest Flys", MuscleGroup: "Chest", Level: 1, AvoidGiven: nil, MovementType: "Isolated"},

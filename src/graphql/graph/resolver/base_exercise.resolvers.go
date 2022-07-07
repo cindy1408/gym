@@ -41,7 +41,7 @@ func (r *queryResolver) HydrateBaseExercise(ctx context.Context) (string, error)
 func (r *queryResolver) CreateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (string, error) {
 	if input.Name == "" ||
 		input.MuscleGroup == "" ||
-		input.SpecificParts == "" ||
+		len(input.SpecificParts) == 0 ||
 		input.Level == 0 ||
 		input.MovementType == "" {
 		return "at least one of the required field is missing", nil

@@ -67,20 +67,20 @@ func (p PgRepo) HydrateBaseExercise(ctx context.Context) (string, error) {
 			p.db.Create(eachBaseExercise)
 		}
 	}
-
+	
 	return "Base exercise table has been hydrated!", nil
 }
 
 func (p PgRepo) AddBaseExercise(ctx context.Context, baseExercise *model.BaseExerciseInput) (string, error) {
-	newExercise := model.BaseExercise{
+
+	p.db.Create(model.BaseExercise{
 		Name:          baseExercise.Name,
 		MuscleGroup:   baseExercise.MuscleGroup,
 		SpecificParts: baseExercise.SpecificParts,
 		Level:         baseExercise.Level,
 		AvoidGiven:    baseExercise.AvoidGiven,
 		MovementType:  baseExercise.MovementType,
-	}
-	p.db.Create(newExercise)
+	})
 
 	return fmt.Sprintf("base exercise %v has been added", baseExercise.Name), nil
 }
