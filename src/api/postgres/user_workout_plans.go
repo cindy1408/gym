@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"github.com/cindy1408/gym/src/api/graphql/graph/model"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 )

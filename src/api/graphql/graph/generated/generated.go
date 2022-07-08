@@ -12,7 +12,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"github.com/cindy1408/gym/src/api/graphql/graph/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -587,7 +587,7 @@ extend type Query {
 type BaseExercise  {
     name: String!
     muscleGroup: String!
-    specificParts: [String]!
+    specificParts: String!
     level: Int! 
     avoidGiven: String
     movementType: String!
@@ -596,7 +596,7 @@ type BaseExercise  {
 input baseExerciseInput {
     name: String!
     muscleGroup: String!
-    specificParts: [String]!
+    specificParts: String!
     level: Int! 
     avoidGiven: String
     movementType: String!
@@ -1083,9 +1083,9 @@ func (ec *executionContext) _BaseExercise_specificParts(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2ᚕᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BaseExercise_level(ctx context.Context, field graphql.CollectedField, obj *model.BaseExercise) (ret graphql.Marshaler) {
@@ -4065,7 +4065,7 @@ func (ec *executionContext) unmarshalInputbaseExerciseInput(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("specificParts"))
-			it.SpecificParts, err = ec.unmarshalNString2ᚕᚖstring(ctx, v)
+			it.SpecificParts, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5512,32 +5512,6 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
-}
-
-func (ec *executionContext) unmarshalNString2ᚕᚖstring(ctx context.Context, v interface{}) ([]*string, error) {
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*string, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOString2ᚖstring(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalNString2ᚕᚖstring(ctx context.Context, sel ast.SelectionSet, v []*string) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	for i := range v {
-		ret[i] = ec.marshalOString2ᚖstring(ctx, sel, v[i])
-	}
-
-	return ret
 }
 
 func (ec *executionContext) unmarshalNUpdateExerciseInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUpdateExerciseInput(ctx context.Context, v interface{}) (model.UpdateExerciseInput, error) {

@@ -7,7 +7,7 @@ import (
 	"context"
 	"net/mail"
 
-	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"github.com/cindy1408/gym/src/api/graphql/graph/model"
 	"github.com/pkg/errors"
 )
 

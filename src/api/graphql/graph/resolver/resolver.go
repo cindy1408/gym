@@ -4,8 +4,8 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 
-	"github.com/cindy1408/gym/src/graphql/graph/generated"
-	"github.com/cindy1408/gym/src/postgres"
+	"github.com/cindy1408/gym/src/api/graphql/graph/generated"
+	"github.com/cindy1408/gym/src/api/postgres"
 )
 
 // This file will not be regenerated automatically.

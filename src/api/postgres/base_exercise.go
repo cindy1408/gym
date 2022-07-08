@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/cindy1408/gym/src/data"
-	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"github.com/cindy1408/gym/src/api/model"
 	"github.com/pkg/errors"
 )
 
@@ -67,7 +67,7 @@ func (p PgRepo) HydrateBaseExercise(ctx context.Context) (string, error) {
 			p.db.Create(eachBaseExercise)
 		}
 	}
-	
+
 	return "Base exercise table has been hydrated!", nil
 }
 

@@ -1,6 +1,6 @@
 package data
 
-import "github.com/cindy1408/gym/src/graphql/graph/model"
+import "github.com/cindy1408/gym/src/api/graphql/graph/model"
 
 var MuscleGroupData = []model.MuscleGroup {
 	{Name: "shoulders"}, 

@@ -6,7 +6,8 @@ package resolver
 import (
 	"context"
 
-	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"github.com/cindy1408/gym/src/api"
+	"github.com/cindy1408/gym/src/api/graphql/graph/model"
 	"github.com/pkg/errors"
 )
 
@@ -28,5 +29,6 @@ func (r *mutationResolver) HydrateSpecificParts(ctx context.Context) (string, er
 }
 
 func (r *queryResolver) GetMuscleSpecifics(ctx context.Context, input *model.MuscleSpecificInput) ([]string, error) {
-	return r.PgRepo.GetMuscleSpecifics(ctx, input)
+	muscle := api.ExternalMuscleSpecificInputToInternalMapper(*input)
+	return r.PgRepo.GetMuscleSpecifics(ctx, &muscle)
 }

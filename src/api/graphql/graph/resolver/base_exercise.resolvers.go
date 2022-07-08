@@ -5,31 +5,50 @@ package resolver
 
 import (
 	"context"
-	"fmt"
 
-	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"github.com/cindy1408/gym/src/api"
+	"github.com/cindy1408/gym/src/api/graphql/graph/model"
 	"github.com/pkg/errors"
 )
 
 func (r *queryResolver) GetBaseExerciseByName(ctx context.Context, input string) (*model.BaseExercise, error) {
-	return r.PgRepo.GetBaseExerciseByName(ctx, input)
+	baseExercise, err := r.PgRepo.GetBaseExerciseByName(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+	exercise := api.InternalBaseExerciseToExternalMapper(*baseExercise)
+
+	return &exercise, nil
 }
 
 func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
-	return r.PgRepo.GetAllBaseExercise(ctx)
+	allBaseExercise, err := r.PgRepo.GetAllBaseExercise(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var exercises []*model.BaseExercise
+	for _, baseExercise := range allBaseExercise {
+		exercise := api.InternalBaseExerciseToExternalMapper(*baseExercise)
+		exercises = append(exercises, &exercise)
+	}
+
+	return exercises, nil
 }
 
 func (r *queryResolver) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
-	updatedExercise, err := r.PgRepo.UpdateBaseExercise(ctx, input)
+	baseExerciseInput := api.ExternalBaseExerciseInputToInternalMapper(*input)
+	
+	updatedExercise, err := r.PgRepo.UpdateBaseExercise(ctx, &baseExerciseInput)
 	if err != nil {
 		return nil, errors.Wrap(err, "postgres.UpdateBaseexercise")
 	}
 
-	return updatedExercise, nil
+	updateExercise := api.InternalBaseExerciseToExternalMapper(*updatedExercise)
+	return &updateExercise, nil
 }
 
 func (r *queryResolver) HydrateBaseExercise(ctx context.Context) (string, error) {
-	fmt.Println("here")
 	result, err := r.HydrateBaseExercise(ctx)
 	if err != nil {
 		return "", errors.Wrap(err, "postgres.HydrateBaseExercise")
@@ -53,7 +72,8 @@ func (r *queryResolver) CreateBaseExercise(ctx context.Context, input *model.Bas
 		return "base exercise already exists", nil
 	}
 
-	result, err := r.PgRepo.AddBaseExercise(ctx, input)
+	internalInput := api.ExternalBaseExerciseInputToInternalMapper(*input)
+	result, err := r.PgRepo.AddBaseExercise(ctx, &internalInput)
 	if err != nil {
 		return "", errors.Wrap(err, "postgres.AddBaseExercise")
 	}

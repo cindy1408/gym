@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/cindy1408/gym/src/data"
-	"github.com/cindy1408/gym/src/graphql/graph/model"
+	"github.com/cindy1408/gym/src/api/model"
 	"github.com/pkg/errors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

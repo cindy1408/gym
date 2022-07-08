@@ -13,7 +13,7 @@ extend type Query {
 type BaseExercise  {
     name: String!
     muscleGroup: String!
-    specificParts: [String]!
+    specificParts: String!
     level: Int! 
     avoidGiven: String
     movementType: String!
@@ -22,7 +22,7 @@ type BaseExercise  {
 input baseExerciseInput {
     name: String!
     muscleGroup: String!
-    specificParts: [String]!
+    specificParts: String!
     level: Int! 
     avoidGiven: String
     movementType: String!

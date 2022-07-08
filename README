@@ -13,8 +13,6 @@ go get -u gorm.io/driver/postgres
 NEXT STEP: 
 
 
-
-
 // container is called gym, user is postgres with password as password
 docker run --name gym -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres
 

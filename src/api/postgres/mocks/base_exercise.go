@@ -8,7 +8,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	model "github.com/cindy1408/gym/src/graphql/graph/model"
+	model "github.com/cindy1408/gym/src/api/model"
 	gomock "github.com/golang/mock/gomock"
 	gorm "gorm.io/gorm"
 )
