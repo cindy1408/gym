@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cindy1408/gym/src/api/graphql/graph/model"
+	"github.com/cindy1408/gym/packages/api/graphql/graph/model"
 )
 
 func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUserWorkoutInput) (string, error) {
@@ -32,10 +32,7 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 
 	if input.Exercises != nil {
 		var exercises []*model.EachExerciseInput
-		for _, eachExercise := range input.Exercises {
-			exercises = append(exercises, eachExercise)
-		}
-
+		exercises = append(exercises, input.Exercises...)
 		return r.PgRepo.AddEachExercises(userWorkoutPlan.ID, exercises)
 	}
 

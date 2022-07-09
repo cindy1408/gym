@@ -9,9 +9,9 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/cindy1408/gym/src/api/graphql/graph/generated"
-	"github.com/cindy1408/gym/src/api/postgres"
-	"github.com/cindy1408/gym/src/api/graphql/graph/resolver"
+	"github.com/cindy1408/gym/packages/api/graphql/graph/generated"
+	"github.com/cindy1408/gym/packages/api/postgres"
+	"github.com/cindy1408/gym/packages/api/graphql/graph/resolver"
 	"gorm.io/gorm"
 )
 

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cindy1408/gym/src/api/graphql/graph/model"
-	"github.com/cindy1408/gym/src/data"
+	"github.com/cindy1408/gym/packages/api/graphql/graph/model"
+	"github.com/cindy1408/gym/packages/data"
 	"github.com/pkg/errors"
 )
 

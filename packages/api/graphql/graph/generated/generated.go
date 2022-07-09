@@ -12,7 +12,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/cindy1408/gym/src/api/graphql/graph/model"
+	"github.com/cindy1408/gym/packages/api/graphql/graph/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -736,7 +736,7 @@ func (ec *executionContext) field_Mutation_addExercise_args(ctx context.Context,
 	var arg0 *model.AddExerciseInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOAddExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐAddExerciseInput(ctx, tmp)
+		arg0, err = ec.unmarshalOAddExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐAddExerciseInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -751,7 +751,7 @@ func (ec *executionContext) field_Mutation_addUserWorkout_args(ctx context.Conte
 	var arg0 model.AddUserWorkoutInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNAddUserWorkoutInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐAddUserWorkoutInput(ctx, tmp)
+		arg0, err = ec.unmarshalNAddUserWorkoutInput2githubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐAddUserWorkoutInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -766,7 +766,7 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 	var arg0 model.CreateUserInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateUserInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐCreateUserInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateUserInput2githubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐCreateUserInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -781,7 +781,7 @@ func (ec *executionContext) field_Mutation_increaseRep_args(ctx context.Context,
 	var arg0 model.IncreaseInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNIncreaseInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐIncreaseInput(ctx, tmp)
+		arg0, err = ec.unmarshalNIncreaseInput2githubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐIncreaseInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -796,7 +796,7 @@ func (ec *executionContext) field_Mutation_increaseSet_args(ctx context.Context,
 	var arg0 model.IncreaseInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNIncreaseInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐIncreaseInput(ctx, tmp)
+		arg0, err = ec.unmarshalNIncreaseInput2githubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐIncreaseInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -811,7 +811,7 @@ func (ec *executionContext) field_Mutation_updateEachExercise_args(ctx context.C
 	var arg0 model.UpdateExerciseInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateExerciseInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUpdateExerciseInput(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateExerciseInput2githubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐUpdateExerciseInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -841,7 +841,7 @@ func (ec *executionContext) field_Query_createBaseExercise_args(ctx context.Cont
 	var arg0 *model.BaseExerciseInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalObaseExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseInput(ctx, tmp)
+		arg0, err = ec.unmarshalObaseExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -871,7 +871,7 @@ func (ec *executionContext) field_Query_getMuscleSpecifics_args(ctx context.Cont
 	var arg0 *model.MuscleSpecificInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOmuscleSpecificInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐMuscleSpecificInput(ctx, tmp)
+		arg0, err = ec.unmarshalOmuscleSpecificInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐMuscleSpecificInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -901,7 +901,7 @@ func (ec *executionContext) field_Query_updateBaseExercise_args(ctx context.Cont
 	var arg0 *model.BaseExerciseInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalObaseExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseInput(ctx, tmp)
+		arg0, err = ec.unmarshalObaseExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1551,7 +1551,7 @@ func (ec *executionContext) _Mutation_increaseRep(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.EachExercise)
 	fc.Result = res
-	return ec.marshalNEachExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx, field.Selections, res)
+	return ec.marshalNEachExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_increaseSet(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1593,7 +1593,7 @@ func (ec *executionContext) _Mutation_increaseSet(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.EachExercise)
 	fc.Result = res
-	return ec.marshalNEachExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx, field.Selections, res)
+	return ec.marshalNEachExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateEachExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1635,7 +1635,7 @@ func (ec *executionContext) _Mutation_updateEachExercise(ctx context.Context, fi
 	}
 	res := resTmp.(*model.EachExercise)
 	fc.Result = res
-	return ec.marshalNEachExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx, field.Selections, res)
+	return ec.marshalNEachExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_hydrateMuscleGroups(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1831,7 +1831,7 @@ func (ec *executionContext) _Query_getBaseExerciseByName(ctx context.Context, fi
 	}
 	res := resTmp.(*model.BaseExercise)
 	fc.Result = res
-	return ec.marshalNBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, field.Selections, res)
+	return ec.marshalNBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getAllAvailableBaseExercises(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1866,7 +1866,7 @@ func (ec *executionContext) _Query_getAllAvailableBaseExercises(ctx context.Cont
 	}
 	res := resTmp.([]*model.BaseExercise)
 	fc.Result = res
-	return ec.marshalNBaseExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseᚄ(ctx, field.Selections, res)
+	return ec.marshalNBaseExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_updateBaseExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1908,7 +1908,7 @@ func (ec *executionContext) _Query_updateBaseExercise(ctx context.Context, field
 	}
 	res := resTmp.(*model.BaseExercise)
 	fc.Result = res
-	return ec.marshalNBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, field.Selections, res)
+	return ec.marshalNBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_hydrateBaseExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2020,7 +2020,7 @@ func (ec *executionContext) _Query_getAllEachExercise(ctx context.Context, field
 	}
 	res := resTmp.([]*model.EachExercise)
 	fc.Result = res
-	return ec.marshalNEachExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseᚄ(ctx, field.Selections, res)
+	return ec.marshalNEachExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExerciseᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getMuscleSpecifics(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2094,7 +2094,7 @@ func (ec *executionContext) _Query_getAllUsers(ctx context.Context, field graphq
 	}
 	res := resTmp.([]*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getUserWorkoutPlansByEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2136,7 +2136,7 @@ func (ec *executionContext) _Query_getUserWorkoutPlansByEmail(ctx context.Contex
 	}
 	res := resTmp.([]*model.UserWorkoutPlan)
 	fc.Result = res
-	return ec.marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx, field.Selections, res)
+	return ec.marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getAllUserWorkoutPlans(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2171,7 +2171,7 @@ func (ec *executionContext) _Query_getAllUserWorkoutPlans(ctx context.Context, f
 	}
 	res := resTmp.([]*model.UserWorkoutPlan)
 	fc.Result = res
-	return ec.marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlanᚄ(ctx, field.Selections, res)
+	return ec.marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlanᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3807,7 +3807,7 @@ func (ec *executionContext) unmarshalInputAddExerciseInput(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("eachExercise"))
-			it.EachExercise, err = ec.unmarshalOEachExerciseInput2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInputᚄ(ctx, v)
+			it.EachExercise, err = ec.unmarshalOEachExerciseInput2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3846,7 +3846,7 @@ func (ec *executionContext) unmarshalInputAddUserWorkoutInput(ctx context.Contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("exercises"))
-			it.Exercises, err = ec.unmarshalOEachExerciseInput2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInput(ctx, v)
+			it.Exercises, err = ec.unmarshalOEachExerciseInput2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4026,7 +4026,7 @@ func (ec *executionContext) unmarshalInputUpdateExerciseInput(ctx context.Contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("eachExercise"))
-			it.EachExercise, err = ec.unmarshalNEachExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInput(ctx, v)
+			it.EachExercise, err = ec.unmarshalNEachExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5333,16 +5333,16 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) unmarshalNAddUserWorkoutInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐAddUserWorkoutInput(ctx context.Context, v interface{}) (model.AddUserWorkoutInput, error) {
+func (ec *executionContext) unmarshalNAddUserWorkoutInput2githubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐAddUserWorkoutInput(ctx context.Context, v interface{}) (model.AddUserWorkoutInput, error) {
 	res, err := ec.unmarshalInputAddUserWorkoutInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNBaseExercise2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx context.Context, sel ast.SelectionSet, v model.BaseExercise) graphql.Marshaler {
+func (ec *executionContext) marshalNBaseExercise2githubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx context.Context, sel ast.SelectionSet, v model.BaseExercise) graphql.Marshaler {
 	return ec._BaseExercise(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNBaseExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.BaseExercise) graphql.Marshaler {
+func (ec *executionContext) marshalNBaseExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.BaseExercise) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5366,7 +5366,7 @@ func (ec *executionContext) marshalNBaseExercise2ᚕᚖgithubᚗcomᚋcindy1408�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, sel, v[i])
+			ret[i] = ec.marshalNBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5386,7 +5386,7 @@ func (ec *executionContext) marshalNBaseExercise2ᚕᚖgithubᚗcomᚋcindy1408�
 	return ret
 }
 
-func (ec *executionContext) marshalNBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx context.Context, sel ast.SelectionSet, v *model.BaseExercise) graphql.Marshaler {
+func (ec *executionContext) marshalNBaseExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐBaseExercise(ctx context.Context, sel ast.SelectionSet, v *model.BaseExercise) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -5411,16 +5411,16 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) unmarshalNCreateUserInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐCreateUserInput(ctx context.Context, v interface{}) (model.CreateUserInput, error) {
+func (ec *executionContext) unmarshalNCreateUserInput2githubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐCreateUserInput(ctx context.Context, v interface{}) (model.CreateUserInput, error) {
 	res, err := ec.unmarshalInputCreateUserInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNEachExercise2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx context.Context, sel ast.SelectionSet, v model.EachExercise) graphql.Marshaler {
+func (ec *executionContext) marshalNEachExercise2githubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx context.Context, sel ast.SelectionSet, v model.EachExercise) graphql.Marshaler {
 	return ec._EachExercise(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNEachExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.EachExercise) graphql.Marshaler {
+func (ec *executionContext) marshalNEachExercise2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExerciseᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.EachExercise) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5444,7 +5444,7 @@ func (ec *executionContext) marshalNEachExercise2ᚕᚖgithubᚗcomᚋcindy1408�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNEachExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx, sel, v[i])
+			ret[i] = ec.marshalNEachExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5464,7 +5464,7 @@ func (ec *executionContext) marshalNEachExercise2ᚕᚖgithubᚗcomᚋcindy1408�
 	return ret
 }
 
-func (ec *executionContext) marshalNEachExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx context.Context, sel ast.SelectionSet, v *model.EachExercise) graphql.Marshaler {
+func (ec *executionContext) marshalNEachExercise2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExercise(ctx context.Context, sel ast.SelectionSet, v *model.EachExercise) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -5474,12 +5474,12 @@ func (ec *executionContext) marshalNEachExercise2ᚖgithubᚗcomᚋcindy1408ᚋg
 	return ec._EachExercise(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNEachExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInput(ctx context.Context, v interface{}) (*model.EachExerciseInput, error) {
+func (ec *executionContext) unmarshalNEachExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInput(ctx context.Context, v interface{}) (*model.EachExerciseInput, error) {
 	res, err := ec.unmarshalInputEachExerciseInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNIncreaseInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐIncreaseInput(ctx context.Context, v interface{}) (model.IncreaseInput, error) {
+func (ec *executionContext) unmarshalNIncreaseInput2githubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐIncreaseInput(ctx context.Context, v interface{}) (model.IncreaseInput, error) {
 	res, err := ec.unmarshalInputIncreaseInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -5514,12 +5514,12 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) unmarshalNUpdateExerciseInput2githubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUpdateExerciseInput(ctx context.Context, v interface{}) (model.UpdateExerciseInput, error) {
+func (ec *executionContext) unmarshalNUpdateExerciseInput2githubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐUpdateExerciseInput(ctx context.Context, v interface{}) (model.UpdateExerciseInput, error) {
 	res, err := ec.unmarshalInputUpdateExerciseInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.User) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5543,7 +5543,7 @@ func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋ
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNUser2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUser(ctx, sel, v[i])
+			ret[i] = ec.marshalNUser2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐUser(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5563,7 +5563,7 @@ func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋ
 	return ret
 }
 
-func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -5573,7 +5573,7 @@ func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrc
 	return ec._User(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx context.Context, sel ast.SelectionSet, v []*model.UserWorkoutPlan) graphql.Marshaler {
+func (ec *executionContext) marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx context.Context, sel ast.SelectionSet, v []*model.UserWorkoutPlan) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5597,7 +5597,7 @@ func (ec *executionContext) marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy14
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx, sel, v[i])
+			ret[i] = ec.marshalOUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5611,7 +5611,7 @@ func (ec *executionContext) marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy14
 	return ret
 }
 
-func (ec *executionContext) marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlanᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.UserWorkoutPlan) graphql.Marshaler {
+func (ec *executionContext) marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlanᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.UserWorkoutPlan) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5635,7 +5635,7 @@ func (ec *executionContext) marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy14
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx, sel, v[i])
+			ret[i] = ec.marshalNUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5655,7 +5655,7 @@ func (ec *executionContext) marshalNUserWorkoutPlan2ᚕᚖgithubᚗcomᚋcindy14
 	return ret
 }
 
-func (ec *executionContext) marshalNUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx context.Context, sel ast.SelectionSet, v *model.UserWorkoutPlan) graphql.Marshaler {
+func (ec *executionContext) marshalNUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx context.Context, sel ast.SelectionSet, v *model.UserWorkoutPlan) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -5918,7 +5918,7 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) unmarshalOAddExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐAddExerciseInput(ctx context.Context, v interface{}) (*model.AddExerciseInput, error) {
+func (ec *executionContext) unmarshalOAddExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐAddExerciseInput(ctx context.Context, v interface{}) (*model.AddExerciseInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -5952,7 +5952,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
-func (ec *executionContext) unmarshalOEachExerciseInput2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInput(ctx context.Context, v interface{}) ([]*model.EachExerciseInput, error) {
+func (ec *executionContext) unmarshalOEachExerciseInput2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInput(ctx context.Context, v interface{}) ([]*model.EachExerciseInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -5964,7 +5964,7 @@ func (ec *executionContext) unmarshalOEachExerciseInput2ᚕᚖgithubᚗcomᚋcin
 	res := make([]*model.EachExerciseInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOEachExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalOEachExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -5972,7 +5972,7 @@ func (ec *executionContext) unmarshalOEachExerciseInput2ᚕᚖgithubᚗcomᚋcin
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOEachExerciseInput2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInputᚄ(ctx context.Context, v interface{}) ([]*model.EachExerciseInput, error) {
+func (ec *executionContext) unmarshalOEachExerciseInput2ᚕᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInputᚄ(ctx context.Context, v interface{}) ([]*model.EachExerciseInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -5984,7 +5984,7 @@ func (ec *executionContext) unmarshalOEachExerciseInput2ᚕᚖgithubᚗcomᚋcin
 	res := make([]*model.EachExerciseInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNEachExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNEachExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -5992,7 +5992,7 @@ func (ec *executionContext) unmarshalOEachExerciseInput2ᚕᚖgithubᚗcomᚋcin
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOEachExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInput(ctx context.Context, v interface{}) (*model.EachExerciseInput, error) {
+func (ec *executionContext) unmarshalOEachExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐEachExerciseInput(ctx context.Context, v interface{}) (*model.EachExerciseInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -6054,7 +6054,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalOUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx context.Context, sel ast.SelectionSet, v *model.UserWorkoutPlan) graphql.Marshaler {
+func (ec *executionContext) marshalOUserWorkoutPlan2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐUserWorkoutPlan(ctx context.Context, sel ast.SelectionSet, v *model.UserWorkoutPlan) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6263,7 +6263,7 @@ func (ec *executionContext) marshalO__Type2ᚖgithubᚗcomᚋ99designsᚋgqlgen�
 	return ec.___Type(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalObaseExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseInput(ctx context.Context, v interface{}) (*model.BaseExerciseInput, error) {
+func (ec *executionContext) unmarshalObaseExerciseInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐBaseExerciseInput(ctx context.Context, v interface{}) (*model.BaseExerciseInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -6271,7 +6271,7 @@ func (ec *executionContext) unmarshalObaseExerciseInput2ᚖgithubᚗcomᚋcindy1
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOmuscleSpecificInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋsrcᚋgraphqlᚋgraphᚋmodelᚐMuscleSpecificInput(ctx context.Context, v interface{}) (*model.MuscleSpecificInput, error) {
+func (ec *executionContext) unmarshalOmuscleSpecificInput2ᚖgithubᚗcomᚋcindy1408ᚋgymᚋpackagesᚋapiᚋgraphqlᚋgraphᚋmodelᚐMuscleSpecificInput(ctx context.Context, v interface{}) (*model.MuscleSpecificInput, error) {
 	if v == nil {
 		return nil, nil
 	}

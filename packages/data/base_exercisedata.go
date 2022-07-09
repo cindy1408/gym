@@ -1,7 +1,7 @@
 package data
 
 import (
-	"github.com/cindy1408/gym/src/api/graphql/graph/model"
+	"github.com/cindy1408/gym/packages/api/graphql/graph/model"
 )
 
 var BaseExerciseData = []model.BaseExercise{

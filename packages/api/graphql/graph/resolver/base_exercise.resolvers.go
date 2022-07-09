@@ -6,7 +6,7 @@ package resolver
 import (
 	"context"
 
-	"github.com/cindy1408/gym/src/api/graphql/graph/model"
+	"github.com/cindy1408/gym/packages/api/graphql/graph/model"
 	"github.com/pkg/errors"
 )
 
@@ -26,15 +26,12 @@ func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*mo
 	}
 
 	var exercises []*model.BaseExercise
-	for _, baseExercise := range allBaseExercise {
-		exercises = append(exercises, baseExercise)
-	}
+	exercises = append(exercises, allBaseExercise...)
 
 	return exercises, nil
 }
 
 func (r *queryResolver) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
-
 	updatedExercise, err := r.PgRepo.UpdateBaseExercise(ctx, input)
 	if err != nil {
 		return nil, errors.Wrap(err, "postgres.UpdateBaseexercise")

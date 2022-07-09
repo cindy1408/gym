@@ -1,6 +1,6 @@
 package data
 
-import "github.com/cindy1408/gym/src/api/graphql/graph/model"
+import "github.com/cindy1408/gym/packages/api/graphql/graph/model"
 
 var SpecificMuscleGroupData = []model.SpecificParts{
 	{Name: "pectoralis major", MuscleGroup: "chest"},

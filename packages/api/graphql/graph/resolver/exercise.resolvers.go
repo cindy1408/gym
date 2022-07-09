@@ -6,7 +6,7 @@ package resolver
 import (
 	"context"
 
-	"github.com/cindy1408/gym/src/api/graphql/graph/model"
+	"github.com/cindy1408/gym/packages/api/graphql/graph/model"
 	"github.com/pkg/errors"
 )
 
@@ -27,7 +27,7 @@ func (r *mutationResolver) AddExercise(ctx context.Context, input *model.AddExer
 
 func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
 	target := model.Details{
-		Rep: true, 
+		Rep: true,
 	}
 	exercise, err := r.PgRepo.Increase(ctx, input, target)
 	if err != nil {
@@ -39,7 +39,7 @@ func (r *mutationResolver) IncreaseRep(ctx context.Context, input model.Increase
 
 func (r *mutationResolver) IncreaseSet(ctx context.Context, input model.IncreaseInput) (*model.EachExercise, error) {
 	target := model.Details{
-		Set: true, 
+		Set: true,
 	}
 
 	exercise, err := r.PgRepo.Increase(ctx, input, target)
