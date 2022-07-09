@@ -7,8 +7,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cindy1408/gym/src/api"
-	m "github.com/cindy1408/gym/src/api/model"
 	"github.com/cindy1408/gym/src/api/graphql/graph/model"
 )
 
@@ -32,14 +30,12 @@ func (r *mutationResolver) AddUserWorkout(ctx context.Context, input model.AddUs
 		return "there was an error for update user", nil
 	}
 
-
 	if input.Exercises != nil {
-		var exercises []*m.EachExerciseInput
+		var exercises []*model.EachExerciseInput
 		for _, eachExercise := range input.Exercises {
-			converted := api.ExternalEachExerciseInputToInternalMapper(*eachExercise)
-			exercises = append(exercises, &converted)
+			exercises = append(exercises, eachExercise)
 		}
-	
+
 		return r.PgRepo.AddEachExercises(userWorkoutPlan.ID, exercises)
 	}
 

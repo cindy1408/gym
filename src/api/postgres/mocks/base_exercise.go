@@ -7,8 +7,7 @@ package mock_postgres
 import (
 	context "context"
 	reflect "reflect"
-
-	model "github.com/cindy1408/gym/src/api/model"
+	"github.com/cindy1408/gym/src/api/graphql/graph/model"
 	gomock "github.com/golang/mock/gomock"
 	gorm "gorm.io/gorm"
 )

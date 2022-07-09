@@ -3,7 +3,7 @@ package postgres
 import (
 	"context"
 
-	"github.com/cindy1408/gym/src/api/model"
+	"github.com/cindy1408/gym/src/api/graphql/graph/model"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 )

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/cindy1408/gym/src/api/graphql/graph/model"
 	"github.com/cindy1408/gym/src/data"
-	"github.com/cindy1408/gym/src/api/model"
 	"github.com/pkg/errors"
 )
 
@@ -139,9 +139,9 @@ func (p PgRepo) Increase(ctx context.Context, input model.IncreaseInput, target 
 		return nil, errors.Wrapf(err, "postgres.GetExerciseByNameAndWorkoutPlanID")
 	}
 
-	if target == model.Set {
+	if target.Set {
 		requestedExercise.Sets = requestedExercise.Sets + 1
-	} else if target == model.Rep {
+	} else if target.Rep {
 		requestedExercise.Reps = requestedExercise.Reps + 1
 	} else {
 		return nil, errors.New("target needs to be either set or rep")

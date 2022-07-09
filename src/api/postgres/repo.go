@@ -4,14 +4,14 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/cindy1408/gym/src/api/graphql/graph/model"
 	"github.com/cindy1408/gym/src/data"
-	"github.com/cindy1408/gym/src/api/model"
 	"github.com/pkg/errors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-type Repo interface {
+type PostgresRepo interface {
 	GetBaseExerciseByName(
 		ctx context.Context,
 		name string) (*model.BaseExercise, error)

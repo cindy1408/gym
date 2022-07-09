@@ -6,7 +6,6 @@ package resolver
 import (
 	"context"
 
-	"github.com/cindy1408/gym/src/api"
 	"github.com/cindy1408/gym/src/api/graphql/graph/model"
 	"github.com/pkg/errors"
 )
@@ -16,9 +15,8 @@ func (r *queryResolver) GetBaseExerciseByName(ctx context.Context, input string)
 	if err != nil {
 		return nil, err
 	}
-	exercise := api.InternalBaseExerciseToExternalMapper(*baseExercise)
 
-	return &exercise, nil
+	return baseExercise, nil
 }
 
 func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
@@ -29,23 +27,20 @@ func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*mo
 
 	var exercises []*model.BaseExercise
 	for _, baseExercise := range allBaseExercise {
-		exercise := api.InternalBaseExerciseToExternalMapper(*baseExercise)
-		exercises = append(exercises, &exercise)
+		exercises = append(exercises, baseExercise)
 	}
 
 	return exercises, nil
 }
 
 func (r *queryResolver) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
-	baseExerciseInput := api.ExternalBaseExerciseInputToInternalMapper(*input)
-	
-	updatedExercise, err := r.PgRepo.UpdateBaseExercise(ctx, &baseExerciseInput)
+
+	updatedExercise, err := r.PgRepo.UpdateBaseExercise(ctx, input)
 	if err != nil {
 		return nil, errors.Wrap(err, "postgres.UpdateBaseexercise")
 	}
 
-	updateExercise := api.InternalBaseExerciseToExternalMapper(*updatedExercise)
-	return &updateExercise, nil
+	return updatedExercise, nil
 }
 
 func (r *queryResolver) HydrateBaseExercise(ctx context.Context) (string, error) {
@@ -72,8 +67,7 @@ func (r *queryResolver) CreateBaseExercise(ctx context.Context, input *model.Bas
 		return "base exercise already exists", nil
 	}
 
-	internalInput := api.ExternalBaseExerciseInputToInternalMapper(*input)
-	result, err := r.PgRepo.AddBaseExercise(ctx, &internalInput)
+	result, err := r.PgRepo.AddBaseExercise(ctx, input)
 	if err != nil {
 		return "", errors.Wrap(err, "postgres.AddBaseExercise")
 	}
