@@ -41,7 +41,6 @@ func (p PgRepo) UpdateBaseExercise(ctx context.Context, input *model.BaseExercis
 
 func (p PgRepo) HydrateBaseExercise(ctx context.Context) (string, error) {
 	for _, eachBaseExercise := range data.BaseExerciseData {
-		// TODO: ISSUE HERE
 		rows, err := p.db.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
 		fmt.Println("here3")
 		if err != nil {
