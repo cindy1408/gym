@@ -6,7 +6,6 @@ import (
 
 	"github.com/cindy1408/gym/packages/api/graphql/graph/model"
 	"github.com/cindy1408/gym/packages/data"
-	"github.com/pkg/errors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -97,7 +96,7 @@ func (p PgRepo) HydrateMuscleGroups(ctx context.Context) error {
 			p.db.Create(eachMuscleGroup)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -122,8 +121,6 @@ func (p PgRepo) HydrateSpecificParts(ctx context.Context) error {
 
 		if count == 0 {
 			p.db.Create(eachSpecificMuscleGroup)
-		} else {
-			return errors.New("HydrateSpecificParts")
 		}
 	}
 
@@ -136,4 +133,3 @@ func (p PgRepo) GetMuscleSpecifics(ctx context.Context, input *model.MuscleSpeci
 
 	return allSpecifics, nil
 }
-
