@@ -20,7 +20,7 @@ func (r *queryResolver) GetBaseExerciseByName(ctx context.Context, input string)
 }
 
 func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*model.BaseExercise, error) {
-	allBaseExercise, err := r.PgRepo.GetAllBaseExercise(ctx)
+	allBaseExercise, err := r.GetAllBaseExercise(ctx)
 	if err != nil {
 		return nil, err
 	}

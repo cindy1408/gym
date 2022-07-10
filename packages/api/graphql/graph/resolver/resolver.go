@@ -25,24 +25,6 @@ func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResol
 
 type mutationResolver struct{ *Resolver }
 
-// func (r *Resolver) Init() error {
-// 	err := r.DB.AutoMigrate(
-// 		&model.BaseExercise{},
-// 		&model.User{},
-// 		&model.MuscleGroup{},
-// 		&model.SpecificParts{},
-// 		&model.UserWorkoutPlan{},
-// 		&model.EachExercise{},
-// 	)
-
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return err
-// 	}
-
-// 	return r.DB.Error
-// }
-
 func Hasher(toHash string) string {
 	hasher := sha256.New()
 	hasher.Write([]byte(toHash))

@@ -61,7 +61,7 @@ func (p PgRepo) HydrateBaseExercise(ctx context.Context) (string, error) {
 				fmt.Printf("%v , exists in database!\n", eachBaseExercise.Name)
 			}
 		}
-		
+
 		if count == 0 {
 			p.db.Create(eachBaseExercise)
 		}
@@ -107,17 +107,8 @@ func (p PgRepo) ValidateBaseExercise(ctx context.Context, name string) bool {
 
 func (p PgRepo) GetAllBaseExercise(ctx context.Context) ([]*model.BaseExercise, error) {
 	allBaseExercises := []*model.BaseExercise{}
-	// rows, err := p.db.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
-	// TODO: ISSUE IS HERE
-	// result := p.db.Find(&model.BaseExercise{}).Scan(&allBaseExercises)
-	// if result.Error != nil {
-	// 	return nil, errors.New("issue with p.db.Find.Scn")
-	// }
-	result := p.db.Table("base_exercises").Scan(&allBaseExercises)
 
-	if result.Error != nil {
-		return nil, errors.Wrap(result.Error, "p.db.Table ")
-	}
+	p.db.Table("base_exercises").Scan(&allBaseExercises)
 
 	return allBaseExercises, nil
 }

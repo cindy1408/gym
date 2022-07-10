@@ -1,8 +1,6 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,8 +8,8 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/cindy1408/gym/packages/api/graphql/graph/generated"
-	"github.com/cindy1408/gym/packages/api/postgres"
 	"github.com/cindy1408/gym/packages/api/graphql/graph/resolver"
+	"github.com/cindy1408/gym/packages/api/postgres"
 	"gorm.io/gorm"
 )
 
@@ -33,32 +31,17 @@ func main() {
 
 	pgRepo := postgres.NewRepo(db)
 
-	resolver := &resolver.Resolver{}
+	resolver := &resolver.Resolver{
+		PgRepo: pgRepo,
+	}
 
 	// populate database tables
-	if err := pgRepo.Init(); err != nil {
+	if err := pgRepo.Init(db); err != nil {
 		log.Fatal("failed to create database: %v", err)
 	}
 
 	resolver.Query()
 	resolver.Mutation()
-
-	var ctx context.Context
-
-	_, err := pgRepo.HydrateBaseExercise(ctx)
-	if err != nil {
-		fmt.Println("Hydrate base exercise failed")
-	}
-
-	err = pgRepo.HydrateMuscleGroups(ctx)
-	if err != nil {
-		fmt.Println("Hydrate Muscle Groups exercise failed")
-	}
-
-	err = pgRepo.HydrateSpecificParts(ctx)
-	if err != nil {
-		fmt.Println("Hydrate SpecificParts failed")
-	}
 
 	// Remember to pass the initialised database to the server
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))

@@ -48,7 +48,11 @@ func NewRepo(DB *gorm.DB) PgRepo {
 	}
 }
 
-func (p *PgRepo) Init() error {
+
+func (p *PgRepo) Init(db *gorm.DB) error {
+
+	pgRepo := NewRepo(db)
+
 	err := p.db.AutoMigrate(
 		&model.BaseExercise{},
 		&model.User{},
@@ -61,6 +65,23 @@ func (p *PgRepo) Init() error {
 	if err != nil {
 		fmt.Println(err)
 		return err
+	}
+
+	var ctx context.Context
+
+	_, err = pgRepo.HydrateBaseExercise(ctx)
+	if err != nil {
+		fmt.Println("Hydrate base exercise failed")
+	}
+
+	err = pgRepo.HydrateMuscleGroups(ctx)
+	if err != nil {
+		fmt.Println("Hydrate Muscle Groups exercise failed")
+	}
+
+	err = pgRepo.HydrateSpecificParts(ctx)
+	if err != nil {
+		fmt.Println("Hydrate SpecificParts failed")
 	}
 
 	return nil
