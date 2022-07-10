@@ -42,7 +42,6 @@ func (p PgRepo) UpdateBaseExercise(ctx context.Context, input *model.BaseExercis
 func (p PgRepo) HydrateBaseExercise(ctx context.Context) (string, error) {
 	for _, eachBaseExercise := range data.BaseExerciseData {
 		rows, err := p.db.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
-		fmt.Println("here3")
 		if err != nil {
 			fmt.Printf("%v , selecting database\n", eachBaseExercise.Name)
 		}
@@ -107,9 +106,14 @@ func (p PgRepo) ValidateBaseExercise(ctx context.Context, name string) bool {
 
 func (p PgRepo) GetAllBaseExercise(ctx context.Context) ([]*model.BaseExercise, error) {
 	allBaseExercises := []*model.BaseExercise{}
-	fmt.Println("here")
+	// rows, err := p.db.Model(&model.BaseExercise{}).Select("name", "avoid_given").Rows()
 	// TODO: ISSUE IS HERE
-	p.db.Table("base_exercises").Scan(&allBaseExercises)
+	result := p.db.Find(&model.BaseExercise{}).Scan(&allBaseExercises)
+	if result.Error != nil {
+		return nil, errors.New("issue with p.db.Find.Scn")
+	}
+	// p.db.Table("base_exercises").Scan(&allBaseExercises)
+
 	return allBaseExercises, nil
 }
 

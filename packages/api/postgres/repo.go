@@ -74,13 +74,12 @@ func NewDatabase() (*gorm.DB, error) {
 	}), &gorm.Config{})
 }
 
-func (p *PgRepo) HydrateMuscleGroups(ctx context.Context) error {
+func (p PgRepo) HydrateMuscleGroups(ctx context.Context) error {
 	for _, eachMuscleGroup := range data.MuscleGroupData {
 		rows, err := p.db.Model(&model.MuscleGroup{}).Select("name").Rows()
 		if err != nil {
 			fmt.Printf("%v, selecting database\n", eachMuscleGroup.Name)
 		}
-
 		defer rows.Close()
 
 		var name string
@@ -95,14 +94,10 @@ func (p *PgRepo) HydrateMuscleGroups(ctx context.Context) error {
 		}
 
 		if count == 0 {
-			muscleGroup := model.MuscleGroup{
-				Name: eachMuscleGroup.Name,
-			}
-			p.db.Create(muscleGroup)
-		} else {
-			return errors.New("Hydrate Muscle Groups")
+			p.db.Create(eachMuscleGroup)
 		}
 	}
+	
 	return nil
 }
 
@@ -112,7 +107,6 @@ func (p PgRepo) HydrateSpecificParts(ctx context.Context) error {
 		if err != nil {
 			fmt.Printf("%v, selecting database\n", eachSpecificMuscleGroup.Name)
 		}
-
 		defer rows.Close()
 
 		var name string
@@ -121,21 +115,18 @@ func (p PgRepo) HydrateSpecificParts(ctx context.Context) error {
 		for rows.Next() {
 			rows.Scan(&name)
 			if name == eachSpecificMuscleGroup.Name {
+				count += 1
 				fmt.Printf("%v, exists in database!\n", eachSpecificMuscleGroup.Name)
 			}
 		}
 
 		if count == 0 {
-			specificMuscleGroup := model.SpecificParts{
-				Name:        eachSpecificMuscleGroup.Name,
-				MuscleGroup: eachSpecificMuscleGroup.MuscleGroup,
-			}
-
-			p.db.Create(specificMuscleGroup)
+			p.db.Create(eachSpecificMuscleGroup)
 		} else {
 			return errors.New("HydrateSpecificParts")
 		}
 	}
+
 	return nil
 }
 
@@ -144,5 +135,5 @@ func (p PgRepo) GetMuscleSpecifics(ctx context.Context, input *model.MuscleSpeci
 	p.db.Model(&model.SpecificParts{}).Where("name = ?", input.Name).Scan(&allSpecifics)
 
 	return allSpecifics, nil
-
 }
+

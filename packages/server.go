@@ -46,15 +46,18 @@ func main() {
 	var ctx context.Context
 
 	_, err := pgRepo.HydrateBaseExercise(ctx)
-	// _, err := q.HydrateBaseExercise(ctx)
 	if err != nil {
 		fmt.Println("Hydrate base exercise failed")
 	}
 
 	err = pgRepo.HydrateMuscleGroups(ctx)
-	// _, err = m.HydrateMuscleGroups(ctx)
 	if err != nil {
-		fmt.Println("Hydrate group exercise failed")
+		fmt.Println("Hydrate Muscle Groups exercise failed")
+	}
+
+	err = pgRepo.HydrateSpecificParts(ctx)
+	if err != nil {
+		fmt.Println("Hydrate SpecificParts failed")
 	}
 
 	// Remember to pass the initialised database to the server
