@@ -34,7 +34,7 @@ func (r *queryResolver) GetAllAvailableBaseExercises(ctx context.Context) ([]*mo
 func (r *queryResolver) UpdateBaseExercise(ctx context.Context, input *model.BaseExerciseInput) (*model.BaseExercise, error) {
 	updatedExercise, err := r.PgRepo.UpdateBaseExercise(ctx, input)
 	if err != nil {
-		return nil, errors.Wrap(err, "postgres.UpdateBaseexercise")
+		return nil, errors.Wrap(err, "cannot update postgres.UpdateBaseexercise")
 	}
 
 	return updatedExercise, nil
