@@ -37,7 +37,7 @@ func main() {
 
 	// populate database tables
 	if err := pgRepo.Init(db); err != nil {
-		log.Fatal("failed to create database: %v", err)
+		log.Fatalf("failed to create database: %d", err)
 	}
 
 	resolver.Query()
