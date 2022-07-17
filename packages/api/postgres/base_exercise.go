@@ -121,7 +121,7 @@ func (p PgRepo) GetBaseExerciseByName(ctx context.Context, name string) (*model.
 	result := p.db.Where("name", name).Find(&model.BaseExercise{}).Scan(&baseExercise)
 
 	if result.RowsAffected == 0 {
-		return nil, errors.Wrapf(result.Error, "unable to find base exercise")
+		return nil, errors.Wrapf(result.Error, "unable to find base exercise, p.db.Where()")
 	}
 
 	return baseExercise, nil
