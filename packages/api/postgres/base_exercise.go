@@ -115,7 +115,7 @@ func (p PgRepo) GetAllBaseExercise(ctx context.Context) ([]*model.BaseExercise, 
 
 func (p PgRepo) GetBaseExerciseByName(ctx context.Context, name string) (*model.BaseExercise, error) {
 	if name == "" {
-		return nil, errors.Wrapf(nil, "base exercise name is empty")
+		return nil, errors.Wrapf(nil, "base exercise name is empty, required field")
 	}
 	var baseExercise *model.BaseExercise
 	result := p.db.Where("name", name).Find(&model.BaseExercise{}).Scan(&baseExercise)
