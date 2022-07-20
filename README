@@ -1,17 +1,17 @@
-##The Gym App 
+The Gym App 
 
 Main function is to allow users to add their workout cycles and exercises. 
 The app mainly splits into 2 sections, users who know what they want from the gym and users who don't know what they want from the gym. 
 
-#Users who know what they want: 
+Users who know what they want: 
 User's can select from existing exercises (base exercise) or they can add their own customised exercise along with sets and reps. 
 User can set their cycle and the app will show the correct workout day depending on their cycle. 
 
-#Users who don't know what they want: 
+Users who don't know what they want: 
 If the user is new to the gym, the app will be able to recommend a workout depending on the users lifestyle.. such as number of workout days they are able to commit to and the area of the body they want to focus (cardio vs weight lifting), the app can also recommend the appropriate amount of set and reps for the users and adjust accordingly. 
 The app will also automatically increase the rep or set by 1 if the last updated exercise was more than 24 hours ago. 
 
-#Both will consists of: 
+Both will consists of: 
 App will also display the correct workout day depending on the workout cycle of the user and also notify the user what workout day or rest they have next. 
 User will be able to have the selection to 'lower', 'keep' or 'increase' depending on their exercise for next time. 
 lower = -1 rep 
