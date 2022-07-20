@@ -1,43 +1,22 @@
-egenerate the code using:
-path: /graphql  
-go run github.com/99designs/gqlgen generate
-go run server.go
+The Gym App 
 
+Main function is to allow users to add their workout cycles and exercises. 
+The app mainly splits into 2 sections, users who know what they want from the gym and users who don't know what they want from the gym. 
 
-GORM: 
+Users who know what they want: 
+It will automatically update by increasing +1 rep if the last time updated was more than 24 hours ago. 
+User's can select from existing exercises (base exercise) or they can add their own customised exercise along with sets and reps. 
+User can set their cycle and the app will show the correct workout day depending on their cycle. 
 
-go get -u gorm.io/gorm
-go get -u gorm.io/driver/postgres
+Users who don't know what they want: 
+If the user is new to the gym, the app will be able to recommend a workout depending on the users lifestyle.. such as number of workout days they are able to commit to and the area of the body they want to focus (cardio vs weight lifting), the app can also recommend the appropriate amount of set and reps for the users and adjust accordingly. 
+The app will also automatically increase the rep or set by 1 if the last updated exercise was more than 24 hours ago. 
 
-
-NEXT STEP: 
-
-
-// container is called gym, user is postgres with password as password
-docker run --name gym -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres
-
-// to  pre-populated database we need a docker file and docker image 
-
-// creates the image and tells Docker to build an image from the Dockerfile and give it a name of 'gym-db'
-docker build -t gym-db ./
-
-// to view docker image 
-
-docker images -a
-
-// to run the container 
-docker run -d --name gym -p 5432:5432 gym-db
-
-// to restart container 
-
-docker restart gym 
-
-
-BEEKEEPER 
-username: postgres
-password: password
-database: gym 
-
-
-Lucid Chart: 
-https://lucid.app/lucidchart/2b62e2a3-fb97-41d0-8c08-7e5f957995fd/edit?beaconFlowId=4DE20C2BAB41862D&invitationId=inv_31987717-db28-48b9-bac4-a495b79506d9&page=0_0#
+Both will consists of: 
+App will automatically increase the rep or set by 1 if completed by user. 
+App will also display the correct workout day depending on the workout cycle of the user and also notify the user what workout day or rest they have next. 
+User will be able to have the selection to 'lower', 'keep' or 'increase' depending on their exercise for next time. 
+lower = -1 rep 
+keep = unchange 
+increase = +1 rep
+There will also be a cross (incomplete) or a tick (completed) for the user to track their progress.
