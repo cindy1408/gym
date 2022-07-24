@@ -18,3 +18,7 @@ lower = -1 rep
 keep = unchange 
 increase = +1 rep
 There will also be a cross (incomplete) or a tick (completed) for the user to track their progress.
+
+extra potential: 
+
+a rest timer that the user can set, if not set, the appropriate recommended timer may be used for the type of exercise. 
